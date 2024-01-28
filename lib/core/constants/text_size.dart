@@ -7,4 +7,5 @@ class TextSize {
 
   static const double pagePadding = 16;
   static const double textFieldGap = 20;
+  static const double textGap = 10;
 }

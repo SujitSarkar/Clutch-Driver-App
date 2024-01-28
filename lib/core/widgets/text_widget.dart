@@ -22,7 +22,7 @@ class BodyText extends StatelessWidget {
         style: TextStyle(
             color: textColor ?? AppColor.textColor,
             fontSize: TextSize.bodyText,
-            fontWeight: fontWeight ?? FontWeight.w500));
+            fontWeight: fontWeight ?? FontWeight.w400));
   }
 }
 

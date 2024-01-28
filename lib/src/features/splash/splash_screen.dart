@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> onInit() async {
     await Future.delayed(const Duration(milliseconds: 1000)).then((value) {
       Navigator.pushNamedAndRemoveUntil(
-          context, AppRouter.home, (route) => false);
+          context, AppRouter.companyList, (route) => false);
     });
   }
 

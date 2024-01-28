@@ -1,7 +1,11 @@
 import 'package:clutch_driver_app/src/features/authentication/view/reset_password_screen.dart';
+import 'package:clutch_driver_app/src/features/home/screen/company_list_screen.dart';
+import 'package:clutch_driver_app/src/features/home/screen/load_attachment_screen.dart';
+import 'package:clutch_driver_app/src/features/home/screen/load_details_screen.dart';
+import 'package:clutch_driver_app/src/features/profile/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import '../../src/features/authentication/view/signin_screen.dart';
-import '../../src/features/home/screen/home_screen.dart';
+import '../../src/features/home/screen/load_list_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
 import '../widgets/no_internet_screen.dart';
 import 'app_router.dart';
@@ -30,19 +34,47 @@ class GeneratedRoute {
             pageBuilder: (_, animation, secondaryAnimation) =>
             const ResetPasswordScreen());
 
-      case AppRouter.home:
-        return PageRouteBuilder(
-            settings: settings,
-            transitionsBuilder: slideTransition,
-            pageBuilder: (_, animation, secondaryAnimation) =>
-                const HomeScreen());
-
       case AppRouter.noInternet:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
             const NoInternetScreen());
+
+      case AppRouter.companyList:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const CompanyListScreen());
+
+      case AppRouter.loadList:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const LoadListScreen());
+
+      case AppRouter.loadDetails:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const LoadDetailsScreen());
+
+      case AppRouter.loadAttachment:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const LoadAttachmentScreen());
+
+      case AppRouter.profile:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const ProfileScreen());
 
       default:
         return PageRouteBuilder(

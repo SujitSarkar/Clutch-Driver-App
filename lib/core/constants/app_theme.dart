@@ -41,10 +41,11 @@ class AppTheme {
                 fontSize: 18.0),
           )),
       appBarTheme: AppBarTheme(
-          // backgroundColor: AppColor.appbarBgColor,
+          backgroundColor: AppColor.primaryColor,
           titleTextStyle:
               TextStyle(color: AppColor.textColor, fontWeight: FontWeight.bold),
           elevation: 0.0,
+          iconTheme: const IconThemeData(color: Colors.white),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: AppColor.primaryColor,
             statusBarIconBrightness: Brightness.light,
