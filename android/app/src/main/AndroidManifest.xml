@@ -8,9 +8,9 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:label="Clutch Driver App"
+        android:label="Driver App"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"

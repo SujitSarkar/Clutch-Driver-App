@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:clutch_driver_app/core/constants/text_size.dart';
+import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_color.dart';
-import '../../../core/constants/app_string.dart';
 import '../../../core/router/app_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,18 +13,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final StreamController<int> _controller = StreamController<int>();
-
   @override
   void initState() {
     onInit();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.close();
-    super.dispose();
   }
 
   Future<void> onInit() async {
@@ -35,14 +28,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        backgroundColor: AppColor.primaryColor,
+    return Scaffold(
         body: Center(
             child: Hero(
               tag: 'splashToSignIn',
-              child: Text(AppString.appName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 40,fontWeight: FontWeight.bold)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [ 
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: Image.asset('assets/images/logo.png',height: 180,width: 180)),
+                  const SizedBox(height: TextSize.pagePadding),
+                  const LargeTitleText(text:'Driver App',
+                      textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             )));
   }
 }

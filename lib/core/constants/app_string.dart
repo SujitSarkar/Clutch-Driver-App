@@ -2,9 +2,8 @@ class AppString {
   static const String appName = 'Clutch Driver App';
   static const String fontName = 'inter';
 
-  static const String appExitMessage = 'Do you want to exit?';
-
   ///Button String
+  static const String appExitMessage = 'Do you want to exit?';
   static const String yes = 'Yes';
   static const String no = 'No';
   static const String cancel = 'Cancel';

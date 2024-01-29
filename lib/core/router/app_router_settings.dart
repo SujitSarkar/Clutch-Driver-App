@@ -1,10 +1,10 @@
-import 'package:clutch_driver_app/src/features/authentication/view/reset_password_screen.dart';
 import 'package:clutch_driver_app/src/features/home/screen/company_list_screen.dart';
 import 'package:clutch_driver_app/src/features/home/screen/load_attachment_screen.dart';
 import 'package:clutch_driver_app/src/features/home/screen/load_details_screen.dart';
 import 'package:clutch_driver_app/src/features/profile/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
-import '../../src/features/authentication/view/signin_screen.dart';
+import '../../src/features/authentication/screen/reset_password_screen.dart';
+import '../../src/features/authentication/screen/signin_screen.dart';
 import '../../src/features/home/screen/load_list_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
 import '../widgets/no_internet_screen.dart';

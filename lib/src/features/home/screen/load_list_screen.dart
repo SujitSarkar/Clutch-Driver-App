@@ -26,7 +26,7 @@ class LoadListScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: ()=> Navigator.pushNamed(context, AppRouter.profile),
+                onTap: () => Navigator.pushNamed(context, AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),
@@ -42,12 +42,13 @@ class LoadListScreen extends StatelessWidget {
   Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
       Column(
         children: [
-          ///Filter
+          ///Filter section
           Padding(
             padding:
                 const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
             child: Row(
               children: [
+                ///Calender icon
                 IconButton(
                   icon: const Icon(Icons.calendar_month,
                       color: AppColor.primaryColor),
@@ -59,53 +60,51 @@ class LoadListScreen extends StatelessWidget {
                             const LoadDateRangePickerWidget());
                   },
                 ),
-                Expanded(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_outlined,
-                          color: AppColor.primaryColor),
-                      onPressed: () {
-                        homeProvider.backwardDateBySlot();
-                      },
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) =>
-                                const LoadDateRangePickerWidget());
-                      },
-                      child: BodyText(
-                          text: homeProvider.filterStartDate!
-                                      .millisecondsSinceEpoch ==
-                                  homeProvider
-                                      .filterEndDate!.millisecondsSinceEpoch
-                              ? DateFormat("MMM dd")
-                                  .format(homeProvider.filterStartDate!)
-                              : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} - ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios_outlined,
-                          color: AppColor.primaryColor),
-                      onPressed: () {
-                        homeProvider.forwardDateBySlot();
-                      },
-                    ),
-                    CustomDropdown(
-                        items: AppString.timeSlotInDays,
-                        selectedValue: homeProvider.selectedTimeSlot,
-                        hintText: 'Select Slot',
-                        width: 100,
-                        buttonHeight: 35,
-                        dropdownWidth: 100,
-                        onChanged: (value) {
-                          homeProvider.changeFilterTimeSlot(value);
-                        })
-                  ],
-                )),
+                ///Back arrow
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_outlined,
+                      color: AppColor.primaryColor),
+                  onPressed: () {
+                    homeProvider.backwardDateBySlot();
+                  },
+                ),
+                ///Date text
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) =>
+                        const LoadDateRangePickerWidget());
+                  },
+                  child: SmallText(
+                      text: homeProvider.filterStartDate!
+                          .millisecondsSinceEpoch ==
+                          homeProvider
+                              .filterEndDate!.millisecondsSinceEpoch
+                          ? DateFormat("MMM dd")
+                          .format(homeProvider.filterStartDate!)
+                          : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)}-${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                ),
+                ///Forward arrow
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios_outlined,
+                      color: AppColor.primaryColor),
+                  onPressed: () {
+                    homeProvider.forwardDateBySlot();
+                  },
+                ),
+                ///Date slot dropdown
+                CustomDropdown(
+                    items: AppString.timeSlotInDays,
+                    selectedValue: homeProvider.selectedTimeSlot,
+                    hintText: 'Select Slot',
+                    width: 100,
+                    buttonHeight: 35,
+                    dropdownWidth: 100,
+                    onChanged: (value) {
+                      homeProvider.changeFilterTimeSlot(value);
+                    })
               ],
             ),
           ),
