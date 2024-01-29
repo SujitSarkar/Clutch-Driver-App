@@ -1,5 +1,8 @@
 import 'package:clutch_driver_app/core/constants/app_string.dart';
+import 'package:clutch_driver_app/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../src/features/home/provider/home_provider.dart';
 import '../constants/app_color.dart';
 import '../constants/text_size.dart';
 import '../tile/drawer_item_tile.dart';
@@ -10,6 +13,8 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeProvider homeProvider = Provider.of(context);
+
     return SafeArea(
       child: NormalCard(
           child: SingleChildScrollView(
@@ -44,16 +49,26 @@ class AppDrawer extends StatelessWidget {
           DrawerItemTile(
               leadingIcon: Icons.fire_truck,
               title: AppString.upcomingLoads,
-              onTap: () async {}),
+              onTap: () async {
+                homeProvider.clearFilter();
+                Scaffold.of(context).closeDrawer();
+                Navigator.pushNamed(context, AppRouter.upcomingLoad);
+              }),
           DrawerItemTile(
               leadingIcon: Icons.check_circle_outline_outlined,
               title: AppString.completedLoads,
-              onTap: () async {}),
+              onTap: () async {
+                homeProvider.clearFilter();
+                Scaffold.of(context).closeDrawer();
+                Navigator.pushNamed(context, AppRouter.completeLoad);
+              }),
           DrawerItemTile(
               leadingIcon: Icons.newspaper,
               title: AppString.dailyLogbook,
-              onTap: () async {}),
-
+              onTap: () async {
+                Scaffold.of(context).closeDrawer();
+                Navigator.pushNamed(context, AppRouter.dailyLogbook);
+              }),
           DrawerItemTile(
               leadingIcon: Icons.logout,
               title: AppString.logout,

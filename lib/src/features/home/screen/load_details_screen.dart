@@ -11,7 +11,14 @@ import '../../../../core/widgets/app_drawer.dart';
 import '../provider/home_provider.dart';
 
 class LoadDetailsScreen extends StatelessWidget {
-  const LoadDetailsScreen({super.key});
+  LoadDetailsScreen({super.key});
+
+  final TextEditingController pickupTareWeight = TextEditingController();
+  final TextEditingController pickupGrossWeight = TextEditingController();
+  final TextEditingController deliveryTareWeight = TextEditingController();
+  final TextEditingController deliveryGrossWeight = TextEditingController();
+  final TextEditingController note = TextEditingController();
+  final TextEditingController calculatedNett = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +86,7 @@ class LoadDetailsScreen extends StatelessWidget {
 
                 ///Note
                 TextFormFieldWidget(
-                  controller: homeProvider.note,
+                  controller: note,
                   labelText: AppString.note,
                   hintText: 'Enter ${AppString.note}',
                   minLine: 3,
@@ -89,13 +96,13 @@ class LoadDetailsScreen extends StatelessWidget {
 
                 ///Pickup Weight
                 TextFormFieldWidget(
-                  controller: homeProvider.pickupTareWeight,
+                  controller: pickupTareWeight,
                   labelText: AppString.pickupTareWeight,
                   hintText: 'Enter ${AppString.pickupTareWeight}',
                 ),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
-                  controller: homeProvider.pickupGrossWeight,
+                  controller: pickupGrossWeight,
                   labelText: AppString.pickupGrossWeight,
                   hintText: 'Enter ${AppString.pickupGrossWeight}',
                 ),
@@ -110,13 +117,13 @@ class LoadDetailsScreen extends StatelessWidget {
 
                 ///Delivery Weight
                 TextFormFieldWidget(
-                  controller: homeProvider.deliveryTareWeight,
+                  controller: deliveryTareWeight,
                   labelText: AppString.deliveryTareWeight,
                   hintText: 'Enter ${AppString.deliveryTareWeight}',
                 ),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
-                  controller: homeProvider.deliveryGrossWeight,
+                  controller: deliveryGrossWeight,
                   labelText: AppString.deliveryGrossWeight,
                   hintText: 'Enter ${AppString.deliveryGrossWeight}',
                 ),
@@ -136,9 +143,9 @@ class LoadDetailsScreen extends StatelessWidget {
                     const SizedBox(width: TextSize.pagePadding),
                     Expanded(
                       child: TextFormFieldWidget(
-                          controller: homeProvider.calculatedNett,
+                          controller: calculatedNett,
                           labelText: AppString.calculatedNett,
-                          hintText: 'Enter ${AppString.calculatedNett}'),
+                          hintText: AppString.calculatedNett),
                     ),
                   ],
                 ),

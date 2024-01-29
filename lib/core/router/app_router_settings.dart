@@ -1,11 +1,16 @@
+import 'package:clutch_driver_app/src/features/drawer/screen/daily_logbook_screen.dart';
+import 'package:clutch_driver_app/src/features/drawer/screen/fatigue_management_checklist_screen.dart';
+import 'package:clutch_driver_app/src/features/drawer/screen/prestart_checklist_screen.dart';
 import 'package:clutch_driver_app/src/features/home/screen/company_list_screen.dart';
+import 'package:clutch_driver_app/src/features/home/screen/completed_load_screen.dart';
 import 'package:clutch_driver_app/src/features/home/screen/load_attachment_screen.dart';
 import 'package:clutch_driver_app/src/features/home/screen/load_details_screen.dart';
+import 'package:clutch_driver_app/src/features/home/screen/pending_load_list_screen.dart';
+import 'package:clutch_driver_app/src/features/home/screen/upcomimg_load_screen.dart';
 import 'package:clutch_driver_app/src/features/profile/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import '../../src/features/authentication/screen/reset_password_screen.dart';
 import '../../src/features/authentication/screen/signin_screen.dart';
-import '../../src/features/home/screen/load_list_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
 import '../widgets/no_internet_screen.dart';
 import 'app_router.dart';
@@ -48,19 +53,33 @@ class GeneratedRoute {
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const CompanyListScreen());
 
-      case AppRouter.loadList:
+      case AppRouter.pendingLoad:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                const LoadListScreen());
+                const PendingLoadListScreen());
+
+      case AppRouter.upcomingLoad:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const UpcomingLoadScreen());
+
+      case AppRouter.completeLoad:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const CompleteLoadScreen());
 
       case AppRouter.loadDetails:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                const LoadDetailsScreen());
+                LoadDetailsScreen());
 
       case AppRouter.loadAttachment:
         return PageRouteBuilder(
@@ -68,6 +87,27 @@ class GeneratedRoute {
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const LoadAttachmentScreen());
+
+      case AppRouter.dailyLogbook:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const DailyLogbookScreen());
+
+      case AppRouter.preStartChecklist:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const PreStartChecklistScreen());
+
+      case AppRouter.fatigueManagementChecklist:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const FatigueManagementCheckListScreen());
 
       case AppRouter.profile:
         return PageRouteBuilder(
@@ -85,6 +125,7 @@ class GeneratedRoute {
     }
   }
 
+  ///Fade Page Transition
   static Widget fadeTransition(
       BuildContext context,
       Animation<double> animation,
@@ -93,6 +134,7 @@ class GeneratedRoute {
     return FadeTransition(opacity: animation, child: child);
   }
 
+  ///Slide Page Transition
   static Widget slideTransition(
       BuildContext context,
       Animation<double> animation,

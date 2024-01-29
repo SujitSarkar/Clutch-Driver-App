@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:clutch_driver_app/core/constants/text_size.dart';
 import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_color.dart';
 import '../../../core/router/app_router.dart';
 
 class SplashScreen extends StatefulWidget {

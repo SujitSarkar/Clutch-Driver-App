@@ -1,4 +1,5 @@
 import 'package:clutch_driver_app/src/features/authentication/provider/authentication_provider.dart';
+import 'package:clutch_driver_app/src/features/drawer/provider/drawer_menu_provider.dart';
 import 'package:clutch_driver_app/src/features/home/provider/home_provider.dart';
 import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
               create: (_) => AuthenticationProvider()),
           ChangeNotifierProvider<HomeProvider>(create: (_) => HomeProvider()),
           ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
+          ChangeNotifierProvider<DrawerMenuProvider>(create: (_) => DrawerMenuProvider()),
         ],
         child: MaterialApp(
           navigatorKey: AppNavigatorKey.key,

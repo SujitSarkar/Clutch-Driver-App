@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:clutch_driver_app/core/utils/media_service.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
@@ -9,8 +11,17 @@ import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/home_provider.dart';
 
-class LoadAttachmentScreen extends StatelessWidget {
+class LoadAttachmentScreen extends StatefulWidget {
   const LoadAttachmentScreen({super.key});
+
+  @override
+  State<LoadAttachmentScreen> createState() => _LoadAttachmentScreenState();
+}
+
+class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
+  final MediaService mediaService = MediaService();
+  File? selectedAttachmentFile;
+  List<File> attachmentFileList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +41,10 @@ class LoadAttachmentScreen extends StatelessWidget {
           ],
         ),
         drawer: const Drawer(child: AppDrawer()),
-        body: _bodyUI(homeProvider, size, context));
+        body: _bodyUI(homeProvider, size));
   }
 
-  Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
+  Widget _bodyUI(HomeProvider homeProvider, Size size) =>
       Column(
         children: [
           ///Save & Cancel Button
@@ -43,13 +54,10 @@ class LoadAttachmentScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                    onPressed: () {
-                      homeProvider.clearAttachedFile();
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => Navigator.pop(context),
                     child: const BodyText(
                       text: AppString.cancel,
-                      textColor: AppColor.primaryColor,
+                      textColor: AppColor.disableColor,
                     )),
                 TextButton(
                     onPressed: () {},
@@ -68,7 +76,11 @@ class LoadAttachmentScreen extends StatelessWidget {
                 ///Image preview
                 InkWell(
                   onTap: () async {
-                    await homeProvider.getImageFromCamera();
+                    await mediaService.getImageFromCamera().then((value){
+                      selectedAttachmentFile = value;
+                      attachmentFileList.add(selectedAttachmentFile!);
+                      setState(() {});
+                    });
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -78,20 +90,16 @@ class LoadAttachmentScreen extends StatelessWidget {
                         color: Colors.grey.shade100,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8))),
-                    child: homeProvider.selectedAttachmentFile != null
+                    child: selectedAttachmentFile != null
                         ? ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8)),
-                            child: isImageFile(
-                                    homeProvider.selectedAttachmentFile!)
-                                ? Image.file(
-                                    homeProvider.selectedAttachmentFile!,
-                                    fit: BoxFit.fitHeight)
+                            child: isImageFile(selectedAttachmentFile!)
+                                ? Image.file(selectedAttachmentFile!, fit: BoxFit.fitHeight)
                                 : Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: BodyText(
-                                        text: homeProvider
-                                            .selectedAttachmentFile!
+                                        text: selectedAttachmentFile!
                                             .uri
                                             .pathSegments
                                             .last,
@@ -116,7 +124,11 @@ class LoadAttachmentScreen extends StatelessWidget {
                 ///Attachment Button
                 TextButton(
                     onPressed: () async {
-                      await homeProvider.getFileFromStorage();
+                      await mediaService.getFileFromStorage().then((value){
+                        selectedAttachmentFile = value;
+                        attachmentFileList.add(selectedAttachmentFile!);
+                        setState(() {});
+                      });
                     },
                     child: const Row(
                       children: [
@@ -136,20 +148,18 @@ class LoadAttachmentScreen extends StatelessWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: homeProvider.attachmentFileList.length,
+                  itemCount: attachmentFileList.length,
                   itemBuilder: (context, index) => Row(
                     children: [
                       IconButton(
                           onPressed: () {
-                            homeProvider
-                                .removeFileFromAttachmentFileList(index);
+                            removeFileFromAttachmentFileList(index);
                           },
                           icon: const Icon(Icons.cancel_outlined,
                               color: AppColor.disableColor)),
                       Expanded(
                         child: BodyText(
-                            text: homeProvider.attachmentFileList[index].uri
-                                .pathSegments.last,
+                            text: attachmentFileList[index].uri.pathSegments.last,
                             textColor: AppColor.textColor),
                       ),
                     ],
@@ -162,4 +172,12 @@ class LoadAttachmentScreen extends StatelessWidget {
           )
         ],
       );
+
+  void removeFileFromAttachmentFileList(int index){
+    if(selectedAttachmentFile!.uri.pathSegments.last == attachmentFileList[index].uri.pathSegments.last){
+      selectedAttachmentFile = null;
+    }
+    attachmentFileList.removeAt(index);
+    setState(() {});
+  }
 }

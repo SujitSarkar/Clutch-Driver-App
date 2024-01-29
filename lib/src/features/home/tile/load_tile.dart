@@ -6,7 +6,8 @@ import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/Material.dart';
 
 class LoadTile extends StatelessWidget {
-  const LoadTile({super.key});
+  const LoadTile({super.key,required this.loadType});
+  final String loadType;
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +42,15 @@ class LoadTile extends StatelessWidget {
                 children: [
                   const BodyText(text: '${AppString.quantity}: 1P'),
                   const SizedBox(height: 20),
-                  ElevatedButton(
+                  loadType == AppString.loadTypeList.first
+                      ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.primaryColor),
                       onPressed: () {},
-                      child:
-                          const BodyText(text: AppString.start, textColor: Colors.white))
+                      child: const BodyText(text: AppString.start, textColor: Colors.white))
+                      : loadType == AppString.loadTypeList.last
+                      ? const Icon(Icons.check_circle_outline_outlined,color: AppColor.enableColor)
+                      : const SizedBox.shrink()
                 ],
               ),
             )

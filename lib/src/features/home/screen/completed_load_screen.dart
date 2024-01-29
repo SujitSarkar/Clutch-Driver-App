@@ -1,20 +1,19 @@
-import 'package:clutch_driver_app/core/constants/app_color.dart';
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/constants/text_size.dart';
-import 'package:clutch_driver_app/core/router/app_router.dart';
-import 'package:clutch_driver_app/core/widgets/custom_dropdown_button.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
-import 'package:clutch_driver_app/src/features/home/provider/home_provider.dart';
-import 'package:clutch_driver_app/src/features/home/tile/load_tile.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/widgets/app_drawer.dart';
+import '../../../../core/constants/app_color.dart';
+import '../../../../core/constants/app_string.dart';
+import '../../../../core/constants/text_size.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/custom_dropdown_button.dart';
 import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/text_widget.dart';
+import '../provider/home_provider.dart';
+import '../tile/load_tile.dart';
 import '../widget/load_date_range_picker_widget.dart';
 
-class LoadListScreen extends StatelessWidget {
-  const LoadListScreen({super.key});
+class CompleteLoadScreen extends StatelessWidget {
+  const CompleteLoadScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +21,8 @@ class LoadListScreen extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          title: const TitleText(text: AppString.upcomingLoads,textColor: Colors.white),
+          titleSpacing: 0,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
@@ -33,8 +34,7 @@ class LoadListScreen extends StatelessWidget {
             )
           ],
         ),
-        drawer: const Drawer(child: AppDrawer()),
-        body: homeProvider.companyListLoading
+        body: homeProvider.completeLoadLoading
             ? const Center(child: LoadingWidget())
             : _bodyUI(homeProvider, size, context));
   }
@@ -45,7 +45,7 @@ class LoadListScreen extends StatelessWidget {
           ///Filter section
           Padding(
             padding:
-                const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
+            const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
             child: Row(
               children: [
                 ///Calender icon
@@ -57,9 +57,10 @@ class LoadListScreen extends StatelessWidget {
                         context: context,
                         isScrollControlled: true,
                         builder: (context) =>
-                            const LoadDateRangePickerWidget());
+                        const LoadDateRangePickerWidget());
                   },
                 ),
+
                 ///Back arrow
                 IconButton(
                   icon: const Icon(Icons.arrow_back_ios_outlined,
@@ -68,6 +69,7 @@ class LoadListScreen extends StatelessWidget {
                     homeProvider.backwardDateBySlot();
                   },
                 ),
+
                 ///Date text
                 InkWell(
                   onTap: () {
@@ -78,14 +80,14 @@ class LoadListScreen extends StatelessWidget {
                         const LoadDateRangePickerWidget());
                   },
                   child: SmallText(
-                      text: homeProvider.filterStartDate!
-                          .millisecondsSinceEpoch ==
-                          homeProvider
-                              .filterEndDate!.millisecondsSinceEpoch
+                      text: homeProvider
+                          .filterStartDate!.millisecondsSinceEpoch ==
+                          homeProvider.filterEndDate!.millisecondsSinceEpoch
                           ? DateFormat("MMM dd")
                           .format(homeProvider.filterStartDate!)
                           : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)}-${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
                 ),
+
                 ///Forward arrow
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios_outlined,
@@ -94,6 +96,7 @@ class LoadListScreen extends StatelessWidget {
                     homeProvider.forwardDateBySlot();
                   },
                 ),
+
                 ///Date slot dropdown
                 CustomDropdown(
                     items: AppString.timeSlotInDays,
@@ -115,9 +118,10 @@ class LoadListScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
               itemCount: 5,
-              itemBuilder: (context, index) => const LoadTile(),
+              itemBuilder: (context, index) =>
+                  LoadTile(loadType: AppString.loadTypeList.last),
               separatorBuilder: (context, index) =>
-                  const SizedBox(height: TextSize.pagePadding),
+              const SizedBox(height: TextSize.pagePadding),
             ),
           )
         ],

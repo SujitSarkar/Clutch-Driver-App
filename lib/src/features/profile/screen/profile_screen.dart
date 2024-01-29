@@ -1,10 +1,11 @@
+import 'dart:io';
+import 'package:clutch_driver_app/core/utils/media_service.dart';
 import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
-import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 
@@ -16,13 +17,29 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  static final MediaService mediaService = MediaService();
+  File? selectedAttachmentFile;
+
+  final TextEditingController name = TextEditingController();
+  final TextEditingController emailAddress = TextEditingController();
+  final TextEditingController organization = TextEditingController();
+  final TextEditingController license = TextEditingController();
+  final TextEditingController vic = TextEditingController();
+  final TextEditingController address = TextEditingController();
+  final TextEditingController reservoir = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final ProfileProvider profileProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-        appBar: AppBar(),
-        drawer: const Drawer(child: AppDrawer()),
+        appBar: AppBar(
+          title: const TitleText(
+              text: AppString.account,
+              textColor: Colors.white),
+          titleSpacing: 8,
+        ),
         body: _bodyUI(profileProvider, size, context));
   }
 
@@ -37,12 +54,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: ()=> Navigator.pop(context),
                     child: const BodyText(
                       text: AppString.cancel,
-                      textColor: AppColor.primaryColor,
+                      textColor: AppColor.disableColor,
                     )),
                 TextButton(
                     onPressed: () {},
@@ -66,12 +81,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 60,
-                        child: profileProvider.selectedAttachmentFile != null
+                        child: selectedAttachmentFile != null
                             ? ClipRRect(
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(100)),
                                 child: Image.file(
-                                  profileProvider.selectedAttachmentFile!,
+                                  selectedAttachmentFile!,
                                   fit: BoxFit.cover,
                                   height: double.infinity,
                                   width: double.infinity,
@@ -81,7 +96,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       TextButton(
                           onPressed: () async {
-                            await profileProvider.getImageFromCamera();
+                            await mediaService.getImageFromCamera().then((value){
+                              selectedAttachmentFile = value;
+                              setState(() {});
+                            });
                           },
                           child: const ButtonText(
                               text: AppString.uploadPhoto,
@@ -100,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///Name
                 TextFormFieldWidget(
-                  controller: profileProvider.name,
+                  controller: name,
                   labelText: AppString.name,
                   hintText: 'Enter ${AppString.name}',
                   textCapitalization: TextCapitalization.words,
@@ -109,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///Email Address
                 TextFormFieldWidget(
-                  controller: profileProvider.emailAddress,
+                  controller: emailAddress,
                   labelText: AppString.emailAddress,
                   hintText: 'Enter ${AppString.emailAddress}',
                   textInputType: TextInputType.emailAddress,
@@ -118,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///Organization
                 TextFormFieldWidget(
-                  controller: profileProvider.organization,
+                  controller: organization,
                   labelText: AppString.organization,
                   hintText: 'Enter ${AppString.organization}',
                   textCapitalization: TextCapitalization.words,
@@ -127,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///License
                 TextFormFieldWidget(
-                  controller: profileProvider.license,
+                  controller: license,
                   labelText: AppString.license,
                   hintText: 'Enter ${AppString.license}',
                 ),
@@ -135,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///VIC
                 TextFormFieldWidget(
-                  controller: profileProvider.vic,
+                  controller: vic,
                   labelText: AppString.vIC,
                   hintText: 'Enter ${AppString.vIC}',
                 ),
@@ -143,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///Address
                 TextFormFieldWidget(
-                  controller: profileProvider.address,
+                  controller: address,
                   labelText: AppString.address,
                   hintText: 'Enter ${AppString.address}',
                   textCapitalization: TextCapitalization.words,
@@ -153,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 ///Reservoir
                 TextFormFieldWidget(
-                  controller: profileProvider.reservoir,
+                  controller: reservoir,
                   labelText: AppString.reservoir,
                   hintText: 'Enter ${AppString.reservoir}',
                 ),

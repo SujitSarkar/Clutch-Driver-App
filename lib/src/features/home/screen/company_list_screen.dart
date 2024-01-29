@@ -8,6 +8,7 @@ import 'package:clutch_driver_app/core/widgets/solid_button.dart';
 import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:clutch_driver_app/src/features/home/tile/company_tile.dart';
 import 'package:flutter/Material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../provider/home_provider.dart';
 
@@ -18,11 +19,39 @@ class CompanyListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-          body: homeProvider.companyListLoading
-              ? const Center(child: LoadingWidget())
-              : _bodyUI(homeProvider, size, context)),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (value) async {
+        if (homeProvider.canPop()) {
+          Navigator.pop(context);
+        } else {
+          // ignore: use_build_context_synchronously
+          final shouldExit = await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text(AppString.appExitMessage),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child:
+                  const Text(AppString.no, style: TextStyle(color: Colors.green)),
+                ),
+                TextButton(
+                  onPressed: () => SystemNavigator.pop(),
+                  child: const Text(AppString.yes, style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            ),
+          );
+          return shouldExit ?? false;
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+            body: homeProvider.companyListLoading
+                ? const Center(child: LoadingWidget())
+                : _bodyUI(homeProvider, size, context)),
+      ),
     );
   }
 
@@ -57,7 +86,7 @@ class CompanyListScreen extends StatelessWidget {
               const SizedBox(height: TextSize.textFieldGap),
 
               SolidButton(onTap: (){
-                Navigator.pushNamed(context, AppRouter.loadList);
+                Navigator.pushNamed(context, AppRouter.pendingLoad);
               }, child: const ButtonText(text: 'Select',))
             ],
           ),

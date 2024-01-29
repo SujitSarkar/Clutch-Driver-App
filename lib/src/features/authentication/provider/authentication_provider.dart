@@ -15,6 +15,8 @@ class AuthenticationProvider extends ChangeNotifier {
 
   final TextEditingController username = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   void clearAllData() {
@@ -33,17 +35,17 @@ class AuthenticationProvider extends ChangeNotifier {
 
     Map<String, dynamic> requestBody = {
       "username": username.text.trim(),
-      "password": passwordController.text.trim(),
+      "password": passwordController.text,
     };
 
     await _authRepository.signIn(requestBody: requestBody).then(
         (LoginResponseModel? response) async {
       if (response != null) {
         await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(response)).then((value) async {
+                loginResponseModelToJson(response))
+            .then((value) async {
           ApiService.instance.addAccessToken(response.data?.accessToken);
           clearAllData();
-
         }, onError: (error) {
           showToast(error.toString());
         });
@@ -63,14 +65,15 @@ class AuthenticationProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
 
-    Map<String, dynamic> requestBody = {"email": ''};
+    Map<String, dynamic> requestBody = {
+      "email": '',
+      'phone': phoneController.text.trim()
+    };
 
     await _authRepository.resetPassword(requestBody: requestBody).then(
-            (ResetPasswordResponseModel? response) async {
-          if (response != null && response.status==true) {
-
-          }
-        }, onError: (error) {
+        (ResetPasswordResponseModel? response) async {
+      if (response != null && response.status == true) {}
+    }, onError: (error) {
       showToast(error.toString());
     });
     loading = false;
