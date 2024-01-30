@@ -29,12 +29,10 @@ class SignInScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Center(
-                      child: Hero(
-                          tag: 'splashToSignIn',
-                          child: LargeTitleText(
-                              text: AppString.welcomeMessage,
-                              textAlign: TextAlign.center,
-                              textColor: AppColor.primaryColor))),
+                      child: LargeTitleText(
+                          text: AppString.welcomeMessage,
+                          textAlign: TextAlign.center,
+                          textColor: AppColor.primaryColor)),
                   const SizedBox(height: TextSize.pagePadding),
 
                   const SmallText(
@@ -63,7 +61,9 @@ class SignInScreen extends StatelessWidget {
                   ///Login Button
                   SolidButton(
                       onTap: () async {
-                        await authProvider.signInButtonOnTap();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, AppRouter.companyList, (route) => false);
+                        // await authProvider.signInButtonOnTap();
                       },
                       child: authProvider.loading
                           ? const LoadingWidget(color: Colors.white)

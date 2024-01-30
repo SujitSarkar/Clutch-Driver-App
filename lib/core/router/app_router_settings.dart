@@ -49,7 +49,7 @@ class GeneratedRoute {
       case AppRouter.companyList:
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: slideTransition,
+            transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const CompanyListScreen());
 

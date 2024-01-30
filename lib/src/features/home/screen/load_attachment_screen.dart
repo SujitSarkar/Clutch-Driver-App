@@ -78,7 +78,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                   onTap: () async {
                     await mediaService.getImageFromCamera().then((value){
                       selectedAttachmentFile = value;
-                      attachmentFileList.add(selectedAttachmentFile!);
+                      attachmentFileList.add(value!);
                       setState(() {});
                     });
                   },
@@ -174,7 +174,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
       );
 
   void removeFileFromAttachmentFileList(int index){
-    if(selectedAttachmentFile!.uri.pathSegments.last == attachmentFileList[index].uri.pathSegments.last){
+    if(selectedAttachmentFile?.uri.pathSegments.last == attachmentFileList[index].uri.pathSegments.last){
       selectedAttachmentFile = null;
     }
     attachmentFileList.removeAt(index);

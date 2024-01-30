@@ -17,7 +17,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static final MediaService mediaService = MediaService();
+  final MediaService mediaService = MediaService();
   File? selectedAttachmentFile;
 
   final TextEditingController name = TextEditingController();
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       TextButton(
                           onPressed: () async {
                             await mediaService.getImageFromCamera().then((value){
-                              selectedAttachmentFile = value;
+                              selectedAttachmentFile = value!;
                               setState(() {});
                             });
                           },

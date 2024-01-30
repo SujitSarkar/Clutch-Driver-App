@@ -7,6 +7,7 @@ import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/text_size.dart';
+import '../../../../core/utils/google_map_service.dart';
 import '../../../../core/widgets/app_drawer.dart';
 import '../provider/home_provider.dart';
 
@@ -80,7 +81,9 @@ class LoadDetailsScreen extends StatelessWidget {
 
                 ///Open Route in Google Map
                 SolidButton(
-                    onTap: () {},
+                    onTap: () async{
+                      await openGoogleMaps(23.829315406238095, 90.42004168093032);
+                    },
                     child: const ButtonText(text: 'Open Route in Google Map')),
                 const SizedBox(height: TextSize.pagePadding),
 

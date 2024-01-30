@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> onInit() async {
     await Future.delayed(const Duration(milliseconds: 1000)).then((value) {
       Navigator.pushNamedAndRemoveUntil(
-          context, AppRouter.companyList, (route) => false);
+          context, AppRouter.signIn, (route) => false);
     });
   }
 
@@ -29,21 +29,18 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: Hero(
-              tag: 'splashToSignIn',
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [ 
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Image.asset('assets/images/logo.png',height: 180,width: 180)),
-                  const SizedBox(height: TextSize.pagePadding),
-                  const LargeTitleText(text:'Driver App',
-                      textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Image.asset('assets/images/logo.png',height: 180,width: 180)),
+                const SizedBox(height: TextSize.pagePadding),
+                const LargeTitleText(text:'Driver App',
+                    textAlign: TextAlign.center,
+                ),
+              ],
             )));
   }
 }
