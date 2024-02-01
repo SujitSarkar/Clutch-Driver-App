@@ -4,19 +4,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/Material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MediaService {
-  static final AppPermissionHandler appPermissionHandler =
-      AppPermissionHandler();
-  static final ImagePicker imagePicker = ImagePicker();
-
+class AppMediaService {
   Future<File?> getImageFromCamera() async {
     File? file;
-    final bool permission = await appPermissionHandler.cameraPermission();
+    final bool permission = await AppPermissionHandler().cameraPermission();
     if (!permission) {
       return null;
     }
     try {
-      final XFile? image = await imagePicker.pickImage(source: ImageSource.camera);
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
       if (image != null) {
         file = File(image.path);
       } else {
@@ -31,7 +27,7 @@ class MediaService {
 
   Future<File?> getFileFromStorage() async {
     File? file;
-    final bool permission = await appPermissionHandler.galleryPermission();
+    final bool permission = await AppPermissionHandler().galleryPermission();
     if (!permission) {
       return null;
     }

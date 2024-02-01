@@ -4,35 +4,46 @@ import '../../../../core/constants/app_string.dart';
 class DrawerMenuProvider extends ChangeNotifier {
   bool functionLoading = false;
 
+  String selectedTruck = AppString.truckList.first;
+
   ///Additional Fees
-  List<bool> additionalFeeCheckedList = List.generate(AppString.additionalFeeCheckBoxList.length,
-      (index) => false);
+  List<bool> additionalFeeCheckedList = List.generate(
+      AppString.additionalFeeCheckBoxList.length, (index) => false);
 
   ///Pre-Start
-  List<bool> preStartFeeCheckedList = List.generate(AppString.preStartCheckboxList.length,
-      (index) => false);
+  List<bool> preStartFeeCheckedList =
+      List.generate(AppString.preStartCheckboxList.length, (index) => false);
 
   ///Fatigue Management
-  List<String>  fatigueManagementCheckboxList = ['Regular Breaks Taken'];
-  List<bool> fatigueManagementCheckedList = List.generate(1, (index) => false);
+  List<String> fatigueManagementCheckboxList = [
+    'Regular Breaks Taken',
+    'Communicated with Scheduler',
+    'Driving hours did not exceed Limit'
+  ];
+  List<bool> fatigueManagementCheckedList = List.generate(3, (index) => false);
 
   ///Additional Fees
-  void changeAdditionalFeeCheckedList(int index, bool? value){
+  void changeAdditionalFeeCheckedList(int index, bool? value) {
     additionalFeeCheckedList[index] = value!;
     notifyListeners();
   }
 
   ///Pre-Start
-  void changePreStartCheckedList(int index, bool? value){
+  void changePreStartCheckedList(int index, bool? value) {
     preStartFeeCheckedList[index] = value!;
     notifyListeners();
   }
 
   ///Fatigue Management
-  void changeFatigueManagementCheckedList(int index, bool? value){
+  void changeFatigueManagementCheckedList(int index, bool? value) {
     fatigueManagementCheckedList[index] = value!;
     notifyListeners();
   }
 
-  void addBreakButtonOnTap(){}
+  void changeTruck(String value) {
+    selectedTruck = value;
+    notifyListeners();
+  }
+
+  void addBreakButtonOnTap() {}
 }

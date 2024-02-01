@@ -47,6 +47,17 @@ class AppDrawer extends StatelessWidget {
           const SizedBox(height: 12),
 
           DrawerItemTile(
+              leadingIcon: Icons.hourglass_empty,
+              title: AppString.pendingLoads,
+              onTap: () async {
+                homeProvider.clearFilter();
+                Scaffold.of(context).closeDrawer();
+                final String currentRoute = ModalRoute.of(context)!.settings.name ?? '/';
+                if(!currentRoute.contains(AppRouter.pendingLoad)){
+                  Navigator.pushNamed(context, AppRouter.pendingLoad);
+                }
+              }),
+          DrawerItemTile(
               leadingIcon: Icons.fire_truck,
               title: AppString.upcomingLoads,
               onTap: () async {
@@ -61,6 +72,13 @@ class AppDrawer extends StatelessWidget {
                 homeProvider.clearFilter();
                 Scaffold.of(context).closeDrawer();
                 Navigator.pushNamed(context, AppRouter.completeLoad);
+              }),
+          DrawerItemTile(
+              leadingIcon: Icons.check_box_outlined,
+              title: AppString.preStartChecklist,
+              onTap: () async {
+                Scaffold.of(context).closeDrawer();
+                Navigator.pushNamed(context, AppRouter.preStartChecklist);
               }),
           DrawerItemTile(
               leadingIcon: Icons.newspaper,

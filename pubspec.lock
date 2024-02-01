@@ -252,10 +252,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "004a2e90ce080f8627b5a04aecb4cdfac87d2c3f3b520aa291260be5a32c033d"
+      sha256: "49a0d4b0c12402853d3f227fe7c315601b238d126aa4caa5dbb2dcf99421aa4a"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.4"
+    version: "4.1.6"
   image_picker:
     dependency: "direct main"
     description:
@@ -577,18 +577,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: ed8527189f874b9d07f78f2f4306739ce003e8baccfdd7453c0098beef16428f
+      sha256: c0693d88cbdef2af5da286c605e5e8f33216c8f6cb3bc92a88a51decfb62bace
       url: "https://pub.dev"
     source: hosted
-    version: "24.1.47"
+    version: "24.2.3"
   syncfusion_flutter_datepicker:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_datepicker
-      sha256: "374ab719b7591af6bf81dabe2db60fa85968bbf4d29522fe61979344454dcc7a"
+      sha256: "8ed5aa0217fafe1788d815766d98ece641d1cf067b47ca3d71da81e7605b0d5c"
       url: "https://pub.dev"
     source: hosted
-    version: "24.1.47"
+    version: "24.2.3"
   term_glyph:
     dependency: transitive
     description:

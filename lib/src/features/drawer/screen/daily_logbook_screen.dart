@@ -7,6 +7,7 @@ import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
+import '../../../../core/widgets/truck_dropdown_button.dart';
 import '../widget/additional_fee_checkbox_widget.dart';
 
 class DailyLogbookScreen extends StatefulWidget {
@@ -17,7 +18,9 @@ class DailyLogbookScreen extends StatefulWidget {
 }
 
 class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
+  final TextEditingController startTime = TextEditingController();
   final TextEditingController endTime = TextEditingController();
+  final TextEditingController startingOdometerReading = TextEditingController();
   final TextEditingController endingOdometerReading = TextEditingController();
   final TextEditingController note = TextEditingController();
 
@@ -45,7 +48,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
         body: _bodyUI(drawerMenuProvider, size));
   }
 
-  Widget _bodyUI(DrawerMenuProvider homeProvider, Size size) =>
+  Widget _bodyUI(DrawerMenuProvider drawerMenuProvider, Size size) =>
       Column(children: [
         ///Cancel & Save Button
         Padding(
@@ -71,27 +74,42 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
 
         Expanded(
             child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
+          padding: const EdgeInsets.all(TextSize.pagePadding),
           children: [
-            ///Pre-Start Checklist Button
-            InkWell(
-                onTap:()=>Navigator.pushNamed(context, AppRouter.preStartChecklist),
-                child: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: SmallText(
-                          text: 'Complete ${AppString.preStartChecklist} >',
-                          textColor: AppColor.primaryColor,
-                          textAlign: TextAlign.end),
-                    ))),
-            const SizedBox(height: TextSize.textFieldGap),
+            ///Truck dropdown
+            TruckDropdown(
+                items: AppString.truckList,
+                selectedValue: drawerMenuProvider.selectedTruck,
+                hintText: 'Select Truck',
+                width: 150,
+                buttonHeight: 35,
+                dropdownWidth: 150,
+                onChanged: (value) {
+                  drawerMenuProvider.changeTruck(value);
+                }),
+            const SizedBox(height: TextSize.textGap),
+
+            ///Start time
+            TextFormFieldWidget(
+              controller: startTime,
+              labelText: AppString.startTime,
+              hintText: 'Enter ${AppString.startTime}',
+            ),
+            const SizedBox(height: TextSize.textGap),
 
             ///End time
             TextFormFieldWidget(
               controller: endTime,
               labelText: AppString.endTime,
               hintText: 'Enter ${AppString.endTime}',
+            ),
+            const SizedBox(height: TextSize.textGap),
+
+            ///Starting Odometer Reading
+            TextFormFieldWidget(
+              controller: startingOdometerReading,
+              labelText: AppString.startingOdometerReading,
+              hintText: 'Enter ${AppString.startingOdometerReading}',
             ),
             const SizedBox(height: TextSize.textGap),
 

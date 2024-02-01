@@ -6,6 +6,7 @@ import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
+import '../../../../core/widgets/truck_dropdown_button.dart';
 import '../provider/drawer_menu_provider.dart';
 import '../widget/pre_start_checkbox_widget.dart';
 
@@ -17,8 +18,8 @@ class PreStartChecklistScreen extends StatefulWidget {
 }
 
 class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
-  final TextEditingController endTime = TextEditingController();
-  final TextEditingController endingOdometerReading = TextEditingController();
+  final TextEditingController startTime = TextEditingController();
+  final TextEditingController startingOdometerReading = TextEditingController();
   final TextEditingController note = TextEditingController();
 
   @override
@@ -60,7 +61,9 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                     textColor: AppColor.disableColor,
                   )),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouter.loadDetails);
+                  },
                   child: const BodyText(
                     text: AppString.save,
                     textColor: AppColor.primaryColor,
@@ -71,23 +74,34 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
 
         Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: TextSize.pagePadding,vertical: TextSize.pagePadding),
+              padding: const EdgeInsets.all(TextSize.pagePadding),
               children: [
+                ///Truck dropdown
+                TruckDropdown(
+                    items: AppString.truckList,
+                    selectedValue: homeProvider.selectedTruck,
+                    hintText: 'Select Truck',
+                    buttonHeight: 35,
+                    onChanged: (value) {
+                      homeProvider.changeTruck(value);
+                    }),
+                const SizedBox(height: TextSize.textFieldGap),
+
+                ///Ending Odometer Reading
+                TextFormFieldWidget(
+                  controller: startingOdometerReading,
+                  labelText: AppString.endingOdometerReading,
+                  hintText: 'Enter ${AppString.startingOdometerReading}',
+                ),
+                const SizedBox(height: TextSize.textFieldGap),
+
                 ///End time
                 TextFormFieldWidget(
-                  controller: endTime,
+                  controller: startTime,
                   labelText: AppString.endTime,
                   hintText: 'Enter ${AppString.endTime}',
                 ),
                 const SizedBox(height: TextSize.textGap),
-
-                ///Ending Odometer Reading
-                TextFormFieldWidget(
-                  controller: endingOdometerReading,
-                  labelText: AppString.endingOdometerReading,
-                  hintText: 'Enter ${AppString.endingOdometerReading}',
-                ),
-                const SizedBox(height: TextSize.textFieldGap),
 
                 ///Pre-start check
                 const BodyText(text: AppString.preStartChecklist,fontWeight: FontWeight.bold),

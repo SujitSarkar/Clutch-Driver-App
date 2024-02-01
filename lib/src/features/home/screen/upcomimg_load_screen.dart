@@ -1,3 +1,4 @@
+import 'package:clutch_driver_app/core/widgets/truck_dropdown_button.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +6,6 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../../core/widgets/custom_dropdown_button.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/home_provider.dart';
@@ -61,52 +61,36 @@ class UpcomingLoadScreen extends StatelessWidget {
                   },
                 ),
 
-                ///Back arrow
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_outlined,
-                      color: AppColor.primaryColor),
-                  onPressed: () {
-                    homeProvider.backwardDateBySlot();
-                  },
-                ),
-
                 ///Date text
-                InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) =>
-                            const LoadDateRangePickerWidget());
-                  },
-                  child: SmallText(
-                      text: homeProvider
-                                  .filterStartDate!.millisecondsSinceEpoch ==
-                              homeProvider.filterEndDate!.millisecondsSinceEpoch
-                          ? DateFormat("MMM dd")
-                              .format(homeProvider.filterStartDate!)
-                          : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)}-${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) =>
+                              const LoadDateRangePickerWidget());
+                    },
+                    child: BodyText(
+                        text: homeProvider
+                                    .filterStartDate!.millisecondsSinceEpoch ==
+                                homeProvider.filterEndDate!.millisecondsSinceEpoch
+                            ? DateFormat("MMM dd")
+                                .format(homeProvider.filterStartDate!)
+                            : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} - ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                  ),
                 ),
 
-                ///Forward arrow
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios_outlined,
-                      color: AppColor.primaryColor),
-                  onPressed: () {
-                    homeProvider.forwardDateBySlot();
-                  },
-                ),
-
-                ///Date slot dropdown
-                CustomDropdown(
-                    items: AppString.timeSlotInDays,
-                    selectedValue: homeProvider.selectedTimeSlot,
-                    hintText: 'Select Slot',
-                    width: 100,
+                ///Truck dropdown
+                TruckDropdown(
+                    items: AppString.truckList,
+                    selectedValue: homeProvider.selectedTruck,
+                    hintText: 'Select Truck',
+                    width: 150,
                     buttonHeight: 35,
-                    dropdownWidth: 100,
+                    dropdownWidth: 150,
                     onChanged: (value) {
-                      homeProvider.changeFilterTimeSlot(value);
+                      homeProvider.changeTruck(value);
                     })
               ],
             ),

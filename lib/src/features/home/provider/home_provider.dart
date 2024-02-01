@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:clutch_driver_app/core/constants/app_string.dart';
 import 'package:clutch_driver_app/shared/api/api_service.dart';
 import 'package:flutter/Material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -15,10 +17,13 @@ class HomeProvider extends ChangeNotifier {
   LoginResponseModel? loginResponseModel;
   int selectedCompanyIndex = 0;
 
+  ///Debounce timer
+  Timer? debounceTimer;
+
   ///Filter
   DateTime? filterStartDate = DateTime.now();
   DateTime? filterEndDate = DateTime.now();
-  int selectedTimeSlot = 1;
+  String selectedTruck = AppString.truckList.first;
 
   Future<void> initialize() async {
     await getLocalData();
@@ -50,23 +55,8 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  void changeFilterTimeSlot(int value) {
-    selectedTimeSlot = value;
-    notifyListeners();
-  }
-
-  void forwardDateBySlot() {
-    if(filterStartDate!.add(Duration(days: selectedTimeSlot)).isBefore(DateTime.now())){
-      filterStartDate = filterStartDate!.add(Duration(days: selectedTimeSlot));
-      filterEndDate = filterStartDate;
-      notifyListeners();
-    }
-  }
-
-  void backwardDateBySlot() {
-    filterStartDate =
-        filterStartDate!.subtract(Duration(days: selectedTimeSlot));
-    filterEndDate = filterStartDate;
+  void changeTruck(String value) {
+    selectedTruck = value;
     notifyListeners();
   }
 
@@ -76,11 +66,17 @@ class HomeProvider extends ChangeNotifier {
 
     functionLoading = false;
     notifyListeners();
+    Navigator.pop(AppNavigatorKey.key.currentState!.context);
   }
 
   void clearFilter() {
     filterStartDate = DateTime.now();
     filterEndDate = DateTime.now();
-    selectedTimeSlot = 1;
+    selectedTruck = AppString.truckList.first;
+  }
+
+  void debouncing({required Function() fn, int waitForMs = 800}) {
+    debounceTimer?.cancel();
+    debounceTimer = Timer(Duration(milliseconds: waitForMs), fn);
   }
 }

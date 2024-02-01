@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:clutch_driver_app/core/utils/media_service.dart';
+import 'package:clutch_driver_app/core/utils/app_media_service.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
@@ -19,7 +19,6 @@ class LoadAttachmentScreen extends StatefulWidget {
 }
 
 class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
-  final MediaService mediaService = MediaService();
   File? selectedAttachmentFile;
   List<File> attachmentFileList = [];
 
@@ -76,10 +75,12 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                 ///Image preview
                 InkWell(
                   onTap: () async {
-                    await mediaService.getImageFromCamera().then((value){
-                      selectedAttachmentFile = value;
-                      attachmentFileList.add(value!);
-                      setState(() {});
+                    await AppMediaService().getImageFromCamera().then((File? value){
+                      if(value!=null){
+                        selectedAttachmentFile = value;
+                        attachmentFileList.add(value);
+                        setState(() {});
+                      }
                     });
                   },
                   child: Container(
@@ -124,10 +125,12 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                 ///Attachment Button
                 TextButton(
                     onPressed: () async {
-                      await mediaService.getFileFromStorage().then((value){
-                        selectedAttachmentFile = value;
-                        attachmentFileList.add(selectedAttachmentFile!);
-                        setState(() {});
+                      await AppMediaService().getFileFromStorage().then((File? value){
+                        if(value!=null){
+                          selectedAttachmentFile = value;
+                          attachmentFileList.add(selectedAttachmentFile!);
+                          setState(() {});
+                        }
                       });
                     },
                     child: const Row(

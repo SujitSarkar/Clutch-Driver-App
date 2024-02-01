@@ -62,7 +62,7 @@ class SignInScreen extends StatelessWidget {
                   SolidButton(
                       onTap: () async {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, AppRouter.companyList, (route) => false);
+                            context, AppRouter.pendingLoad, (route) => false);
                         // await authProvider.signInButtonOnTap();
                       },
                       child: authProvider.loading

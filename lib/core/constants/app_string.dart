@@ -10,6 +10,7 @@ class AppString {
   static const String save = 'Save';
   static const String start = 'Start';
   static const String complete = 'Complete';
+  static const String completeDelivery = 'Complete Delivery';
   static const String upload = 'Upload';
   static const String reset = 'Reset';
   static const String addBreak = 'Add Break';
@@ -45,7 +46,9 @@ class AppString {
   static const String totalHoursDriven = 'Total Hours Driven';
 
   ///Daily Logbook
+  static const String startTime = 'Start Time';
   static const String endTime = 'End Time';
+  static const String startingOdometerReading = 'Starting Odometer Reading';
   static const String endingOdometerReading = 'Ending Odometer Reading';
   static const String totalLoadComplete = 'Total loads completed';
   static const String totalTonnageDone = 'Total tonnage done';
@@ -61,6 +64,7 @@ class AppString {
   static const String destination = 'Destination';
   static const String commodity = 'Commodity';
   static const String quantity = 'QTY';
+  static const String details = 'Details';
 
   static const String note = 'Note';
   static const String pickupTareWeight = 'Pickup Tare Weight';
@@ -78,7 +82,7 @@ class AppString {
       ' Please select the Truck to view the loads. The trucks are listed in order based on which load '
       'is scheduled to be completed first.';
 
-  static List<int> timeSlotInDays = [1, 7, 14];
+  static List<String> truckList = ['XYZ01','XYZ02','XYZ03','XYZ04','XYZ05'];
   static List<String> loadTypeList = ['Pending', 'Upcoming', 'Complete'];
   static List<String> additionalFeeCheckBoxList = [
     'Overnight Delivery',

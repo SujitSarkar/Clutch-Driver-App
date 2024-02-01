@@ -7,6 +7,7 @@ import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
+import '../../../../core/widgets/truck_dropdown_button.dart';
 import '../provider/drawer_menu_provider.dart';
 import '../widget/fatigue_management_checkbox_widget.dart';
 
@@ -20,8 +21,6 @@ class FatigueManagementCheckListScreen extends StatefulWidget {
 
 class _FatigueManagementCheckListScreenState
     extends State<FatigueManagementCheckListScreen> {
-  final TextEditingController endTime = TextEditingController();
-  final TextEditingController endingOdometerReading = TextEditingController();
   final TextEditingController note = TextEditingController();
 
   @override
@@ -75,46 +74,50 @@ class _FatigueManagementCheckListScreenState
 
         Expanded(
             child: ListView(
-          padding: const EdgeInsets.symmetric(
-              horizontal: TextSize.pagePadding, vertical: TextSize.pagePadding),
+          padding: const EdgeInsets.all(TextSize.pagePadding),
           children: [
-            ///End time
-            TextFormFieldWidget(
-              controller: endTime,
-              labelText: AppString.endTime,
-              hintText: 'Enter ${AppString.endTime}',
-            ),
-            const SizedBox(height: TextSize.textGap),
-
-            ///Ending Odometer Reading
-            TextFormFieldWidget(
-              controller: endingOdometerReading,
-              labelText: AppString.endingOdometerReading,
-              hintText: 'Enter ${AppString.endingOdometerReading}',
-            ),
+            ///Truck dropdown
+            TruckDropdown(
+                items: AppString.truckList,
+                selectedValue: homeProvider.selectedTruck,
+                hintText: 'Select Slot',
+                buttonHeight: 35,
+                onChanged: (value) {
+                  homeProvider.changeTruck(value);
+                }),
             const SizedBox(height: TextSize.textFieldGap),
 
-            ///Pre-start check
+            ///Fatigue Management Checklist
             const BodyText(
                 text: AppString.fatigueManagementChecklist,
                 fontWeight: FontWeight.bold),
             const Divider(),
             const FatigueManagementCheckboxWidget(),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: AppColor.primaryColor),
-                onPressed: () {},
-                child: const ButtonText(
-                  text: AppString.addBreak,
-                ),
-              ),
-            ),
             const SizedBox(height: TextSize.textFieldGap),
 
             ///Break Times
-            const BodyText(
-                text: AppString.breakTimes, fontWeight: FontWeight.bold),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: BodyText(
+                      text: AppString.breakTimes, fontWeight: FontWeight.bold),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.primaryColor,
+                    minimumSize: const Size(130, 28),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: const ButtonText(
+                    text: AppString.addBreak,
+                  ),
+                ),
+              ],
+            ),
             const Divider(),
             //Header
             const Row(
@@ -170,17 +173,25 @@ class _FatigueManagementCheckListScreenState
                 ),
               ],
             ),
-            const SizedBox(height: TextSize.textFieldGap),
+            const Divider(height: TextSize.textFieldGap),
+
+            ///Total hours driven
+            const Row(
+              children: [
+                Expanded(
+                    child: BodyText(text: "${AppString.totalHoursDriven}:")),
+                BodyText(text: '12')
+              ],
+            ),
+            const SizedBox(height: TextSize.textFieldGap + TextSize.textFieldGap),
 
             ///Note
             TextFormFieldWidget(
-              controller: note,
-              labelText: AppString.note,
-              hintText: 'Enter ${AppString.note}',
-              minLine: 3,
-              maxLine: 5,
-            ),
-            const SizedBox(height: TextSize.textFieldGap),
+                controller: note,
+                labelText: AppString.note,
+                hintText: 'Enter ${AppString.note}',
+                minLine: 3,
+                maxLine: 5),
           ],
         ))
       ]);

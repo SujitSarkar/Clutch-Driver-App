@@ -5,16 +5,16 @@ import '../constants/app_color.dart';
 import '../constants/text_size.dart';
 
 // ignore: must_be_immutable
-class CustomDropdown extends StatelessWidget {
-  final List<int> items;
-  int? selectedValue;
+class TruckDropdown extends StatelessWidget {
+  final List<String> items;
+  String? selectedValue;
   final String hintText;
-  final Function(int) onChanged;
+  final Function(String) onChanged;
   final double? width;
   final double? buttonHeight;
   final double? dropdownWidth;
 
-  CustomDropdown(
+  TruckDropdown(
       {super.key,
       required this.items,
       required this.selectedValue,
@@ -35,16 +35,16 @@ class CustomDropdown extends StatelessWidget {
         style:
             TextStyle(color: AppColor.textColor, fontSize: TextSize.bodyText),
         items: items
-            .map((item) => DropdownMenuItem<int>(
+            .map((item) => DropdownMenuItem<String>(
                   value: item,
                   child: BodyText(text:
-                    '$item Day',
+                    'Truck: $item',
                   ),
                 ))
             .toList(),
         value: selectedValue,
         onChanged: (value) {
-          selectedValue = value as int;
+          selectedValue = value as String;
           onChanged(selectedValue!);
         },
         iconStyleData: const IconStyleData(

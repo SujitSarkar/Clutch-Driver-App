@@ -8,12 +8,17 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/utils/google_map_service.dart';
-import '../../../../core/widgets/app_drawer.dart';
+import '../../../../core/utils/validator.dart';
 import '../provider/home_provider.dart';
 
-class LoadDetailsScreen extends StatelessWidget {
-  LoadDetailsScreen({super.key});
+class LoadDetailsScreen extends StatefulWidget {
+  const LoadDetailsScreen({super.key});
 
+  @override
+  State<LoadDetailsScreen> createState() => _LoadDetailsScreenState();
+}
+
+class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
   final TextEditingController pickupTareWeight = TextEditingController();
   final TextEditingController pickupGrossWeight = TextEditingController();
   final TextEditingController deliveryTareWeight = TextEditingController();
@@ -22,47 +27,87 @@ class LoadDetailsScreen extends StatelessWidget {
   final TextEditingController calculatedNett = TextEditingController();
 
   @override
+  void initState() {
+    pickupTareWeight.addListener(calculateNett);
+    pickupGrossWeight.addListener(calculateNett);
+    deliveryTareWeight.addListener(calculateNett);
+    deliveryGrossWeight.addListener(calculateNett);
+    super.initState();
+  }
+
+  void calculateNett() {
+    final HomeProvider homeProvider = Provider.of(context, listen: false);
+    homeProvider.debouncing(
+      fn: () async {
+        if (deliveryGrossWeight.text.isNotEmpty &&
+            deliveryTareWeight.text.isNotEmpty) {
+          calculatedNett.text =
+              '${parseTextFieldDataToDouble(deliveryGrossWeight) - parseTextFieldDataToDouble(deliveryTareWeight)}';
+        } else {
+          calculatedNett.text =
+              '${parseTextFieldDataToDouble(pickupTareWeight) - parseTextFieldDataToDouble(pickupGrossWeight)}';
+        }
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          title:
+              const TitleText(text: AppString.details, textColor: Colors.white),
+          titleSpacing: 0,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: ()=> Navigator.pushNamed(context, AppRouter.profile),
+                onTap: () => Navigator.pushNamed(context, AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),
             )
           ],
         ),
-        drawer: const Drawer(child: AppDrawer()),
         body: _bodyUI(homeProvider, size, context));
   }
 
   Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
       Column(
         children: [
-          ///Cancel Button
+          ///Cancel & Save Button
           Padding(
             padding: const EdgeInsets.only(left: 4),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const BodyText(
-                    text: AppString.cancel,
-                    textColor: AppColor.primaryColor,
-                  )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const BodyText(
+                      text: AppString.cancel,
+                      textColor: AppColor.disableColor,
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context,
+                          (route) =>
+                              route.settings.name == AppRouter.pendingLoad);
+                    },
+                    child: const BodyText(
+                      text: AppString.save,
+                      textColor: AppColor.primaryColor,
+                    )),
+              ],
             ),
           ),
 
           Expanded(
             child: ListView(
               padding:
-                  const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
+                  const EdgeInsets.all(TextSize.pagePadding),
               children: [
                 ///Details
                 const Row(
@@ -81,8 +126,9 @@ class LoadDetailsScreen extends StatelessWidget {
 
                 ///Open Route in Google Map
                 SolidButton(
-                    onTap: () async{
-                      await openGoogleMaps(23.829315406238095, 90.42004168093032);
+                    onTap: () async {
+                      await openGoogleMaps(
+                          23.829315406238095, 90.42004168093032);
                     },
                     child: const ButtonText(text: 'Open Route in Google Map')),
                 const SizedBox(height: TextSize.pagePadding),
@@ -102,12 +148,14 @@ class LoadDetailsScreen extends StatelessWidget {
                   controller: pickupTareWeight,
                   labelText: AppString.pickupTareWeight,
                   hintText: 'Enter ${AppString.pickupTareWeight}',
+                  textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: pickupGrossWeight,
                   labelText: AppString.pickupGrossWeight,
                   hintText: 'Enter ${AppString.pickupGrossWeight}',
+                  textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),
                 SolidButton(
@@ -120,17 +168,20 @@ class LoadDetailsScreen extends StatelessWidget {
 
                 ///Delivery Weight
                 TextFormFieldWidget(
-                  controller: deliveryTareWeight,
-                  labelText: AppString.deliveryTareWeight,
-                  hintText: 'Enter ${AppString.deliveryTareWeight}',
-                ),
-                const SizedBox(height: TextSize.textGap),
-                TextFormFieldWidget(
                   controller: deliveryGrossWeight,
                   labelText: AppString.deliveryGrossWeight,
                   hintText: 'Enter ${AppString.deliveryGrossWeight}',
+                  textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),
+                TextFormFieldWidget(
+                  controller: deliveryTareWeight,
+                  labelText: AppString.deliveryTareWeight,
+                  hintText: 'Enter ${AppString.deliveryTareWeight}',
+                  textInputType: TextInputType.number,
+                ),
+                const SizedBox(height: TextSize.textGap),
+
                 SolidButton(
                     onTap: () {
                       Navigator.pushNamed(context, AppRouter.loadAttachment);
@@ -146,16 +197,20 @@ class LoadDetailsScreen extends StatelessWidget {
                     const SizedBox(width: TextSize.pagePadding),
                     Expanded(
                       child: TextFormFieldWidget(
-                          controller: calculatedNett,
-                          labelText: AppString.calculatedNett,
-                          hintText: AppString.calculatedNett),
+                        controller: calculatedNett,
+                        labelText: AppString.calculatedNett,
+                        hintText: AppString.calculatedNett,
+                        readOnly: true,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: TextSize.pagePadding),
+
+                ///Complete Delivery Button
                 SolidButton(
                     onTap: () {},
-                    child: const ButtonText(text: AppString.complete)),
+                    child: const ButtonText(text: AppString.completeDelivery)),
                 const SizedBox(height: TextSize.pagePadding),
               ],
             ),

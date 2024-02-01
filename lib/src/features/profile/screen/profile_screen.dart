@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:clutch_driver_app/core/utils/media_service.dart';
 import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
+import '../../../../core/utils/app_media_service.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 
@@ -17,7 +17,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final MediaService mediaService = MediaService();
   File? selectedAttachmentFile;
 
   final TextEditingController name = TextEditingController();
@@ -72,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Expanded(
             child: ListView(
               padding:
-                  const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
+                  const EdgeInsets.all(TextSize.pagePadding),
               children: [
                 Center(
                   child: Column(
@@ -96,9 +95,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       TextButton(
                           onPressed: () async {
-                            await mediaService.getImageFromCamera().then((value){
-                              selectedAttachmentFile = value!;
-                              setState(() {});
+                            await AppMediaService().getImageFromCamera().then((File? value){
+                              if(value!=null){
+                                selectedAttachmentFile = value;
+                                setState(() {});
+                              }
                             });
                           },
                           child: const ButtonText(
@@ -113,7 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const BodyText(
                     text: AppString.personalDetails,
                     fontWeight: FontWeight.bold),
-                const Divider(height: 8, thickness: 0.8),
                 const SizedBox(height: TextSize.textGap),
 
                 ///Name
@@ -135,6 +135,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: TextSize.textGap),
 
                 ///Organization
+                const BodyText(
+                    text: AppString.organization,
+                    fontWeight: FontWeight.bold),
+                const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: organization,
                   labelText: AppString.organization,
@@ -144,6 +148,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: TextSize.textGap),
 
                 ///License
+                const BodyText(
+                    text: AppString.license,
+                    fontWeight: FontWeight.bold),
+                const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: license,
                   labelText: AppString.license,
@@ -151,7 +159,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: TextSize.textGap),
 
-                ///VIC
+                ///Address
+                const BodyText(
+                    text: AppString.address,
+                    fontWeight: FontWeight.bold),
+                const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: vic,
                   labelText: AppString.vIC,
@@ -159,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: TextSize.textGap),
 
-                ///Address
+                //Address
                 TextFormFieldWidget(
                   controller: address,
                   labelText: AppString.address,

@@ -4,7 +4,7 @@ import '../constants/app_color.dart';
 
 class TextFormFieldWidget extends StatefulWidget {
   const TextFormFieldWidget(
-      {Key? key,
+      {super.key,
       required this.controller,
       required this.labelText,
       required this.hintText,
@@ -26,8 +26,7 @@ class TextFormFieldWidget extends StatefulWidget {
       this.onChanged,
       this.onEditingComplete,
       this.contentPadding,
-      this.focusNode})
-      : super(key: key);
+      this.focusNode});
 
   final TextEditingController controller;
   final String labelText;
@@ -105,7 +104,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
               borderSide:
                   BorderSide(color: AppColor.errorColor, width: 0.5)),
           isDense: true,
-          contentPadding: widget.contentPadding ?? const EdgeInsets.all(16),
+          contentPadding: widget.contentPadding ?? const EdgeInsets.all(12),
           floatingLabelAlignment: FloatingLabelAlignment.start,
           hintText: '${widget.hintText} ${widget.required? '*' :''}',
           floatingLabelBehavior: FloatingLabelBehavior.auto,
