@@ -81,9 +81,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
                 items: AppString.truckList,
                 selectedValue: drawerMenuProvider.selectedTruck,
                 hintText: 'Select Truck',
-                width: 150,
                 buttonHeight: 35,
-                dropdownWidth: 150,
                 onChanged: (value) {
                   drawerMenuProvider.changeTruck(value);
                 }),
