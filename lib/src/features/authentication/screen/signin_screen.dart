@@ -42,10 +42,11 @@ class SignInScreen extends StatelessWidget {
                   const SizedBox(height: TextSize.pagePadding),
 
                   TextFormFieldWidget(
-                    controller: authProvider.username,
-                    labelText: AppString.username,
-                    hintText: 'Enter your ${AppString.username.toLowerCase()}',
+                    controller: authProvider.email,
+                    labelText: AppString.emailAddress,
+                    hintText: 'Enter your ${AppString.emailAddress.toLowerCase()}',
                     required: true,
+                    textInputType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: TextSize.textFieldGap),
 
@@ -60,11 +61,7 @@ class SignInScreen extends StatelessWidget {
 
                   ///Login Button
                   SolidButton(
-                      onTap: () async {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, AppRouter.pendingLoad, (route) => false);
-                        // await authProvider.signInButtonOnTap();
-                      },
+                      onTap: () async => await authProvider.signInButtonOnTap(),
                       child: authProvider.loading
                           ? const LoadingWidget(color: Colors.white)
                           : const ButtonText(text: AppString.login)),

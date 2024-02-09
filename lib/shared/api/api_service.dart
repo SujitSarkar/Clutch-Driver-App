@@ -1,3 +1,4 @@
+import 'package:clutch_driver_app/shared/api/api_exception.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -15,10 +16,12 @@ class ApiService {
 
   Map<String, String> headers = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'};
+    'Accept': '*/*'};
 
   void addAccessToken(String? token) {
-    headers.addEntries({'Authorization': 'Bearer $token'}.entries);
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
   }
 
   void clearAccessToken() {
@@ -28,15 +31,13 @@ class ApiService {
   Future<void> apiCall(
       {required Function execute,
       required Function(dynamic) onSuccess,
-      Function(dynamic)? onError,
-      Function? onLoading}) async {
+      Function(dynamic)? onError}) async {
     try {
-      if (onLoading != null) onLoading();
       // hide keyboard
       SystemChannels.textInput.invokeMethod('TextInput.hide');
-      var response = await execute();
+      final response = await execute();
       return onSuccess(response);
-    } catch (error) {
+    }catch (error) {
       if (onError == null) return;
       onError(error);
       return;
@@ -44,27 +45,27 @@ class ApiService {
   }
 
   ///get api request
-  Future<T> get<T>(String url, T Function(Map<String, dynamic> json) fromJson) async {
+  Future<T> get<T>(String url, {required T Function(Map<String, dynamic> json) fromJson}) async {
     http.Response response = await http.get(Uri.parse(url), headers: headers);
     return _processResponse(response, fromJson);
   }
 
   ///post api request
-  Future<T> post<T>(String url, T Function(Map<String, dynamic> json) fromJson, {Map<String, dynamic>? body}) async {
+  Future<T> post<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
     http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
     return _processResponse(response, fromJson);
   }
 
   ///patch api request
-  Future<T> patch<T>(String url, T Function(Map<String, dynamic> json) fromJson, {Map<String, dynamic>? body}) async {
+  Future<T> patch<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
     http.Response response = await http.patch(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
     return _processResponse(response, fromJson);
   }
 
   ///delete api request
-  Future<T> delete<T>(String url,T Function(Map<String, dynamic> json) fromJson) async {
+  Future<T> delete<T>(String url,{required T Function(Map<String, dynamic> json) fromJson}) async {
     http.Response response =
         await http.delete(Uri.parse(url), headers: headers);
     return _processResponse(response, fromJson);
@@ -77,13 +78,15 @@ class ApiService {
     debugPrint('AccessToken:- ${headers['Authorization']}');
     debugPrint('response:- ${response.body}');
 
-    if (response.statusCode == 200 ||
-        response.statusCode == 201 ||
-        response.statusCode == 204) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return fromJson(jsonData);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final dynamic jsonData = jsonDecode(response.body);
+      if (jsonData is Map<String, dynamic>) {
+        return fromJson(jsonData);
+      } else {
+        throw AppException(message: 'Invalid response format');
+      }
     } else {
-      throw Exception(jsonDecode(response.body)['message']);
+      throw AppException(message: 'HTTP Error: ${response.statusCode}');
     }
   }
 }
