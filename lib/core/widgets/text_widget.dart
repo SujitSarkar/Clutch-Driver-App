@@ -1,6 +1,6 @@
-import 'package:clutch_driver_app/core/constants/app_color.dart';
-import 'package:clutch_driver_app/core/constants/text_size.dart';
 import 'package:flutter/Material.dart';
+import '../constants/app_color.dart';
+import '../constants/text_size.dart';
 
 class BodyText extends StatelessWidget {
   const BodyText(

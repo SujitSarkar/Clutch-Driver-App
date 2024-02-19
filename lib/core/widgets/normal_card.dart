@@ -3,12 +3,11 @@ import '../constants/app_color.dart';
 
 class NormalCard extends StatelessWidget {
   const NormalCard(
-      {Key? key,
+      {super.key,
       required this.child,
       this.bgColor,
       this.borderRadius,
-      this.padding})
-      : super(key: key);
+      this.padding});
   final Widget child;
   final Color? bgColor;
   final double? borderRadius;

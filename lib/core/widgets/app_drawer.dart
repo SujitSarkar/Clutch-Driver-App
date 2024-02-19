@@ -1,12 +1,12 @@
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/router/app_router.dart';
-import 'package:clutch_driver_app/src/features/authentication/provider/authentication_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../src/features/authentication/provider/authentication_provider.dart';
 import '../../src/features/home/provider/home_provider.dart';
 import '../constants/app_color.dart';
+import '../constants/app_string.dart';
 import '../constants/text_size.dart';
-import '../router/page_navigate.dart';
+import '../router/app_router.dart';
+import '../router/page_navigator.dart';
 import '../../src/features/drawer/widget/drawer_item_tile.dart';
 import 'normal_card.dart';
 

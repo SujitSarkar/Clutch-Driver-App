@@ -7,7 +7,7 @@ import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/text_size.dart';
-import '../../../../core/router/page_navigate.dart';
+import '../../../../core/router/page_navigator.dart';
 import '../../../../core/utils/google_map_service.dart';
 import '../../../../core/utils/validator.dart';
 import '../provider/home_provider.dart';

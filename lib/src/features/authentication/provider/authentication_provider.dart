@@ -1,7 +1,7 @@
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../../core/router/page_navigate.dart';
+import '../../../../core/router/page_navigator.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/text_size.dart';
 import '../../../core/router/app_router.dart';
-import '../../../core/router/page_navigate.dart';
+import '../../../core/router/page_navigator.dart';
 import '../../../core/utils/local_storage.dart';
 import '../../../core/widgets/text_widget.dart';
 import '../drawer/provider/drawer_menu_provider.dart';

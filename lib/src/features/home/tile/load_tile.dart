@@ -5,7 +5,7 @@ import 'package:clutch_driver_app/core/widgets/normal_card.dart';
 import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/Material.dart';
 
-import '../../../../core/router/page_navigate.dart';
+import '../../../../core/router/page_navigator.dart';
 
 class LoadTile extends StatelessWidget {
   const LoadTile({super.key,required this.loadType});
