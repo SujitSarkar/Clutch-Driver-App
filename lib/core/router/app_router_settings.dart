@@ -56,7 +56,7 @@ class GeneratedRoute {
       case AppRouter.pendingLoad:
         return PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: slideTransition,
+            transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const PendingLoadListScreen());
 
