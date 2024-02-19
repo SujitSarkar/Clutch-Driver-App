@@ -1,20 +1,24 @@
 import 'dart:async';
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/shared/api/api_service.dart';
 import 'package:flutter/Material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/local_storage.dart';
+import '../../../../shared/api/api_service.dart';
 import '../../authentication/model/login_response_model.dart';
 
 class HomeProvider extends ChangeNotifier {
+  static final HomeProvider instance =
+  Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
+
   bool functionLoading = false;
   bool companyListLoading = false;
   bool pendingLoadLoading = false;
   bool upcomingLoadLoading = false;
   bool completeLoadLoading = false;
-  LoginResponseModel? loginResponseModel;
+  LoginResponseModel? loginModel;
   int selectedCompanyIndex = 0;
 
   ///Debounce timer
@@ -27,15 +31,15 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> initialize() async {
     await getLocalData();
+    notifyListeners();
   }
 
   Future<void> getLocalData() async {
     final loginResponseFromLocal =
         await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
-      loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
-      ApiService.instance.addAccessToken(loginResponseModel!.data!.accessToken);
-      notifyListeners();
+      loginModel = loginResponseModelFromJson(loginResponseFromLocal);
+      ApiService.instance.addAccessToken(loginModel?.token);
     }
   }
 

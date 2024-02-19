@@ -4,6 +4,7 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/router/page_navigate.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
@@ -36,7 +37,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+                onTap: () =>  pushTo(AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),
@@ -46,7 +47,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
         body: _bodyUI(drawerMenuProvider, size));
   }
 
-  Widget _bodyUI(DrawerMenuProvider homeProvider, Size size) =>
+  Widget _bodyUI(DrawerMenuProvider drawerMenuProvider, Size size) =>
       Column(children: [
         ///Cancel & Save Button
         Padding(
@@ -55,14 +56,14 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => popScreen(),
                   child: const BodyText(
                     text: AppString.cancel,
                     textColor: AppColor.disableColor,
                   )),
               TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRouter.loadDetails);
+                    pushTo(AppRouter.loadDetails);
                   },
                   child: const BodyText(
                     text: AppString.save,
@@ -78,12 +79,12 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
               children: [
                 ///Truck dropdown
                 TruckDropdown(
-                    items: AppString.truckList,
-                    selectedValue: homeProvider.selectedTruck,
+                    items: drawerMenuProvider.truckList,
+                    selectedValue: drawerMenuProvider.selectedTruck,
                     hintText: 'Select Truck',
                     buttonHeight: 35,
                     onChanged: (value) {
-                      homeProvider.changeTruck(value);
+                      drawerMenuProvider.changeTruck(value);
                     }),
                 const SizedBox(height: TextSize.textFieldGap),
 

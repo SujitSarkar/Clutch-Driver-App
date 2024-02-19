@@ -1,4 +1,3 @@
-import 'package:clutch_driver_app/core/widgets/truck_dropdown_button.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -6,8 +5,11 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/router/page_navigate.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
+import '../../../../core/widgets/truck_dropdown_button.dart';
+import '../../drawer/provider/drawer_menu_provider.dart';
 import '../provider/home_provider.dart';
 import '../tile/load_tile.dart';
 import '../widget/load_date_range_picker_widget.dart';
@@ -27,7 +29,7 @@ class UpcomingLoadScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+                onTap: () => pushTo(AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),
@@ -39,7 +41,7 @@ class UpcomingLoadScreen extends StatelessWidget {
             : _bodyUI(homeProvider, size, context));
   }
 
-  Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
+  Widget _bodyUI(HomeProvider homeProvider,Size size, BuildContext context) =>
       Column(
         children: [
           ///Filter section
@@ -83,14 +85,14 @@ class UpcomingLoadScreen extends StatelessWidget {
 
                 ///Truck dropdown
                 TruckDropdown(
-                    items: AppString.truckList,
-                    selectedValue: homeProvider.selectedTruck,
+                    items: DrawerMenuProvider.instance.truckList,
+                    selectedValue: DrawerMenuProvider.instance.selectedTruck,
                     hintText: 'Select Truck',
                     width: 150,
                     buttonHeight: 35,
                     dropdownWidth: 150,
                     onChanged: (value) {
-                      homeProvider.changeTruck(value);
+                      DrawerMenuProvider.instance.changeTruck(value);
                     })
               ],
             ),

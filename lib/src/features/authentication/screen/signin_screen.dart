@@ -1,8 +1,7 @@
-import 'package:clutch_driver_app/core/constants/text_size.dart';
-import 'package:clutch_driver_app/core/router/app_router.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/text_size.dart';
+import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/widgets/loading_widget.dart';
@@ -42,10 +41,11 @@ class SignInScreen extends StatelessWidget {
                   const SizedBox(height: TextSize.pagePadding),
 
                   TextFormFieldWidget(
-                    controller: authProvider.username,
-                    labelText: AppString.username,
-                    hintText: 'Enter your ${AppString.username.toLowerCase()}',
+                    controller: authProvider.emailController,
+                    labelText: AppString.emailAddress,
+                    hintText: 'Enter your ${AppString.emailAddress.toLowerCase()}',
                     required: true,
+                    textInputType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: TextSize.textFieldGap),
 
@@ -60,21 +60,10 @@ class SignInScreen extends StatelessWidget {
 
                   ///Login Button
                   SolidButton(
-                      onTap: () async {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, AppRouter.pendingLoad, (route) => false);
-                        // await authProvider.signInButtonOnTap();
-                      },
+                      onTap: () async => await authProvider.signInButtonOnTap(),
                       child: authProvider.loading
                           ? const LoadingWidget(color: Colors.white)
                           : const ButtonText(text: AppString.login)),
-                  const SizedBox(height: TextSize.textFieldGap),
-
-                  TextButton(
-                      onPressed: () => Navigator.pushNamed(context, AppRouter.resetPassword),
-                      child: const ButtonText(
-                          text: AppString.resetPassword,
-                          textColor: AppColor.primaryColor))
                 ],
               ),
             ),

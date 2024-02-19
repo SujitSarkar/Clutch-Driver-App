@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:clutch_driver_app/core/utils/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/Material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'permission_handler.dart';
 
 class AppMediaService {
   Future<File?> getImageFromCamera() async {

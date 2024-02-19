@@ -5,6 +5,8 @@ import 'package:clutch_driver_app/core/widgets/normal_card.dart';
 import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/Material.dart';
 
+import '../../../../core/router/page_navigate.dart';
+
 class LoadTile extends StatelessWidget {
   const LoadTile({super.key,required this.loadType});
   final String loadType;
@@ -47,7 +49,7 @@ class LoadTile extends StatelessWidget {
                       ),
                       minimumSize: const Size(80, 28)),
                     onPressed: () {
-                      Navigator.pushNamed(context, AppRouter.preStartChecklist);
+                       pushTo(AppRouter.preStartChecklist);
                     },
                     child: const BodyText(text: AppString.start, textColor: Colors.white))
                     : loadType == AppString.loadTypeList.last

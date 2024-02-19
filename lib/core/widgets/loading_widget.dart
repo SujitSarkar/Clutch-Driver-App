@@ -10,8 +10,8 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 30,
-        width: 30,
+        height: 25,
+        width: 25,
         child: Platform.isIOS
             ? CupertinoActivityIndicator(color: color ?? AppColor.secondaryColor)
             : CircularProgressIndicator(

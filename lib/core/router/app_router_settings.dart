@@ -1,16 +1,16 @@
-import 'package:clutch_driver_app/src/features/drawer/screen/daily_logbook_screen.dart';
-import 'package:clutch_driver_app/src/features/drawer/screen/fatigue_management_checklist_screen.dart';
-import 'package:clutch_driver_app/src/features/drawer/screen/prestart_checklist_screen.dart';
-import 'package:clutch_driver_app/src/features/home/screen/company_list_screen.dart';
-import 'package:clutch_driver_app/src/features/home/screen/completed_load_screen.dart';
-import 'package:clutch_driver_app/src/features/home/screen/load_attachment_screen.dart';
-import 'package:clutch_driver_app/src/features/home/screen/load_details_screen.dart';
-import 'package:clutch_driver_app/src/features/home/screen/pending_load_list_screen.dart';
-import 'package:clutch_driver_app/src/features/home/screen/upcomimg_load_screen.dart';
-import 'package:clutch_driver_app/src/features/profile/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
-import '../../src/features/authentication/screen/reset_password_screen.dart';
+import '../../src/features/authentication/screen/change_password_screen.dart';
+import '../../src/features/drawer/screen/daily_logbook_screen.dart';
+import '../../src/features/drawer/screen/fatigue_management_checklist_screen.dart';
+import '../../src/features/drawer/screen/prestart_checklist_screen.dart';
+import '../../src/features/home/screen/company_list_screen.dart';
+import '../../src/features/home/screen/completed_load_screen.dart';
+import '../../src/features/home/screen/load_attachment_screen.dart';
+import '../../src/features/home/screen/load_details_screen.dart';
+import '../../src/features/home/screen/pending_load_list_screen.dart';
+import '../../src/features/home/screen/upcomimg_load_screen.dart';
 import '../../src/features/authentication/screen/signin_screen.dart';
+import '../../src/features/profile/screen/profile_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
 import '../widgets/no_internet_screen.dart';
 import 'app_router.dart';
@@ -32,12 +32,12 @@ class GeneratedRoute {
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const SignInScreen());
 
-      case AppRouter.resetPassword:
+      case AppRouter.changePassword:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-            const ResetPasswordScreen());
+            const ChangePasswordScreen());
 
       case AppRouter.noInternet:
         return PageRouteBuilder(
@@ -79,7 +79,7 @@ class GeneratedRoute {
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                LoadDetailsScreen());
+                const LoadDetailsScreen());
 
       case AppRouter.loadAttachment:
         return PageRouteBuilder(

@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'api_exception.dart';
 
 class ApiService {
   ApiService._privateConstructor();
@@ -15,10 +17,12 @@ class ApiService {
 
   Map<String, String> headers = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'};
+    'Accept': '*/*',
+    'Cookie': 'auth_token=347%7CjmYNu0wbM99zWQObuvOTgs5tegddq1CGcvXSnni3558dc798; laravel_session=E4QlFwGjaV2pWCz2NeO3NOpSOD0XKMxPtSFnw2PH'
+  };
 
   void addAccessToken(String? token) {
-    headers.addEntries({'Authorization': 'Bearer $token'}.entries);
+    headers.addEntries({'Authorization': '$token'}.entries);
   }
 
   void clearAccessToken() {
@@ -28,14 +32,16 @@ class ApiService {
   Future<void> apiCall(
       {required Function execute,
       required Function(dynamic) onSuccess,
-      Function(dynamic)? onError,
-      Function? onLoading}) async {
+      Function(dynamic)? onError}) async {
     try {
-      if (onLoading != null) onLoading();
       // hide keyboard
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       var response = await execute();
       return onSuccess(response);
+    } on SocketException{
+      if (onError == null) return;
+      onError(ApiException(message: 'No internet connection'));
+      return;
     } catch (error) {
       if (onError == null) return;
       onError(error);
@@ -44,28 +50,28 @@ class ApiService {
   }
 
   ///get api request
-  Future<T> get<T>(String url, T Function(Map<String, dynamic> json) fromJson) async {
-    http.Response response = await http.get(Uri.parse(url), headers: headers);
+  Future<T> get<T>(String url, {required T Function(Map<String, dynamic> json) fromJson}) async {
+    final http.Response response = await http.get(Uri.parse(url), headers: headers);
     return _processResponse(response, fromJson);
   }
 
   ///post api request
-  Future<T> post<T>(String url, T Function(Map<String, dynamic> json) fromJson, {Map<String, dynamic>? body}) async {
-    http.Response response = await http.post(Uri.parse(url),
+  Future<T> post<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
+    final http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
     return _processResponse(response, fromJson);
   }
 
   ///patch api request
-  Future<T> patch<T>(String url, T Function(Map<String, dynamic> json) fromJson, {Map<String, dynamic>? body}) async {
-    http.Response response = await http.patch(Uri.parse(url),
+  Future<T> patch<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
+    final http.Response response = await http.patch(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
     return _processResponse(response, fromJson);
   }
 
   ///delete api request
-  Future<T> delete<T>(String url,T Function(Map<String, dynamic> json) fromJson) async {
-    http.Response response =
+  Future<T> delete<T>(String url,{required T Function(Map<String, dynamic> json) fromJson}) async {
+    final http.Response response =
         await http.delete(Uri.parse(url), headers: headers);
     return _processResponse(response, fromJson);
   }
@@ -73,17 +79,26 @@ class ApiService {
   ///check if the response is valid (everything went fine) / else throw error
   T _processResponse<T>(var response, T Function(Map<String, dynamic> json) fromJson) {
     debugPrint('url:- ${response.request?.url}');
-    debugPrint('statusCode:- ${response.statusCode}');
     debugPrint('AccessToken:- ${headers['Authorization']}');
+    debugPrint('statusCode:- ${response.statusCode}');
     debugPrint('response:- ${response.body}');
 
-    if (response.statusCode == 200 ||
-        response.statusCode == 201 ||
-        response.statusCode == 204) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return fromJson(jsonData);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      try{
+        final dynamic jsonData = jsonDecode(response.body);
+        if (jsonData is Map<String, dynamic>) {
+          return fromJson(jsonData);
+        } else {
+          throw ApiException(message: 'Data parsing error');
+        }
+      }on FormatException{
+        throw ApiException(message: 'Data formation error');
+      } catch(error){
+        throw ApiException(message: '$error');
+      }
     } else {
-      throw Exception(jsonDecode(response.body)['message']);
+      var jsonData = jsonDecode(response.body);
+      throw ApiException(message: jsonData['message']);
     }
   }
 }

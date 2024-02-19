@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
+import '../../../../core/router/page_navigate.dart';
 import '../../../../core/utils/app_media_service.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
+import '../provider/profile_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -53,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                    onPressed: ()=> Navigator.pop(context),
+                    onPressed: ()=> popScreen(),
                     child: const BodyText(
                       text: AppString.cancel,
                       textColor: AppColor.disableColor,

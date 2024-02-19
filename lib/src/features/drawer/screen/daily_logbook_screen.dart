@@ -1,13 +1,14 @@
-import 'package:clutch_driver_app/src/features/drawer/provider/drawer_menu_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/router/page_navigate.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
+import '../provider/drawer_menu_provider.dart';
 import '../widget/additional_fee_checkbox_widget.dart';
 
 class DailyLogbookScreen extends StatefulWidget {
@@ -28,7 +29,6 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
   Widget build(BuildContext context) {
     final DrawerMenuProvider drawerMenuProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
         appBar: AppBar(
           title: const TitleText(
@@ -38,17 +38,17 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+                onTap: () =>  pushTo(AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),
             )
           ],
         ),
-        body: _bodyUI(drawerMenuProvider, size));
+        body: _bodyUI(drawerMenuProvider,size));
   }
 
-  Widget _bodyUI(DrawerMenuProvider drawerMenuProvider, Size size) =>
+  Widget _bodyUI(DrawerMenuProvider drawerMenuProvider,Size size) =>
       Column(children: [
         ///Cancel & Save Button
         Padding(
@@ -78,7 +78,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
           children: [
             ///Truck dropdown
             TruckDropdown(
-                items: AppString.truckList,
+                items: drawerMenuProvider.truckList,
                 selectedValue: drawerMenuProvider.selectedTruck,
                 hintText: 'Select Truck',
                 buttonHeight: 35,
@@ -144,7 +144,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
 
             ///Fatigue Management Checklist Button
             InkWell(
-                onTap:()=>Navigator.pushNamed(context, AppRouter.fatigueManagementChecklist),
+                onTap:()=> pushTo(AppRouter.fatigueManagementChecklist),
                 child: const Align(
                     alignment: Alignment.centerRight,
                     child: Padding(

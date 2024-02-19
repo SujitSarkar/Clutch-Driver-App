@@ -1,15 +1,16 @@
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import '../../src/features/home/model/truck_model.dart';
 import '../constants/app_color.dart';
 import '../constants/text_size.dart';
+import 'text_widget.dart';
 
 // ignore: must_be_immutable
 class TruckDropdown extends StatelessWidget {
-  final List<String> items;
-  String? selectedValue;
+  final List<TruckDataModel> items;
+  TruckDataModel? selectedValue;
   final String hintText;
-  final Function(String) onChanged;
+  final Function(TruckDataModel) onChanged;
   final double? width;
   final double? buttonHeight;
   final double? dropdownWidth;
@@ -27,7 +28,7 @@ class TruckDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2(
+      child: DropdownButton2<TruckDataModel>(
         isExpanded: true,
         hint: Text(hintText,
             style: const TextStyle(color: AppColor.textFieldHintColor),
@@ -35,16 +36,16 @@ class TruckDropdown extends StatelessWidget {
         style:
             TextStyle(color: AppColor.textColor, fontSize: TextSize.bodyText),
         items: items
-            .map((item) => DropdownMenuItem<String>(
+            .map((item) => DropdownMenuItem<TruckDataModel>(
                   value: item,
                   child: BodyText(text:
-                    'Truck: $item',
+                    'Truck: ${item.registrationNo}',
                   ),
                 ))
             .toList(),
         value: selectedValue,
-        onChanged: (value) {
-          selectedValue = value as String;
+        onChanged: (TruckDataModel? value) {
+          selectedValue = value;
           onChanged(selectedValue!);
         },
         iconStyleData: const IconStyleData(

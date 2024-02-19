@@ -1,8 +1,7 @@
 class AppRouter {
   static const String initializer = '/';
   static const String signIn = '/signIn';
-  static const String signup = '/signup';
-  static const String resetPassword = '/reset-password';
+  static const String changePassword = '/change-password';
   static const String noInternet = '/no-internet';
 
   ///Home

@@ -1,8 +1,13 @@
 import 'dart:async';
-import 'package:clutch_driver_app/core/constants/text_size.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
+import '../../../core/constants/local_storage_key.dart';
+import '../../../core/constants/text_size.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/router/page_navigate.dart';
+import '../../../core/utils/local_storage.dart';
+import '../../../core/widgets/text_widget.dart';
+import '../drawer/provider/drawer_menu_provider.dart';
+import '../home/provider/home_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,9 +24,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> onInit() async {
-    await Future.delayed(const Duration(milliseconds: 1000)).then((value) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRouter.signIn, (route) => false);
+    await getData(LocalStorageKey.loginResponseKey).then((loginResponseFromLocal)async{
+      if(loginResponseFromLocal!=null){
+        await HomeProvider.instance.initialize();
+        await DrawerMenuProvider.instance.initialize();
+        pushAndRemoveUntil(AppRouter.pendingLoad);
+      } else{
+        await Future.delayed(const Duration(milliseconds: 1000)).then((value) {
+          pushAndRemoveUntil(AppRouter.signIn);
+        });
+      }
     });
   }
 

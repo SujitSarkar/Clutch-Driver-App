@@ -6,6 +6,7 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/router/page_navigate.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/widgets/text_widget.dart';
@@ -32,7 +33,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: ()=> Navigator.pushNamed(context, AppRouter.profile),
+                onTap: ()=> pushTo(AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),

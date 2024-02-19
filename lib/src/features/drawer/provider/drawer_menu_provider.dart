@@ -1,10 +1,21 @@
 import 'package:flutter/Material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/app_string.dart';
+import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../core/utils/app_toast.dart';
+import '../../../../shared/api/api_endpoint.dart';
+import '../../../../shared/api/api_service.dart';
+import '../../home/model/truck_model.dart';
+import '../../home/provider/home_provider.dart';
 
 class DrawerMenuProvider extends ChangeNotifier {
-  bool functionLoading = false;
+  static final DrawerMenuProvider instance =
+  Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
 
-  String selectedTruck = AppString.truckList.first;
+  bool initialLoading = false;
+  bool functionLoading = false;
+  List<TruckDataModel> truckList = [];
+  TruckDataModel? selectedTruck;
 
   ///Additional Fees
   List<bool> additionalFeeCheckedList = List.generate(
@@ -21,6 +32,10 @@ class DrawerMenuProvider extends ChangeNotifier {
     'Driving hours did not exceed Limit'
   ];
   List<bool> fatigueManagementCheckedList = List.generate(3, (index) => false);
+
+  Future<void> initialize()async{
+    await getTruckList();
+  }
 
   ///Additional Fees
   void changeAdditionalFeeCheckedList(int index, bool? value) {
@@ -40,10 +55,34 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeTruck(String value) {
+  void changeTruck(TruckDataModel value) {
     selectedTruck = value;
     notifyListeners();
+    HomeProvider.instance.notifyListeners();
   }
 
+  Future<void> getTruckList() async {
+    final HomeProvider homeProvider =
+    Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
+    final companyId = homeProvider.loginModel?.userInfo?.user?.companies?.first.id;
+    final driverId = homeProvider.loginModel?.userInfo?.user?.info?.id;
+
+    initialLoading = false;
+    notifyListeners();
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.get(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.assetList}?company_id=$companyId&driver_id=$driverId',fromJson: TruckModel.fromJson);
+    }, onSuccess: (response) async {
+      final TruckModel truckModel = response as TruckModel;
+      truckList = truckModel.data??[];
+      selectedTruck = truckList.first;
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+    initialLoading = false;
+    notifyListeners();
+    HomeProvider.instance.notifyListeners();
+  }
   void addBreakButtonOnTap() {}
 }

@@ -1,17 +1,19 @@
-import 'package:clutch_driver_app/core/constants/app_color.dart';
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/constants/text_size.dart';
-import 'package:clutch_driver_app/core/router/app_router.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
-import 'package:clutch_driver_app/core/widgets/truck_dropdown_button.dart';
-import 'package:clutch_driver_app/src/features/home/provider/home_provider.dart';
-import 'package:clutch_driver_app/src/features/home/tile/load_tile.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_color.dart';
+import '../../../../core/constants/app_string.dart';
+import '../../../../core/constants/text_size.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/router/page_navigate.dart';
+import '../../../../core/widgets/text_widget.dart';
+import '../../../../core/widgets/truck_dropdown_button.dart';
 import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/widgets/loading_widget.dart';
+import '../../drawer/provider/drawer_menu_provider.dart';
+import '../provider/home_provider.dart';
+import '../tile/load_tile.dart';
 import '../widget/load_date_range_picker_widget.dart';
 
 class PendingLoadListScreen extends StatelessWidget {
@@ -56,7 +58,7 @@ class PendingLoadListScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: TextSize.pagePadding),
                 child: InkWell(
-                  onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+                  onTap: () => pushTo(AppRouter.profile),
                   child: const CircleAvatar(
                       child: Icon(Icons.person, color: AppColor.primaryColor)),
                 ),
@@ -114,14 +116,14 @@ class PendingLoadListScreen extends StatelessWidget {
 
                 ///Truck dropdown
                 TruckDropdown(
-                    items: AppString.truckList,
-                    selectedValue: homeProvider.selectedTruck,
+                    items: DrawerMenuProvider.instance.truckList,
+                    selectedValue: DrawerMenuProvider.instance.selectedTruck,
                     hintText: 'Select Truck',
                     width: 150,
                     buttonHeight: 35,
                     dropdownWidth: 150,
                     onChanged: (value) {
-                      homeProvider.changeTruck(value);
+                      DrawerMenuProvider.instance.changeTruck(value);
                     })
               ],
             ),

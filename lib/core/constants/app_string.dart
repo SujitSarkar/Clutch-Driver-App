@@ -17,16 +17,16 @@ class AppString {
 
   ///Auth
   static const String welcomeMessage = 'Welcome to $appName';
-  static const String username = 'Username';
   static const String password = 'Password';
+  static const String confirmPassword = 'Confirm Password';
   static const String phone = 'Phone';
   static const String login = 'Login';
   static const String logout = 'Logout';
-  static const String resetPassword = 'Reset Password';
+  static const String changePassword = 'Change Password';
   static const String signInMessage =
       'Please sign-in to your account and start the\nadventure';
   static const String noInternetConnection = 'No internet connection';
-  static const String resetPassTitle = 'Reset your password';
+  static const String resetPassTitle = 'Change your password';
   static const String resetPassSubTitle =
       'enter the email or phone number you use to log into clutch and we’ll send you a link to get back into your account';
 

@@ -1,11 +1,13 @@
 import 'package:clutch_driver_app/core/constants/app_string.dart';
 import 'package:clutch_driver_app/core/router/app_router.dart';
+import 'package:clutch_driver_app/src/features/authentication/provider/authentication_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../src/features/home/provider/home_provider.dart';
 import '../constants/app_color.dart';
 import '../constants/text_size.dart';
-import '../tile/drawer_item_tile.dart';
+import '../router/page_navigate.dart';
+import '../../src/features/drawer/widget/drawer_item_tile.dart';
 import 'normal_card.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -24,24 +26,28 @@ class AppDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
             decoration: BoxDecoration(
                 color: AppColor.drawerHeaderBg),
-            child: const Row(
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.person, size: 42, color: Colors.grey),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mr. Deepu Khan',
-                          style: TextStyle(fontSize: TextSize.bodyText),
-                        ),
-                        Text(
-                          'deepu@gmail.com',
-                          style: TextStyle(
-                              fontSize: TextSize.bodyText, color: Colors.grey),
-                        )
-                      ])
+                  const Icon(Icons.person, size: 42, color: Colors.grey),
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.firstName} ${HomeProvider.instance.loginModel?.userInfo?.user?.info?.lastName}',
+                            style: const TextStyle(fontSize: TextSize.bodyText),
+                          ),
+                          FittedBox(
+                            child: Text(
+                              '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.email}',
+                              style: const TextStyle(
+                                  fontSize: TextSize.bodyText, color: Colors.grey),
+                            ),
+                          )
+                        ]),
+                  )
                 ]),
           ),
           const SizedBox(height: 12),
@@ -54,7 +60,7 @@ class AppDrawer extends StatelessWidget {
                 Scaffold.of(context).closeDrawer();
                 final String currentRoute = ModalRoute.of(context)!.settings.name ?? '/';
                 if(!currentRoute.contains(AppRouter.pendingLoad)){
-                  Navigator.pushNamed(context, AppRouter.pendingLoad);
+                   pushTo(AppRouter.pendingLoad);
                 }
               }),
           DrawerItemTile(
@@ -63,7 +69,7 @@ class AppDrawer extends StatelessWidget {
               onTap: () async {
                 homeProvider.clearFilter();
                 Scaffold.of(context).closeDrawer();
-                Navigator.pushNamed(context, AppRouter.upcomingLoad);
+                 pushTo(AppRouter.upcomingLoad);
               }),
           DrawerItemTile(
               leadingIcon: Icons.check_circle_outline_outlined,
@@ -71,26 +77,35 @@ class AppDrawer extends StatelessWidget {
               onTap: () async {
                 homeProvider.clearFilter();
                 Scaffold.of(context).closeDrawer();
-                Navigator.pushNamed(context, AppRouter.completeLoad);
+                 pushTo(AppRouter.completeLoad);
               }),
           DrawerItemTile(
               leadingIcon: Icons.check_box_outlined,
               title: AppString.preStartChecklist,
               onTap: () async {
                 Scaffold.of(context).closeDrawer();
-                Navigator.pushNamed(context, AppRouter.preStartChecklist);
+                pushTo(AppRouter.preStartChecklist);
               }),
           DrawerItemTile(
               leadingIcon: Icons.newspaper,
               title: AppString.dailyLogbook,
               onTap: () async {
                 Scaffold.of(context).closeDrawer();
-                Navigator.pushNamed(context, AppRouter.dailyLogbook);
+                pushTo(AppRouter.dailyLogbook);
+              }),
+          DrawerItemTile(
+              leadingIcon: Icons.key,
+              title: AppString.changePassword,
+              onTap: () async {
+                Scaffold.of(context).closeDrawer();
+                pushTo(AppRouter.changePassword);
               }),
           DrawerItemTile(
               leadingIcon: Icons.logout,
               title: AppString.logout,
-              onTap: () async {}),
+              onTap: () async {
+                await AuthenticationProvider.instance.logout();
+              }),
         ]),
       )),
     );

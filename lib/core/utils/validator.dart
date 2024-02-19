@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 
 bool validateEmail(String emailAddress) => RegExp(
