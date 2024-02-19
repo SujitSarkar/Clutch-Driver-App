@@ -7,12 +7,6 @@ bool validateEmail(String emailAddress) => RegExp(
 
 bool validatePassword(String password) => password.length >= 8;
 
-bool isVideoUrl(String url) {
-  final RegExp videoExtensions =
-      RegExp(r'\.(mp4|avi|mov|wmv)$', caseSensitive: false);
-  return videoExtensions.hasMatch(url);
-}
-
 bool isImageFile(File file) {
   String fileName = file.uri.pathSegments.last;
   String extension = fileName.split('.').last.toLowerCase();

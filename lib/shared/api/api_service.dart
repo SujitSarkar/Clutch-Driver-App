@@ -89,7 +89,7 @@ class ApiService {
         if (jsonData is Map<String, dynamic>) {
           return fromJson(jsonData);
         } else {
-          throw ApiException(message: 'Data parsing error');
+          throw ApiException(message: 'Invalid response format');
         }
       }on FormatException{
         throw ApiException(message: 'Data formation error');
