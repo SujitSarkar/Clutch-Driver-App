@@ -65,7 +65,7 @@ class PendingLoadListScreen extends StatelessWidget {
               )
             ],
           ),
-          drawer: const Drawer(child: AppDrawer()),
+          drawer: const AppDrawer(),
           body: homeProvider.pendingLoadLoading
               ? const Center(child: LoadingWidget())
               : _bodyUI(homeProvider, size, context)),

@@ -17,97 +17,100 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
 
-    return SafeArea(
-      child: NormalCard(
-          child: SingleChildScrollView(
-        child: Column(children: [
-          ///Header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-            decoration: BoxDecoration(
-                color: AppColor.drawerHeaderBg),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.person, size: 42, color: Colors.grey),
-                  Expanded(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.firstName} ${HomeProvider.instance.loginModel?.userInfo?.user?.info?.lastName}',
-                            style: const TextStyle(fontSize: TextSize.bodyText),
-                          ),
-                          FittedBox(
-                            child: Text(
-                              '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.email}',
-                              style: const TextStyle(
-                                  fontSize: TextSize.bodyText, color: Colors.grey),
+    return Drawer(
+      width: MediaQuery.of(context).size.width*.9,
+      child: SafeArea(
+        child: NormalCard(
+            child: SingleChildScrollView(
+          child: Column(children: [
+            ///Header
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+              decoration: BoxDecoration(
+                  color: AppColor.drawerHeaderBg),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.person, size: 42, color: Colors.grey),
+                    Expanded(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.firstName} ${HomeProvider.instance.loginModel?.userInfo?.user?.info?.lastName}',
+                              style: const TextStyle(fontSize: TextSize.bodyText),
                             ),
-                          )
-                        ]),
-                  )
-                ]),
-          ),
-          const SizedBox(height: 12),
+                            FittedBox(
+                              child: Text(
+                                '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.email}',
+                                style: const TextStyle(
+                                    fontSize: TextSize.bodyText, color: Colors.grey),
+                              ),
+                            )
+                          ]),
+                    )
+                  ]),
+            ),
+            const SizedBox(height: 12),
 
-          DrawerItemTile(
-              leadingIcon: Icons.hourglass_empty,
-              title: AppString.pendingLoads,
-              onTap: () async {
-                homeProvider.clearFilter();
-                Scaffold.of(context).closeDrawer();
-                final String currentRoute = ModalRoute.of(context)!.settings.name ?? '/';
-                if(!currentRoute.contains(AppRouter.pendingLoad)){
-                   pushTo(AppRouter.pendingLoad);
-                }
-              }),
-          DrawerItemTile(
-              leadingIcon: Icons.fire_truck,
-              title: AppString.upcomingLoads,
-              onTap: () async {
-                homeProvider.clearFilter();
-                Scaffold.of(context).closeDrawer();
-                 pushTo(AppRouter.upcomingLoad);
-              }),
-          DrawerItemTile(
-              leadingIcon: Icons.check_circle_outline_outlined,
-              title: AppString.completedLoads,
-              onTap: () async {
-                homeProvider.clearFilter();
-                Scaffold.of(context).closeDrawer();
-                 pushTo(AppRouter.completeLoad);
-              }),
-          DrawerItemTile(
-              leadingIcon: Icons.check_box_outlined,
-              title: AppString.preStartChecklist,
-              onTap: () async {
-                Scaffold.of(context).closeDrawer();
-                pushTo(AppRouter.preStartChecklist);
-              }),
-          DrawerItemTile(
-              leadingIcon: Icons.newspaper,
-              title: AppString.dailyLogbook,
-              onTap: () async {
-                Scaffold.of(context).closeDrawer();
-                pushTo(AppRouter.dailyLogbook);
-              }),
-          DrawerItemTile(
-              leadingIcon: Icons.key,
-              title: AppString.changePassword,
-              onTap: () async {
-                Scaffold.of(context).closeDrawer();
-                pushTo(AppRouter.changePassword);
-              }),
-          DrawerItemTile(
-              leadingIcon: Icons.logout,
-              title: AppString.logout,
-              onTap: () async {
-                await AuthenticationProvider.instance.logout();
-              }),
-        ]),
-      )),
+            DrawerItemTile(
+                leadingIcon: Icons.hourglass_empty,
+                title: AppString.pendingLoads,
+                onTap: () async {
+                  homeProvider.clearFilter();
+                  Scaffold.of(context).closeDrawer();
+                  final String currentRoute = ModalRoute.of(context)!.settings.name ?? '/';
+                  if(!currentRoute.contains(AppRouter.pendingLoad)){
+                     pushTo(AppRouter.pendingLoad);
+                  }
+                }),
+            DrawerItemTile(
+                leadingIcon: Icons.fire_truck,
+                title: AppString.upcomingLoads,
+                onTap: () async {
+                  homeProvider.clearFilter();
+                  Scaffold.of(context).closeDrawer();
+                   pushTo(AppRouter.upcomingLoad);
+                }),
+            DrawerItemTile(
+                leadingIcon: Icons.check_circle_outline_outlined,
+                title: AppString.completedLoads,
+                onTap: () async {
+                  homeProvider.clearFilter();
+                  Scaffold.of(context).closeDrawer();
+                   pushTo(AppRouter.completeLoad);
+                }),
+            DrawerItemTile(
+                leadingIcon: Icons.check_box_outlined,
+                title: AppString.preStartChecklist,
+                onTap: () async {
+                  Scaffold.of(context).closeDrawer();
+                  pushTo(AppRouter.preStartChecklist);
+                }),
+            DrawerItemTile(
+                leadingIcon: Icons.newspaper,
+                title: AppString.dailyLogbook,
+                onTap: () async {
+                  Scaffold.of(context).closeDrawer();
+                  pushTo(AppRouter.dailyLogbook);
+                }),
+            DrawerItemTile(
+                leadingIcon: Icons.key,
+                title: AppString.changePassword,
+                onTap: () async {
+                  Scaffold.of(context).closeDrawer();
+                  pushTo(AppRouter.changePassword);
+                }),
+            DrawerItemTile(
+                leadingIcon: Icons.logout,
+                title: AppString.logout,
+                onTap: () async {
+                  await AuthenticationProvider.instance.logout();
+                }),
+          ]),
+        )),
+      ),
     );
   }
 }
