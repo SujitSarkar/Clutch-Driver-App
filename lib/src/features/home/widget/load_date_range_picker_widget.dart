@@ -9,7 +9,8 @@ import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/solid_button.dart';
 
 class LoadDateRangePickerWidget extends StatelessWidget {
-  const LoadDateRangePickerWidget({super.key});
+  const LoadDateRangePickerWidget({super.key, required this.loadType});
+  final String loadType;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class LoadDateRangePickerWidget extends StatelessWidget {
                 SolidButton(
                     onTap: () async {
                       setState(() {});
-                      await homeProvider.dateFilterButtonOnTap();
+                      await homeProvider.dateFilterButtonOnTap(loadType: loadType);
                     },
                     child: homeProvider.functionLoading
                         ? const LoadingWidget()

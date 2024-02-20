@@ -38,12 +38,12 @@ class AppDrawer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.firstName} ${HomeProvider.instance.loginModel?.userInfo?.user?.info?.lastName}',
+                              '${HomeProvider.instance.loginModel?.data?.firstName} ${HomeProvider.instance.loginModel?.data?.lastName}',
                               style: const TextStyle(fontSize: TextSize.bodyText),
                             ),
                             FittedBox(
                               child: Text(
-                                '${HomeProvider.instance.loginModel?.userInfo?.user?.info?.email}',
+                                '${HomeProvider.instance.loginModel?.data?.email}',
                                 style: const TextStyle(
                                     fontSize: TextSize.bodyText, color: Colors.grey),
                               ),

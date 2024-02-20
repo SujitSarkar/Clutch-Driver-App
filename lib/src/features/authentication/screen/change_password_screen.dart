@@ -81,7 +81,7 @@ class ChangePasswordScreen extends StatelessWidget {
                   ///Reset Button
                   SolidButton(
                       onTap: () async {
-                        final int? userId = HomeProvider.instance.loginModel?.userInfo?.user?.info?.id;
+                        final int? userId = HomeProvider.instance.loginModel?.data?.id;
                         await authProvider.changePasswordButtonOnTap(userId: userId!);
                       },
                       child: authProvider.loading

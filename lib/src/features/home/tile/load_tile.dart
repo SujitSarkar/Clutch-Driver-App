@@ -3,13 +3,15 @@ import 'package:clutch_driver_app/core/constants/app_string.dart';
 import 'package:clutch_driver_app/core/router/app_router.dart';
 import 'package:clutch_driver_app/core/widgets/normal_card.dart';
 import 'package:clutch_driver_app/core/widgets/text_widget.dart';
+import 'package:clutch_driver_app/src/features/home/model/load_model.dart';
 import 'package:flutter/Material.dart';
 
 import '../../../../core/router/page_navigator.dart';
 
 class LoadTile extends StatelessWidget {
-  const LoadTile({super.key,required this.loadType});
+  const LoadTile({super.key,required this.loadType, required this.loadModel});
   final String loadType;
+  final LoadDataModel loadModel;
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +21,16 @@ class LoadTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Expanded(
+          Expanded(
             flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BodyText(text: '${AppString.contact}: CBC34534'),
-                BodyText(text: '${AppString.load}: MB657'),
-                BodyText(text: '${AppString.pickup}: Laverton North'),
-                BodyText(text: '${AppString.destination}: Calac'),
-                BodyText(text: '${AppString.commodity}: Fertilizer'),
+                BodyText(text: '${AppString.contact}: ${loadModel.contractNo}'),
+                BodyText(text: '${AppString.load}: ${loadModel.loadRef}'),
+                BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state}'),
+                BodyText(text: '${AppString.destination}: ${loadModel.destination?.country}'),
+                BodyText(text: '${AppString.commodity}: ${loadModel.commodity}'),
               ],
             ),
           ),
@@ -38,7 +40,7 @@ class LoadTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const BodyText(text: '${AppString.quantity}: 1P'),
+                BodyText(text: '${AppString.quantity}: ${loadModel.qty}'),
                 const SizedBox(height: 30),
                 loadType == AppString.loadTypeList.first
                     ? ElevatedButton(

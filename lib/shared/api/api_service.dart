@@ -17,16 +17,16 @@ class ApiService {
 
   Map<String, String> headers = {
     'Content-Type': 'application/json',
-    'Accept': '*/*',
-    'Cookie': 'auth_token=347%7CjmYNu0wbM99zWQObuvOTgs5tegddq1CGcvXSnni3558dc798; laravel_session=E4QlFwGjaV2pWCz2NeO3NOpSOD0XKMxPtSFnw2PH'
-  };
+    'Accept': '*/*'};
 
-  void addAccessToken(String? token) {
+  void addAccessTokenAndCookie({required String? token,required String? cookie}) {
     headers.addEntries({'Authorization': '$token'}.entries);
+    headers.addEntries({'Cookie': 'auth_token=$cookie'}.entries);
   }
 
-  void clearAccessToken() {
+  void clearAccessTokenAndCookie() {
     headers.remove('Authorization');
+    headers.remove('Cookie');
   }
 
   Future<void> apiCall(
@@ -50,52 +50,42 @@ class ApiService {
   }
 
   ///get api request
-  Future<T> get<T>(String url, {required T Function(Map<String, dynamic> json) fromJson}) async {
+  Future<dynamic> get(String url) async {
     final http.Response response = await http.get(Uri.parse(url), headers: headers);
-    return _processResponse(response, fromJson);
+    return _processResponse(response);
   }
 
   ///post api request
-  Future<T> post<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
+  Future<dynamic> post(String url, {Map<String, dynamic>? body}) async {
     final http.Response response = await http.post(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
-    return _processResponse(response, fromJson);
+    return _processResponse(response);
   }
 
   ///patch api request
-  Future<T> patch<T>(String url, {required T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic>? body}) async {
+  Future<dynamic> patch(String url, {Map<String, dynamic>? body}) async {
     final http.Response response = await http.patch(Uri.parse(url),
         headers: headers, body: body != null ? jsonEncode(body) : null);
-    return _processResponse(response, fromJson);
+    return _processResponse(response);
   }
 
   ///delete api request
-  Future<T> delete<T>(String url,{required T Function(Map<String, dynamic> json) fromJson}) async {
+  Future<dynamic> delete(String url) async {
     final http.Response response =
         await http.delete(Uri.parse(url), headers: headers);
-    return _processResponse(response, fromJson);
+    return _processResponse(response);
   }
 
   ///check if the response is valid (everything went fine) / else throw error
-  T _processResponse<T>(var response, T Function(Map<String, dynamic> json) fromJson) {
+  dynamic _processResponse(var response) {
     debugPrint('url:- ${response.request?.url}');
-    debugPrint('AccessToken:- ${headers['Authorization']}');
     debugPrint('statusCode:- ${response.statusCode}');
-    debugPrint('response:- ${response.body}');
+    debugPrint('AccessToken:- ${headers['Authorization']}');
+    debugPrint('Cookie:- ${headers['Cookie']}');
+    debugPrint('response:- ${response.body}\n');
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      try{
-        final dynamic jsonData = jsonDecode(response.body);
-        if (jsonData is Map<String, dynamic>) {
-          return fromJson(jsonData);
-        } else {
-          throw ApiException(message: 'Invalid response format');
-        }
-      }on FormatException{
-        throw ApiException(message: 'Data formation error');
-      } catch(error){
-        throw ApiException(message: '$error');
-      }
+      return response;
     } else {
       var jsonData = jsonDecode(response.body);
       throw ApiException(message: jsonData['message']);

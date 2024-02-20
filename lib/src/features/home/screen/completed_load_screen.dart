@@ -13,6 +13,7 @@ import '../../drawer/provider/drawer_menu_provider.dart';
 import '../provider/home_provider.dart';
 import '../tile/load_tile.dart';
 import '../widget/load_date_range_picker_widget.dart';
+import '../widget/no_load_found_widget.dart';
 
 class CompleteLoadScreen extends StatelessWidget {
   const CompleteLoadScreen({super.key});
@@ -23,7 +24,8 @@ class CompleteLoadScreen extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: const TitleText(text: AppString.upcomingLoads,textColor: Colors.white),
+          title: const TitleText(
+              text: AppString.upcomingLoads, textColor: Colors.white),
           titleSpacing: 0,
           actions: [
             Padding(
@@ -35,82 +37,82 @@ class CompleteLoadScreen extends StatelessWidget {
               ),
             )
           ],
-        ),
-        body: homeProvider.completeLoadLoading
-            ? const Center(child: LoadingWidget())
-            : _bodyUI(homeProvider,size, context));
-  }
-
-  Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
-      Column(
-        children: [
-          ///Filter section
-          Padding(
-            padding:
-            const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
-            child: Row(
-              children: [
-                ///Calender icon
-                IconButton(
-                  icon: const Icon(Icons.calendar_month,
-                      color: AppColor.primaryColor),
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) =>
-                        const LoadDateRangePickerWidget());
-                  },
-                ),
-
-                ///Date text
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: Container(
+              color: AppColor.appBodyBg,
+              padding:
+                  const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
+              child: Row(
+                children: [
+                  ///Calender icon
+                  IconButton(
+                    icon: const Icon(Icons.calendar_month,
+                        color: AppColor.primaryColor),
+                    onPressed: () {
                       showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          builder: (context) =>
-                          const LoadDateRangePickerWidget());
+                          builder: (context) => LoadDateRangePickerWidget(
+                              loadType: AppString.loadTypeList.last));
                     },
-                    child: BodyText(
-                        text: homeProvider
-                            .filterStartDate!.millisecondsSinceEpoch ==
-                            homeProvider.filterEndDate!.millisecondsSinceEpoch
-                            ? DateFormat("MMM dd")
-                            .format(homeProvider.filterStartDate!)
-                            : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} - ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
                   ),
-                ),
 
+                  ///Date text
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) => LoadDateRangePickerWidget(
+                                loadType: AppString.loadTypeList.last));
+                      },
+                      child: BodyText(
+                          text: homeProvider.filterStartDate!
+                                      .millisecondsSinceEpoch ==
+                                  homeProvider
+                                      .filterEndDate!.millisecondsSinceEpoch
+                              ? DateFormat("MMM dd")
+                                  .format(homeProvider.filterStartDate!)
+                              : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} '
+                                  '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                    ),
+                  ),
 
-                ///Truck dropdown
-                TruckDropdown(
-                    items: DrawerMenuProvider.instance.truckList,
-                    selectedValue: DrawerMenuProvider.instance.selectedTruck,
-                    hintText: 'Select Truck',
-                    width: 150,
-                    buttonHeight: 35,
-                    dropdownWidth: 150,
-                    onChanged: (value) {
-                      DrawerMenuProvider.instance.changeTruck(value);
-                    })
-              ],
+                  ///Truck dropdown
+                  TruckDropdown(
+                      items: DrawerMenuProvider.instance.truckList,
+                      selectedValue: DrawerMenuProvider.instance.selectedTruck,
+                      hintText: 'Select Truck',
+                      width: 150,
+                      buttonHeight: 35,
+                      dropdownWidth: 150,
+                      onChanged: (value) {
+                        DrawerMenuProvider.instance.changeTruck(value);
+                      })
+                ],
+              ),
             ),
           ),
+        ),
+        body: homeProvider.completeLoadLoading
+            ? const Center(child: LoadingWidget())
+            : _bodyUI(homeProvider, size, context));
+  }
 
-          ///Load List
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
-              itemCount: 5,
-              itemBuilder: (context, index) =>
-                  LoadTile(loadType: AppString.loadTypeList.last),
-              separatorBuilder: (context, index) =>
-              const SizedBox(height: TextSize.pagePadding),
-            ),
-          )
-        ],
-      );
+  Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
+      homeProvider.completedLoadList.isNotEmpty? ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(
+            horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
+        itemCount: homeProvider.completedLoadList.length,
+        itemBuilder: (context, index) => LoadTile(
+          loadType: AppString.loadTypeList.last,
+          loadModel: homeProvider.completedLoadList[index],
+        ),
+        separatorBuilder: (context, index) =>
+            const SizedBox(height: TextSize.pagePadding),
+      ):NoLoadFoundWidget(
+              onRefresh: () async => homeProvider.getCompletedLoadList());
 }

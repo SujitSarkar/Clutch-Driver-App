@@ -11,18 +11,19 @@ import '../../../../shared/api/api_service.dart';
 import '../../drawer/provider/drawer_menu_provider.dart';
 import '../../home/provider/home_provider.dart';
 import '../model/change_password_model.dart';
-import '../model/login_response_model.dart';
+import '../model/login_model.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   static final AuthenticationProvider instance =
-  Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
+      Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
 
   bool loading = false;
   final GlobalKey<FormState> signInFormKey = GlobalKey();
   final GlobalKey<FormState> changePasswordFormKey = GlobalKey();
 
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
@@ -36,7 +37,7 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signInButtonOnTap() async {
-    ApiService.instance.clearAccessToken();
+    ApiService.instance.clearAccessTokenAndCookie();
     if (!signInFormKey.currentState!.validate()) {
       return;
     }
@@ -50,19 +51,22 @@ class AuthenticationProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.login}',fromJson: LoginResponseModel.fromJson,
-          body: requestBody);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.login}', body: requestBody);
     }, onSuccess: (response) async {
-      final LoginResponseModel loginResponseModel = response;
-      if (loginResponseModel.userInfo!=null) {
-        await setData(LocalStorageKey.loginResponseKey,
-            loginResponseModelToJson(loginResponseModel))
+      final LoginModel loginModel = loginModelFromJson(response.body);
+      if (loginModel.data != null) {
+        await setData(
+                LocalStorageKey.loginResponseKey, loginModelToJson(loginModel))
             .then((value) async {
-          ApiService.instance.addAccessToken(loginResponseModel.token);
+          ApiService.instance.addAccessTokenAndCookie(
+              token: loginModel.data?.token,
+              cookie: loginModel.data?.cookie?.authToken);
           clearAllData();
-          final BuildContext context = AppNavigatorKey.key.currentState!.context;
-          final HomeProvider homeProvider = Provider.of(context,listen: false);
-          final DrawerMenuProvider drawerMenuProvider = Provider.of(context,listen: false);
+          final BuildContext context =
+              AppNavigatorKey.key.currentState!.context;
+          final HomeProvider homeProvider = Provider.of(context, listen: false);
+          final DrawerMenuProvider drawerMenuProvider =
+              Provider.of(context, listen: false);
           await homeProvider.initialize();
           await drawerMenuProvider.initialize();
           pushAndRemoveUntil(AppRouter.pendingLoad);
@@ -70,7 +74,7 @@ class AuthenticationProvider extends ChangeNotifier {
           showToast(error.toString());
         });
       }
-      showToast('${loginResponseModel.message}');
+      showToast('${loginModel.message}');
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -79,9 +83,9 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void>logout()async{
+  Future<void> logout() async {
     await clearLocalData().then((value) {
-      ApiService.instance.clearAccessToken();
+      ApiService.instance.clearAccessTokenAndCookie();
       pushAndRemoveUntil(AppRouter.signIn);
     });
   }
@@ -100,10 +104,9 @@ class AuthenticationProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}',fromJson: ChangePasswordModel.fromJson,
-          body: requestBody);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}', body: requestBody);
     }, onSuccess: (response) async {
-      final ChangePasswordModel changePasswordModel = response;
+      final ChangePasswordModel changePasswordModel = changePasswordModelFromJson(response.body);
       showToast('${changePasswordModel.message}');
       clearAllData();
       await logout();

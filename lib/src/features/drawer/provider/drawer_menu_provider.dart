@@ -62,20 +62,18 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getTruckList() async {
-    final HomeProvider homeProvider =
-    Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
-    final companyId = homeProvider.loginModel?.userInfo?.user?.companies?.first.id;
-    final driverId = homeProvider.loginModel?.userInfo?.user?.info?.id;
+    const companyId = 1;
+    final driverId = HomeProvider.instance.loginModel?.data?.id;
 
-    initialLoading = false;
+    initialLoading = true;
     notifyListeners();
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.assetList}?company_id=$companyId&driver_id=$driverId',fromJson: TruckModel.fromJson);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.assetList}?company_id=$companyId&driver_id=$driverId');
     }, onSuccess: (response) async {
-      final TruckModel truckModel = response as TruckModel;
+      final TruckModel truckModel = truckModelFromJson(response.body);
       truckList = truckModel.data??[];
-      selectedTruck = truckList.first;
+      selectedTruck = truckList.isNotEmpty? truckList.first:null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');

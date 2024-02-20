@@ -1,12 +1,12 @@
 import 'package:flutter/Material.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/utils/local_storage.dart';
-import '../../authentication/model/login_response_model.dart';
+import '../../authentication/model/login_model.dart';
 
 class ProfileProvider extends ChangeNotifier{
   bool initialLoading = false;
   bool functionLoading = false;
-  LoginResponseModel? loginResponseModel;
+  LoginModel? loginResponseModel;
 
   Future<void> initialize() async {
     initialLoading = true;
@@ -20,7 +20,7 @@ class ProfileProvider extends ChangeNotifier{
     final loginResponseFromLocal =
     await getData(LocalStorageKey.loginResponseKey);
     if (loginResponseFromLocal != null) {
-      loginResponseModel = loginResponseModelFromJson(loginResponseFromLocal);
+      loginResponseModel = loginModelFromJson(loginResponseFromLocal);
       notifyListeners();
     }
   }
