@@ -82,13 +82,22 @@ class ApiService {
     debugPrint('statusCode:- ${response.statusCode}');
     debugPrint('AccessToken:- ${headers['Authorization']}');
     debugPrint('Cookie:- ${headers['Cookie']}');
-    debugPrint('response:- ${response.body}\n');
+    debugPrint('response:- ${response.body}\n\n');
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return response;
-    } else {
       var jsonData = jsonDecode(response.body);
-      throw ApiException(message: jsonData['message']);
+      if(jsonData['data']!=null && jsonData['data'].isNotEmpty){
+        return response;
+      }else{
+        throw ApiException(message: jsonData['message']);
+      }
+    } else {
+      try {
+        var jsonData = jsonDecode(response.body);
+        throw ApiException(message: jsonData['message']);
+      }catch (e) {
+        throw ApiException(message: 'Invalid data format');
+      }
     }
   }
 }

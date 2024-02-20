@@ -55,8 +55,8 @@ class HomeProvider extends ChangeNotifier {
     if (loginResponseFromLocal != null) {
       loginModel = loginModelFromJson(loginResponseFromLocal);
       ApiService.instance.addAccessTokenAndCookie(
-          token: loginModel?.data?.token,
-          cookie: loginModel?.data?.cookie?.authToken);
+          token: loginModel?.data?.authToken,
+          cookie: loginModel?.data?.authToken);
     }
   }
 
@@ -107,14 +107,14 @@ class HomeProvider extends ChangeNotifier {
 
   ///API Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   Future<void> getPendingLoadList() async {
-    const companyId = 1;
+    pendingLoadList = [];
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final String startDate = DateFormat('yyyy-mm-dd').format(filterStartDate??DateTime.now());
-    final String endDate = DateFormat('yyyy-mm-dd').format(filterEndDate??DateTime.now());
+    final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
+    final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=1');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -126,16 +126,16 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getUpcomingLoadList() async {
+    upcomingLoadList = [];
     upcomingLoadLoading=true;
     notifyListeners();
-    const companyId = 1;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final String startDate = DateFormat('yyyy-mm-dd').format(filterStartDate??DateTime.now());
-    final String endDate = DateFormat('yyyy-mm-dd').format(filterEndDate??DateTime.now());
+    final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
+    final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=2');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
@@ -149,16 +149,16 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getCompletedLoadList() async {
+    completedLoadList = [];
     completeLoadLoading=true;
     notifyListeners();
-    const companyId = 1;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final String startDate = DateFormat('yyyy-mm-dd').format(filterStartDate??DateTime.now());
-    final String endDate = DateFormat('yyyy-mm-dd').format(filterEndDate??DateTime.now());
+    final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
+    final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=3');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];

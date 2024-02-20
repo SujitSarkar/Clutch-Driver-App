@@ -59,8 +59,8 @@ class AuthenticationProvider extends ChangeNotifier {
                 LocalStorageKey.loginResponseKey, loginModelToJson(loginModel))
             .then((value) async {
           ApiService.instance.addAccessTokenAndCookie(
-              token: loginModel.data?.token,
-              cookie: loginModel.data?.cookie?.authToken);
+              token: loginModel.data?.authToken,
+              cookie: loginModel.data?.authToken);
           clearAllData();
           final BuildContext context =
               AppNavigatorKey.key.currentState!.context;
