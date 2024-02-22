@@ -12,7 +12,7 @@ class RefreshIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
         backgroundColor: Colors.white,
-        color: AppColor.secondaryColor,
+        color: AppColor.primaryColor,
         onRefresh: onRefresh,
         child: child);
   }

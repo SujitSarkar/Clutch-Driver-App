@@ -3,8 +3,8 @@ import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/local_storage_key.dart';
+import '../../../../core/constants/static_list.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
@@ -12,6 +12,7 @@ import '../../../../core/utils/local_storage.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../../authentication/model/login_model.dart';
+import '../../drawer/provider/drawer_menu_provider.dart';
 import '../model/load_model.dart';
 
 class HomeProvider extends ChangeNotifier {
@@ -32,7 +33,6 @@ class HomeProvider extends ChangeNotifier {
   ///Filter
   DateTime? filterStartDate = DateTime.now();
   DateTime? filterEndDate = DateTime.now();
-  String selectedTruck = AppString.truckList.first;
 
   ///Load
   List<LoadDataModel> pendingLoadList = [];
@@ -75,22 +75,17 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  void changeTruck(String value) {
-    selectedTruck = value;
-    notifyListeners();
-  }
-
   Future<void> dateFilterButtonOnTap({required String loadType}) async {
     functionLoading = true;
     notifyListeners();
 
-    if(loadType == AppString.loadTypeList.first){
+    if(loadType == StaticList.loadTypeList.first){
       ///pending load
       await getPendingLoadList();
-    }else if(loadType == AppString.loadTypeList[1]){
+    }else if(loadType == StaticList.loadTypeList[1]){
       ///Upcoming load
       await getUpcomingLoadList();
-    }else if(loadType == AppString.loadTypeList.last){
+    }else if(loadType == StaticList.loadTypeList.last){
       ///Completed load
       await getCompletedLoadList();
     }
@@ -102,7 +97,8 @@ class HomeProvider extends ChangeNotifier {
   void clearFilter() {
     filterStartDate = DateTime.now();
     filterEndDate = DateTime.now();
-    selectedTruck = AppString.truckList.first;
+    // DrawerMenuProvider.instance.selectedTruck = null;
+    DrawerMenuProvider.instance.notifyListeners();
   }
 
   ///API Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -114,7 +110,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=1');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -135,7 +131,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=2');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
@@ -158,7 +154,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=3');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
+import '../../../../core/constants/static_list.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
@@ -24,6 +25,7 @@ class PendingLoadListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
+    final DrawerMenuProvider drawerMenuProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
@@ -85,7 +87,7 @@ class PendingLoadListScreen extends StatelessWidget {
                             context: context,
                             isScrollControlled: true,
                             builder: (context) =>
-                                LoadDateRangePickerWidget(loadType: AppString.loadTypeList.first));
+                                LoadDateRangePickerWidget(loadType: StaticList.loadTypeList.first));
                       },
                     ),
 
@@ -97,7 +99,7 @@ class PendingLoadListScreen extends StatelessWidget {
                               context: context,
                               isScrollControlled: true,
                               builder: (context) =>
-                                  LoadDateRangePickerWidget(loadType: AppString.loadTypeList.first));
+                                  LoadDateRangePickerWidget(loadType: StaticList.loadTypeList.first));
                         },
                         child: BodyText(
                             text: homeProvider.filterStartDate!
@@ -113,15 +115,15 @@ class PendingLoadListScreen extends StatelessWidget {
 
                     ///Truck dropdown
                     TruckDropdown(
-                        items: DrawerMenuProvider.instance.truckList,
+                        items: drawerMenuProvider.truckList,
                         selectedValue:
-                            DrawerMenuProvider.instance.selectedTruck,
+                            drawerMenuProvider.selectedTruck,
                         hintText: 'Select Truck',
                         width: 150,
                         buttonHeight: 35,
                         dropdownWidth: 150,
                         onChanged: (value) {
-                          DrawerMenuProvider.instance.changeTruck(value);
+                          drawerMenuProvider.changeTruck(value);
                         })
                   ],
                 ),
@@ -130,7 +132,7 @@ class PendingLoadListScreen extends StatelessWidget {
           ),
           drawer: const AppDrawer(),
           body: homeProvider.pendingLoadLoading
-              ? const Center(child: LoadingWidget())
+              ? const Center(child: LoadingWidget(color: AppColor.primaryColor))
               : _bodyUI(homeProvider, size, context)),
     );
   }
@@ -145,7 +147,7 @@ class PendingLoadListScreen extends StatelessWidget {
                     vertical: TextSize.textGap),
                 itemCount: homeProvider.pendingLoadList.length,
                 itemBuilder: (context, index) => LoadTile(
-                  loadType: AppString.loadTypeList.first,
+                  loadType: StaticList.loadTypeList.first,
                   loadModel: homeProvider.pendingLoadList[index],
                 ),
                 separatorBuilder: (context, index) =>

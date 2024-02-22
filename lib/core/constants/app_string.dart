@@ -82,25 +82,6 @@ class AppString {
       ' Please select the Truck to view the loads. The trucks are listed in order based on which load '
       'is scheduled to be completed first.';
 
-  static List<String> truckList = ['XYZ01','XYZ02','XYZ03','XYZ04','XYZ05'];
-  static List<String> loadTypeList = ['Pending', 'Upcoming', 'Complete'];
-  static List<String> additionalFeeCheckBoxList = [
-    'Overnight Delivery',
-    'Vehicle Maintenance',
-    'Truck Wash'
-  ];
-  static List<String> preStartCheckboxList = [
-    'Gauges Working',
-    'Radio Working',
-    'First-Aid Kit',
-    'Fire Extinguisher',
-    'Tire Pressure Check',
-    'Trailer lights Check',
-    'Brake lights Check',
-    'Tail-light Check',
-    'Headlight Check'
-  ];
-
   ///Profile
   static const String account = 'Account';
   static const String personalDetails = 'Personal Details';

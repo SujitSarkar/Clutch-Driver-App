@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:async';
 import 'dart:convert';
+import '../../core/utils/app_navigator_key.dart';
+import '../../src/features/authentication/provider/authentication_provider.dart';
 import 'api_exception.dart';
 
 class ApiService {
@@ -17,9 +20,11 @@ class ApiService {
 
   Map<String, String> headers = {
     'Content-Type': 'application/json',
-    'Accept': '*/*'};
+    'Accept': '*/*'
+  };
 
-  void addAccessTokenAndCookie({required String? token,required String? cookie}) {
+  void addAccessTokenAndCookie(
+      {required String? token, required String? cookie}) {
     headers.addEntries({'Authorization': '$token'}.entries);
     headers.addEntries({'Cookie': 'auth_token=$cookie'}.entries);
   }
@@ -38,7 +43,7 @@ class ApiService {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       var response = await execute();
       return onSuccess(response);
-    } on SocketException{
+    } on SocketException {
       if (onError == null) return;
       onError(ApiException(message: 'No internet connection'));
       return;
@@ -51,7 +56,8 @@ class ApiService {
 
   ///get api request
   Future<dynamic> get(String url) async {
-    final http.Response response = await http.get(Uri.parse(url), headers: headers);
+    final http.Response response =
+        await http.get(Uri.parse(url), headers: headers);
     return _processResponse(response);
   }
 
@@ -77,7 +83,7 @@ class ApiService {
   }
 
   ///check if the response is valid (everything went fine) / else throw error
-  dynamic _processResponse(var response) {
+  dynamic _processResponse(var response) async {
     debugPrint('url:- ${response.request?.url}');
     debugPrint('statusCode:- ${response.statusCode}');
     debugPrint('AccessToken:- ${headers['Authorization']}');
@@ -86,18 +92,27 @@ class ApiService {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       var jsonData = jsonDecode(response.body);
-      if(jsonData['data']!=null && jsonData['data'].isNotEmpty){
-        return response;
-      }else{
-        throw ApiException(message: jsonData['message']);
-      }
+      await tokenExpiredAction(jsonData['message']);
+      return response;
+    } else if (response.statusCode == 500) {
+      throw ApiException(message: 'Internal server error');
     } else {
       try {
         var jsonData = jsonDecode(response.body);
+        await tokenExpiredAction(jsonData['message']);
         throw ApiException(message: jsonData['message']);
-      }catch (e) {
+      } catch (e) {
+        await tokenExpiredAction(e.toString());
         throw ApiException(message: 'Invalid data format');
       }
+    }
+  }
+
+  Future<void> tokenExpiredAction(String message) async {
+    if (message.toLowerCase() == 'Token expired please login'.toLowerCase()) {
+      final AuthenticationProvider authenticationProvider =
+          Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
+      await authenticationProvider.logout();
     }
   }
 }

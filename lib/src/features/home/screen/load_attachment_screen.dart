@@ -1,14 +1,13 @@
 import 'dart:io';
-import 'package:clutch_driver_app/core/utils/app_media_service.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/utils/app_media_service.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/utils/validator.dart';
-import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/home_provider.dart';
 
@@ -40,7 +39,6 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
             )
           ],
         ),
-        drawer: const Drawer(child: AppDrawer()),
         body: _bodyUI(homeProvider, size));
   }
 

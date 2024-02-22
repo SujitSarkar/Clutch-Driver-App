@@ -1,8 +1,7 @@
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
-import 'package:clutch_driver_app/src/features/drawer/provider/drawer_menu_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/widgets/text_widget.dart';
+import '../provider/drawer_menu_provider.dart';
 
 class PreStartCheckboxWidget extends StatelessWidget {
   const PreStartCheckboxWidget({super.key});
@@ -13,16 +12,22 @@ class PreStartCheckboxWidget extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: AppString.preStartCheckboxList.length,
+      itemCount: drawerMenuProvider.preStartCheckBoxItem.length,
       itemBuilder: (context, index) {
         return CheckboxListTile(
           contentPadding: EdgeInsets.zero,
           visualDensity: VisualDensity.compact,
           dense: true,
-          title: BodyText(text: AppString.preStartCheckboxList[index]),
-          value: drawerMenuProvider.preStartFeeCheckedList[index],
-          onChanged: (value) {
-            drawerMenuProvider.changePreStartCheckedList(index, value!);
+          title: BodyText(
+              text: drawerMenuProvider.preStartCheckBoxItem[index].name!),
+          value: drawerMenuProvider.preStartCheckBoxItem[index].value ??
+              false,
+          onChanged: (bool? value) {
+            drawerMenuProvider.changePreStartItemCheckboxValue(
+              index,
+              value!,
+              drawerMenuProvider.preStartCheckBoxItem[index],
+            );
           },
         );
       },

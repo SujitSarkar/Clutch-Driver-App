@@ -1,6 +1,7 @@
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/static_list.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
@@ -15,17 +16,30 @@ import '../tile/load_tile.dart';
 import '../widget/load_date_range_picker_widget.dart';
 import '../widget/no_load_found_widget.dart';
 
-class CompleteLoadScreen extends StatelessWidget {
+class CompleteLoadScreen extends StatefulWidget {
   const CompleteLoadScreen({super.key});
+
+  @override
+  State<CompleteLoadScreen> createState() => _CompleteLoadScreenState();
+}
+
+class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) =>
+        HomeProvider.instance.getCompletedLoadList());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
+    final DrawerMenuProvider drawerMenuProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           title: const TitleText(
-              text: AppString.upcomingLoads, textColor: Colors.white),
+              text: AppString.completedLoads, textColor: Colors.white),
           titleSpacing: 0,
           actions: [
             Padding(
@@ -54,7 +68,7 @@ class CompleteLoadScreen extends StatelessWidget {
                           context: context,
                           isScrollControlled: true,
                           builder: (context) => LoadDateRangePickerWidget(
-                              loadType: AppString.loadTypeList.last));
+                              loadType: StaticList.loadTypeList.last));
                     },
                   ),
 
@@ -66,7 +80,7 @@ class CompleteLoadScreen extends StatelessWidget {
                             context: context,
                             isScrollControlled: true,
                             builder: (context) => LoadDateRangePickerWidget(
-                                loadType: AppString.loadTypeList.last));
+                                loadType: StaticList.loadTypeList.last));
                       },
                       child: BodyText(
                           text: homeProvider.filterStartDate!
@@ -82,14 +96,14 @@ class CompleteLoadScreen extends StatelessWidget {
 
                   ///Truck dropdown
                   TruckDropdown(
-                      items: DrawerMenuProvider.instance.truckList,
-                      selectedValue: DrawerMenuProvider.instance.selectedTruck,
+                      items: drawerMenuProvider.truckList,
+                      selectedValue: drawerMenuProvider.selectedTruck,
                       hintText: 'Select Truck',
                       width: 150,
                       buttonHeight: 35,
                       dropdownWidth: 150,
                       onChanged: (value) {
-                        DrawerMenuProvider.instance.changeTruck(value);
+                        drawerMenuProvider.changeTruck(value);
                       })
                 ],
               ),
@@ -97,7 +111,7 @@ class CompleteLoadScreen extends StatelessWidget {
           ),
         ),
         body: homeProvider.completeLoadLoading
-            ? const Center(child: LoadingWidget())
+            ? const Center(child: LoadingWidget(color: AppColor.primaryColor))
             : _bodyUI(homeProvider, size, context));
   }
 
@@ -108,7 +122,7 @@ class CompleteLoadScreen extends StatelessWidget {
             horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
         itemCount: homeProvider.completedLoadList.length,
         itemBuilder: (context, index) => LoadTile(
-          loadType: AppString.loadTypeList.last,
+          loadType: StaticList.loadTypeList.last,
           loadModel: homeProvider.completedLoadList[index],
         ),
         separatorBuilder: (context, index) =>

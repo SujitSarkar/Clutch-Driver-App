@@ -1,6 +1,5 @@
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/home_provider.dart';
 

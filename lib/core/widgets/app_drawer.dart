@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../src/features/authentication/provider/authentication_provider.dart';
+import '../../src/features/drawer/screen/prestart_checklist_screen.dart';
 import '../../src/features/home/provider/home_provider.dart';
 import '../constants/app_color.dart';
 import '../constants/app_string.dart';
@@ -86,7 +87,8 @@ class AppDrawer extends StatelessWidget {
                 title: AppString.preStartChecklist,
                 onTap: () async {
                   Scaffold.of(context).closeDrawer();
-                  pushTo(AppRouter.preStartChecklist);
+                  pushTo(AppRouter.preStartChecklist,
+                      arguments: const PreStartChecklistScreen(fromPage: 'drawer'));
                 }),
             DrawerItemTile(
                 leadingIcon: Icons.newspaper,

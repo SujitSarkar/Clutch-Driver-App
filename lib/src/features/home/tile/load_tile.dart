@@ -1,12 +1,13 @@
-import 'package:clutch_driver_app/core/constants/app_color.dart';
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/router/app_router.dart';
-import 'package:clutch_driver_app/core/widgets/normal_card.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
-import 'package:clutch_driver_app/src/features/home/model/load_model.dart';
 import 'package:flutter/Material.dart';
-
+import '../../../../core/constants/app_color.dart';
+import '../../../../core/constants/app_string.dart';
+import '../../../../core/constants/static_list.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/normal_card.dart';
+import '../../../../core/widgets/text_widget.dart';
+import '../../../../src/features/home/model/load_model.dart';
 import '../../../../core/router/page_navigator.dart';
+import '../../drawer/screen/prestart_checklist_screen.dart';
 
 class LoadTile extends StatelessWidget {
   const LoadTile({super.key,required this.loadType, required this.loadModel});
@@ -42,7 +43,7 @@ class LoadTile extends StatelessWidget {
               children: [
                 BodyText(text: '${AppString.quantity}: ${loadModel.qty}'),
                 const SizedBox(height: 30),
-                loadType == AppString.loadTypeList.first
+                loadType == StaticList.loadTypeList.first
                     ? ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColor.primaryColor,
@@ -51,10 +52,11 @@ class LoadTile extends StatelessWidget {
                       ),
                       minimumSize: const Size(80, 28)),
                     onPressed: () {
-                       pushTo(AppRouter.preStartChecklist);
+                       pushTo(AppRouter.preStartChecklist,
+                           arguments: const PreStartChecklistScreen(fromPage: AppRouter.pendingLoad));
                     },
                     child: const BodyText(text: AppString.start, textColor: Colors.white))
-                    : loadType == AppString.loadTypeList.last
+                    : loadType == StaticList.loadTypeList.last
                     ? const Icon(Icons.check_circle_outline_outlined,color: AppColor.enableColor)
                     : const SizedBox.shrink()
               ],

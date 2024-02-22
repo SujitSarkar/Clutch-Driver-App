@@ -96,11 +96,12 @@ class GeneratedRoute {
                 const DailyLogbookScreen());
 
       case AppRouter.preStartChecklist:
+        final PreStartChecklistScreen arguments = settings.arguments as PreStartChecklistScreen;
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                const PreStartChecklistScreen());
+                PreStartChecklistScreen(fromPage: arguments.fromPage));
 
       case AppRouter.fatigueManagementChecklist:
         return PageRouteBuilder(

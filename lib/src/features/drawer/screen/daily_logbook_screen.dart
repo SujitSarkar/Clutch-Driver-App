@@ -5,9 +5,11 @@ import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
+import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
+import '../../../../shared/time_picker.dart';
 import '../provider/drawer_menu_provider.dart';
 import '../widget/additional_fee_checkbox_widget.dart';
 
@@ -24,6 +26,23 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
   final TextEditingController startingOdometerReading = TextEditingController();
   final TextEditingController endingOdometerReading = TextEditingController();
   final TextEditingController note = TextEditingController();
+
+  @override
+  void initState() {
+    final DrawerMenuProvider drawerMenuProvider = Provider.of(context,listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp)async{
+      await drawerMenuProvider.getPreStartChecks(fromPage: 'drawer');
+      await drawerMenuProvider.getDailySummary();
+      ///Set data to textField
+      startTime.text = drawerMenuProvider.preStartDataModel!.data!.logStartTime??'';
+      endTime.text = drawerMenuProvider.preStartDataModel!.data!.logEndTime??'';
+      startingOdometerReading.text = drawerMenuProvider.preStartDataModel!.data!.startOdoReading??'';
+      endingOdometerReading.text = drawerMenuProvider.preStartDataModel!.data!.endOdoReading??'';
+      note.text = drawerMenuProvider.preStartDataModel!.data!.logNotes??'';
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +64,9 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             )
           ],
         ),
-        body: _bodyUI(drawerMenuProvider,size));
+        body: drawerMenuProvider.initialLoading
+            ? const LoadingWidget(color: AppColor.primaryColor)
+            : _bodyUI(drawerMenuProvider,size));
   }
 
   Widget _bodyUI(DrawerMenuProvider drawerMenuProvider,Size size) =>
@@ -63,8 +84,15 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
                     textColor: AppColor.disableColor,
                   )),
               TextButton(
-                  onPressed: () {},
-                  child: const BodyText(
+                  onPressed: () async{
+                    await drawerMenuProvider.saveDailyLogBook(
+                        endTime: endTime.text.trim(),
+                        endingOdoMeterReading: endingOdometerReading.text.trim(),
+                        notes: note.text.trim());
+                  },
+                  child: drawerMenuProvider.functionLoading
+                      ? const LoadingWidget(color: AppColor.primaryColor)
+                      : const BodyText(
                     text: AppString.save,
                     textColor: AppColor.primaryColor,
                   )),
@@ -72,6 +100,8 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
           ),
         ),
 
+        if(drawerMenuProvider.preStartDataModel!=null &&
+            drawerMenuProvider.dailySummaryModel!=null)
         Expanded(
             child: ListView(
           padding: const EdgeInsets.all(TextSize.pagePadding),
@@ -92,6 +122,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
               controller: startTime,
               labelText: AppString.startTime,
               hintText: 'Enter ${AppString.startTime}',
+              readOnly: true,
             ),
             const SizedBox(height: TextSize.textGap),
 
@@ -100,6 +131,13 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
               controller: endTime,
               labelText: AppString.endTime,
               hintText: 'Enter ${AppString.endTime}',
+              readOnly: true,
+              onTap: ()async{
+                TimeOfDay? timeOfDay = await pickTime(context);
+                if(timeOfDay!=null){
+                  endTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                }
+              },
             ),
             const SizedBox(height: TextSize.textGap),
 
@@ -108,6 +146,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
               controller: startingOdometerReading,
               labelText: AppString.startingOdometerReading,
               hintText: 'Enter ${AppString.startingOdometerReading}',
+              readOnly: true,
             ),
             const SizedBox(height: TextSize.textGap),
 
@@ -116,28 +155,29 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
               controller: endingOdometerReading,
               labelText: AppString.endingOdometerReading,
               hintText: 'Enter ${AppString.endingOdometerReading}',
+              textInputType: TextInputType.number,
             ),
             const SizedBox(height: TextSize.textFieldGap),
 
-            const Row(
+            Row(
               children: [
-                BodyText(text: '${AppString.totalLoadComplete} :'),
-                Expanded(child: BodyText(text: '3', textAlign: TextAlign.end))
+                const BodyText(text: '${AppString.totalLoadComplete} :'),
+                Expanded(child: BodyText(text: '${drawerMenuProvider.dailySummaryModel?.data?.totalLoads}', textAlign: TextAlign.end))
               ],
             ),
             const SizedBox(height: TextSize.textGap),
-            const Row(
+            Row(
               children: [
-                BodyText(text: '${AppString.totalTonnageDone} :'),
+                const BodyText(text: '${AppString.totalTonnageDone} :'),
                 Expanded(
-                    child: BodyText(text: '249.2', textAlign: TextAlign.end))
+                    child: BodyText(text: '${drawerMenuProvider.dailySummaryModel?.data?.totalqty}', textAlign: TextAlign.end))
               ],
             ),
             const SizedBox(height: TextSize.textGap),
-            const Row(
+            Row(
               children: [
-                BodyText(text: '${AppString.totalKmDriven} :'),
-                Expanded(child: BodyText(text: '133', textAlign: TextAlign.end))
+                const BodyText(text: '${AppString.totalKmDriven} :'),
+                Expanded(child: BodyText(text: '${drawerMenuProvider.dailySummaryModel?.data?.totalkms}', textAlign: TextAlign.end))
               ],
             ),
             const SizedBox(height: TextSize.textFieldGap),

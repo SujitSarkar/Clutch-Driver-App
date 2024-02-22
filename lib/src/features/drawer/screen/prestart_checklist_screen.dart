@@ -1,5 +1,6 @@
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
@@ -8,11 +9,13 @@ import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
+import '../../../../shared/time_picker.dart';
 import '../provider/drawer_menu_provider.dart';
 import '../widget/pre_start_checkbox_widget.dart';
 
 class PreStartChecklistScreen extends StatefulWidget {
-  const PreStartChecklistScreen({super.key});
+  const PreStartChecklistScreen({super.key, required this.fromPage});
+  final String fromPage;
 
   @override
   State<PreStartChecklistScreen> createState() => _PreStartChecklistScreenState();
@@ -22,12 +25,26 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
   final TextEditingController startTime = TextEditingController();
   final TextEditingController startingOdometerReading = TextEditingController();
   final TextEditingController note = TextEditingController();
+  ///You have to fillup this form first
+
+  @override
+  void initState() {
+    final DrawerMenuProvider drawerMenuProvider = Provider.of(context,listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp)async{
+      await drawerMenuProvider.getPreStartChecks(fromPage: widget.fromPage);
+      ///Set data to textField
+      startingOdometerReading.text = drawerMenuProvider.preStartDataModel!.data!.startOdoReading??'';
+      startTime.text = drawerMenuProvider.preStartDataModel!.data!.logStartTime??'';
+      note.text = drawerMenuProvider.preStartDataModel!.data!.preStartNotes??'';
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final DrawerMenuProvider drawerMenuProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
         appBar: AppBar(
           title: const TitleText(
@@ -44,7 +61,9 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
             )
           ],
         ),
-        body: _bodyUI(drawerMenuProvider, size));
+        body: drawerMenuProvider.initialLoading
+            ? const LoadingWidget(color: AppColor.primaryColor)
+            : _bodyUI(drawerMenuProvider, size));
   }
 
   Widget _bodyUI(DrawerMenuProvider drawerMenuProvider, Size size) =>
@@ -62,10 +81,17 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                     textColor: AppColor.disableColor,
                   )),
               TextButton(
-                  onPressed: () {
-                    pushTo(AppRouter.loadDetails);
+                  onPressed: () async{
+                    await drawerMenuProvider.savePreStartCheckList(
+                        startTime: startTime.text.trim(),
+                        odoMeterReading: startingOdometerReading.text.trim(),
+                        notes: note.text.trim(),
+                      fromPage: widget.fromPage
+                    );
                   },
-                  child: const BodyText(
+                  child: drawerMenuProvider.functionLoading
+                      ? const LoadingWidget(color: AppColor.primaryColor)
+                      : const BodyText(
                     text: AppString.save,
                     textColor: AppColor.primaryColor,
                   )),
@@ -93,14 +119,22 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                   controller: startingOdometerReading,
                   labelText: AppString.endingOdometerReading,
                   hintText: 'Enter ${AppString.startingOdometerReading}',
+                  textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textFieldGap),
 
                 ///End time
                 TextFormFieldWidget(
                   controller: startTime,
-                  labelText: AppString.endTime,
-                  hintText: 'Enter ${AppString.endTime}',
+                  labelText: AppString.startTime,
+                  hintText: 'Enter ${AppString.startTime}',
+                  readOnly: true,
+                  onTap: ()async{
+                    TimeOfDay? timeOfDay = await pickTime(context);
+                    if(timeOfDay!=null){
+                      startTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                    }
+                  },
                 ),
                 const SizedBox(height: TextSize.textGap),
 

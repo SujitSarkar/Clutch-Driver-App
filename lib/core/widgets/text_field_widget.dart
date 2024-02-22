@@ -107,8 +107,12 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           contentPadding: widget.contentPadding ?? const EdgeInsets.all(12),
           floatingLabelAlignment: FloatingLabelAlignment.start,
           hintText: '${widget.hintText} ${widget.required? '*' :''}',
+          labelText: widget.labelText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           hintStyle: const TextStyle(
+              color: AppColor.textFieldHintColor,
+              fontSize: 14),
+          labelStyle: const TextStyle(
               color: AppColor.textFieldHintColor,
               fontSize: 14),
           prefixIcon: widget.prefixIcon != null
