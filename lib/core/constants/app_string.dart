@@ -18,6 +18,7 @@ class AppString {
   ///Auth
   static const String welcomeMessage = 'Welcome to $appName';
   static const String password = 'Password';
+  static const String anotherProcessRunning = 'Another process running';
   static const String confirmPassword = 'Confirm Password';
   static const String phone = 'Phone';
   static const String login = 'Login';
@@ -85,12 +86,18 @@ class AppString {
   ///Profile
   static const String account = 'Account';
   static const String personalDetails = 'Personal Details';
-  static const String name = 'Name';
+  static const String firstName = 'First Name';
+  static const String lastName = 'Last Name';
   static const String emailAddress = 'Email Address';
   static const String organization = 'Organization';
-  static const String license = 'License';
-  static const String vIC = 'VIC';
-  static const String address = 'Address';
-  static const String reservoir = 'Reservoir';
   static const String uploadPhoto = 'Upload Photo';
+  static const String license = 'License';
+  static const String street = 'Street';
+  static const String address = 'Address';
+  static const String streetNumber = 'Street Number';
+  static const String suburb = 'Suburb';
+  static const String state = 'State';
+  static const String postCode = 'Post Code';
+  static const String country = 'Country';
+
 }

@@ -61,26 +61,49 @@ class PreStartData {
 
   factory PreStartData.fromJson(Map<String, dynamic> json) => PreStartData(
         randomCode: json["random_code"],
-        logsDate: '${json["logs_date"]}',
-        companyId: '${json["company_id"]}',
-        organizationId: '${json["organization_id"]}',
-        assetId: '${json["asset_id"]}',
-        driverId: '${json["driver_id"]}',
-        logStartTime: '${json["log_start_time"]}',
-        startOdoReading: '${json["start_odo_reading"]}',
-        preStartNotes: json["pre_start_notes"],
+        logsDate: json["logs_date"] != null
+            ? '${json["logs_date"]}'
+            : json["logs_date"],
+        companyId: json["company_id"] != null
+            ? '${json["company_id"]}'
+            : json["company_id"],
+        organizationId: json["organization_id"] != null
+            ? '${json["organization_id"]}'
+            : json["organization_id"],
+        assetId:
+            json["asset_id"] != null ? '${json["asset_id"]}' : json["asset_id"],
+        driverId: json["driver_id"] != null
+            ? '${json["driver_id"]}'
+            : json["driver_id"],
+        logStartTime: json["log_start_time"] != null
+            ? '${json["log_start_time"]}'
+            : json["log_start_time"],
+        startOdoReading: json["start_odo_reading"] != null
+            ? '${json["start_odo_reading"]}'
+            : json["start_odo_reading"],
+        preStartNotes: json["pre_start_notes"] != null
+            ? '${json["pre_start_notes"]}'
+            : json["pre_start_notes"],
         preStartChecks: json["pre_start_checks"] == null
             ? []
             : List<CheckBoxDataModel>.from(json["pre_start_checks"]!
                 .map((x) => CheckBoxDataModel.fromJson(x))),
-        logEndTime: '${json["log_end_time"]}',
-        endOdoReading: '${json["end_odo_reading"]}',
-        logNotes: '${json["log_notes"]}',
+        logEndTime: json["log_end_time"] != null
+            ? '${json["log_end_time"]}'
+            : json["log_end_time"],
+        endOdoReading: json["end_odo_reading"] != null
+            ? '${json["end_odo_reading"]}'
+            : json["end_odo_reading"],
+        logNotes: json["log_notes"] != null
+            ? '${json["log_notes"]}'
+            : json["log_notes"],
         additionalFees: json["additional_fees"] == null
             ? []
             : List<CheckBoxDataModel>.from(json["additional_fees"]!
                 .map((x) => CheckBoxDataModel.fromJson(x))),
-        fatigueNotes: '${json["fatigue_notes"]}',
+        fatigueNotes: json["fatigue_notes"] != null
+            ? '${json["fatigue_notes"]}'
+            : json["fatigue_notes"],
         fatigueChecks: json["fatigue_checks"] == null
             ? []
             : List<CheckBoxDataModel>.from(json["fatigue_checks"]!

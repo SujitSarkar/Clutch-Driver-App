@@ -209,6 +209,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
               hintText: 'Enter ${AppString.note}',
               minLine: 3,
               maxLine: 5,
+              textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: TextSize.textFieldGap),
           ],

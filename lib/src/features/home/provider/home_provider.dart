@@ -3,8 +3,10 @@ import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/constants/static_list.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
@@ -13,6 +15,7 @@ import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../../authentication/model/login_model.dart';
 import '../../drawer/provider/drawer_menu_provider.dart';
+import '../../drawer/screen/prestart_checklist_screen.dart';
 import '../model/load_model.dart';
 
 class HomeProvider extends ChangeNotifier {
@@ -25,7 +28,7 @@ class HomeProvider extends ChangeNotifier {
   bool upcomingLoadLoading = false;
   bool completeLoadLoading = false;
   LoginModel? loginModel;
-  int selectedCompanyIndex = 0;
+  // int selectedCompanyIndex = 0;
 
   ///Debounce timer
   Timer? debounceTimer;
@@ -38,6 +41,7 @@ class HomeProvider extends ChangeNotifier {
   List<LoadDataModel> pendingLoadList = [];
   List<LoadDataModel> upcomingLoadList = [];
   List<LoadDataModel> completedLoadList = [];
+  LoadDataModel? selectedPendingLoadModel;
 
   Future<void> initialize() async {
     pendingLoadLoading=true;
@@ -62,10 +66,10 @@ class HomeProvider extends ChangeNotifier {
 
   bool canPop() => AppNavigatorKey.key.currentState!.canPop();
 
-  void changeCompanyRadioValue(int value) {
-    selectedCompanyIndex = value;
-    notifyListeners();
-  }
+  // void changeCompanyRadioValue(int value) {
+  //   selectedCompanyIndex = value;
+  //   notifyListeners();
+  // }
 
   ///Load Filter
   void dateRangeOnSelectionChanged(DateRangePickerSelectionChangedArgs args) async{
@@ -94,6 +98,13 @@ class HomeProvider extends ChangeNotifier {
     popScreen();
   }
 
+  void pendingLoadStartButtonOnTap({required LoadDataModel model}){
+    selectedPendingLoadModel = model;
+    notifyListeners();
+    pushTo(AppRouter.preStartChecklist,
+        arguments: const PreStartChecklistScreen(fromPage: AppRouter.pendingLoad));
+  }
+
   void clearFilter() {
     filterStartDate = DateTime.now();
     filterEndDate = DateTime.now();
@@ -110,7 +121,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-23&end_date=$endDate?status=2');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -122,6 +133,10 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getUpcomingLoadList() async {
+    if(upcomingLoadLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     upcomingLoadList = [];
     upcomingLoadLoading=true;
     notifyListeners();
@@ -131,7 +146,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-23&end_date=$endDate?status=3');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
@@ -145,6 +160,10 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getCompletedLoadList() async {
+    if(completeLoadLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     completedLoadList = [];
     completeLoadLoading=true;
     notifyListeners();
@@ -154,7 +173,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-23&end_date=$endDate?status=4');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];

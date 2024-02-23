@@ -1,5 +1,6 @@
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_string.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/constants/local_storage_key.dart';
@@ -37,6 +38,10 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signInButtonOnTap() async {
+    if( loading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     ApiService.instance.clearAccessTokenAndCookie();
     if (!signInFormKey.currentState!.validate()) {
       return;
@@ -44,7 +49,7 @@ class AuthenticationProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
 
-    Map<String, dynamic> requestBody = {
+    final Map<String, dynamic> requestBody = {
       "email": emailController.text.trim(),
       "password": passwordController.text,
     };
@@ -91,17 +96,21 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> changePasswordButtonOnTap({required int? userId}) async {
+    if(loading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     if (!changePasswordFormKey.currentState!.validate()) {
       return;
     }
-    Map<String, dynamic> requestBody = {
+    loading = true;
+    notifyListeners();
+
+    final Map<String, dynamic> requestBody = {
       "id": '$userId',
       "password": passwordController.text,
       'confirm_password': confirmPasswordController.text
     };
-    loading = true;
-    notifyListeners();
-
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}', body: requestBody);

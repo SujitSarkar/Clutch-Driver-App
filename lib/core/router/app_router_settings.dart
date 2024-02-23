@@ -3,7 +3,6 @@ import '../../src/features/authentication/screen/change_password_screen.dart';
 import '../../src/features/drawer/screen/daily_logbook_screen.dart';
 import '../../src/features/drawer/screen/fatigue_management_checklist_screen.dart';
 import '../../src/features/drawer/screen/prestart_checklist_screen.dart';
-import '../../src/features/home/screen/company_list_screen.dart';
 import '../../src/features/home/screen/completed_load_screen.dart';
 import '../../src/features/home/screen/load_attachment_screen.dart';
 import '../../src/features/home/screen/load_details_screen.dart';
@@ -46,12 +45,12 @@ class GeneratedRoute {
             pageBuilder: (_, animation, secondaryAnimation) =>
             const NoInternetScreen());
 
-      case AppRouter.companyList:
-        return PageRouteBuilder(
-            settings: settings,
-            transitionsBuilder: fadeTransition,
-            pageBuilder: (_, animation, secondaryAnimation) =>
-                const CompanyListScreen());
+      // case AppRouter.companyList:
+      //   return PageRouteBuilder(
+      //       settings: settings,
+      //       transitionsBuilder: fadeTransition,
+      //       pageBuilder: (_, animation, secondaryAnimation) =>
+      //           const CompanyListScreen());
 
       case AppRouter.pendingLoad:
         return PageRouteBuilder(

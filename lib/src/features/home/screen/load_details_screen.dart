@@ -1,14 +1,13 @@
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/router/app_router.dart';
-import 'package:clutch_driver_app/core/widgets/solid_button.dart';
-import 'package:clutch_driver_app/core/widgets/text_field_widget.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_string.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/solid_button.dart';
+import '../../../../core/widgets/text_field_widget.dart';
+import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/page_navigator.dart';
-import '../../../../core/utils/google_map_service.dart';
 import '../../../../core/utils/validator.dart';
 import '../provider/home_provider.dart';
 
@@ -72,10 +71,10 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
             )
           ],
         ),
-        body: _bodyUI(homeProvider, size, context));
+        body: _bodyUI(homeProvider, size));
   }
 
-  Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
+  Widget _bodyUI(HomeProvider homeProvider, Size size) =>
       Column(
         children: [
           ///Cancel & Save Button
@@ -111,25 +110,25 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                   const EdgeInsets.all(TextSize.pagePadding),
               children: [
                 ///Details
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BodyText(text: '${AppString.contact}: CBC34534'),
-                    BodyText(text: '${AppString.quantity}: 1P'),
+                    BodyText(text: '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo}'),
+                    BodyText(text: '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty}'),
                   ],
                 ),
-                const BodyText(text: '${AppString.load}: MB657'),
-                const BodyText(text: '${AppString.pickup}: Laverton North'),
-                const BodyText(text: '${AppString.destination}: Calac'),
-                const BodyText(text: '${AppString.commodity}: Fertilizer'),
+                BodyText(text: '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef}'),
+                BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country}'),
+                BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country}'),
+                BodyText(text: '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity}'),
                 const SizedBox(height: TextSize.textGap),
 
                 ///Open Route in Google Map
                 SolidButton(
                     onTap: () async {
-                      await openGoogleMaps(
-                          23.829315406238095, 90.42004168093032);
+                      // await openGoogleMaps(
+                      //     23.829315406238095, 90.42004168093032);
                     },
                     child: const ButtonText(text: 'Open Route in Google Map')),
                 const SizedBox(height: TextSize.pagePadding),
@@ -141,6 +140,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                   hintText: 'Enter ${AppString.note}',
                   minLine: 3,
                   maxLine: 5,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
                 const SizedBox(height: TextSize.textGap),
 

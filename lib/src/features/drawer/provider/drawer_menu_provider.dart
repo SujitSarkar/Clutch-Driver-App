@@ -1,10 +1,11 @@
-import 'dart:convert';
-import '../../../../src/features/drawer/model/fatigue_management_break_model.dart';
-import '../../../../src/features/drawer/model/daily_summery_model.dart';
-import '../../../../core/router/page_navigator.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import '../../../../core/constants/app_string.dart';
+import '../../../../src/features/drawer/model/fatigue_management_break_model.dart';
+import '../../../../src/features/drawer/model/daily_summery_model.dart';
+import '../../../../core/router/page_navigator.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
@@ -104,9 +105,12 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getPreStartChecks({required fromPage}) async {
+    if(initialLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     initialLoading = true;
     notifyListeners();
-
     final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final assetId = selectedTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
@@ -124,7 +128,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       notifyListeners();
       debugPrint(fromPage);
       if(fromPage==AppRouter.pendingLoad){
-        if(preStartDataModel?.message?.toLowerCase() != 'You have to fillup this form first'.toLowerCase()){
+        if(preStartDataModel?.message?.toLowerCase() == 'Pre Check List Data'.toLowerCase()){
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -138,6 +142,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getDailySummary() async {
+    if(initialLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     initialLoading = true;
     notifyListeners();
 
@@ -160,6 +168,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getFatigueBreaks() async {
+    if(fatigueManagementLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     fatigueManagementLoading = true;
     notifyListeners();
 
@@ -182,6 +194,10 @@ class DrawerMenuProvider extends ChangeNotifier {
     required String notes,
     required fromPage
   }) async {
+    if(functionLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     functionLoading = true;
     notifyListeners();
 
@@ -202,8 +218,9 @@ class DrawerMenuProvider extends ChangeNotifier {
       'log_start_time': startTime,
       'start_odo_reading': odoMeterReading,
       'pre_start_notes': notes,
-      'pre_start_checks': preStartChecks,
+      'pre_start_checks': jsonEncode(preStartChecks),
     };
+    debugPrint('$requestBody\n');
     await ApiService.instance.apiCall(
         execute: () async {
           return await ApiService.instance.post(
@@ -231,6 +248,10 @@ class DrawerMenuProvider extends ChangeNotifier {
     required String endingOdoMeterReading,
     required String notes,
   }) async {
+    if(functionLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     functionLoading = true;
     notifyListeners();
 
@@ -249,7 +270,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       'log_notes': notes,
       'end_odo_reading': endingOdoMeterReading,
       'log_end_time': endTime,
-      'additional_fees': additionalFees,
+      'additional_fees': jsonEncode(additionalFees),
     };
     await ApiService.instance.apiCall(
         execute: () async {
@@ -274,6 +295,10 @@ class DrawerMenuProvider extends ChangeNotifier {
     required String endTime,
     required String breakDetails,
   }) async {
+    if(functionLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     functionLoading = true;
     notifyListeners();
     final assetId = selectedTruck?.id;
@@ -310,6 +335,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   Future<void> saveFatigueManagement({
     required String notes
   }) async {
+    if(functionLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
     functionLoading = true;
     notifyListeners();
 
@@ -327,7 +356,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       'asset_id': assetId,
       'driver_id': driverId,
       'fatigue_notes': notes,
-      'fatigue_checks': fatigueChecks,
+      'fatigue_checks': jsonEncode(fatigueChecks),
       'logs_date': logsDate,
     };
     await ApiService.instance.apiCall(
@@ -349,5 +378,4 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addBreakButtonOnTap() {}
 }

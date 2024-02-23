@@ -151,6 +151,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                   hintText: 'Enter ${AppString.note}',
                   minLine: 3,
                   maxLine: 5,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
                 const SizedBox(height: TextSize.textFieldGap),
               ],

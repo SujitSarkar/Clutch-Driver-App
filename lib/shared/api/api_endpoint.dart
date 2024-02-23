@@ -11,6 +11,11 @@ class ApiEndpoint {
   static const String loadList = '/index.php/api/driver_app/load-list';
   static const String singleLoad = '/index.php/api/driver_app/load-single';
 
+  ///Profile
+  static const String updateProfile = '/index.php/api/app-update-profile';
+  static const String stateList = '/index.php/api/state-list';
+  static const String countryList = '/index.php/api/country-list';
+
   ///Drawer
   static const String assetList = '/index.php/api/driver_app/asset-list';
   static const String getPreStartChecklist = '/index.php/api/driver_logbook/get-pre-start-checklist';

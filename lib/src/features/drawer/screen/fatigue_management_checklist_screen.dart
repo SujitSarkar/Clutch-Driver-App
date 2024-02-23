@@ -146,7 +146,7 @@ class _FatigueManagementCheckListScreenState
               //Header
               drawerMenuProvider.fatigueManagementLoading
                   ? const LoadingWidget(color: AppColor.primaryColor)
-                  : drawerMenuProvider.fatigueManagementBreakModel!.data!
+                  :drawerMenuProvider.fatigueManagementBreakModel!=null && drawerMenuProvider.fatigueManagementBreakModel!.data!
                           .breakes!.isNotEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,

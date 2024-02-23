@@ -1,6 +1,10 @@
-import 'dart:io';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import 'dart:io';
+import '../../../../core/widgets/basic_dropdown.dart';
+import '../../../../core/widgets/loading_widget.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
@@ -20,13 +24,39 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   File? selectedAttachmentFile;
 
-  final TextEditingController name = TextEditingController();
+  final TextEditingController firstName = TextEditingController();
+  final TextEditingController lastName = TextEditingController();
   final TextEditingController emailAddress = TextEditingController();
+  final TextEditingController phone = TextEditingController();
   final TextEditingController organization = TextEditingController();
   final TextEditingController license = TextEditingController();
-  final TextEditingController vic = TextEditingController();
-  final TextEditingController address = TextEditingController();
-  final TextEditingController reservoir = TextEditingController();
+  final TextEditingController street = TextEditingController();
+  final TextEditingController streetNumber = TextEditingController();
+  final TextEditingController suburb = TextEditingController();
+  final TextEditingController postcode = TextEditingController();
+
+  @override
+  void initState() {
+    final HomeProvider homeProvider = Provider.of(context, listen: false);
+    final ProfileProvider profileProvider = Provider.of(context, listen: false);
+    firstName.text = homeProvider.loginModel!.data!.firstName ?? '';
+    lastName.text = homeProvider.loginModel!.data!.lastName ?? '';
+    emailAddress.text = homeProvider.loginModel!.data!.email ?? '';
+    phone.text = homeProvider.loginModel!.data!.phone ?? '';
+    organization.text =
+        homeProvider.loginModel!.data!.organizations!.orgName ?? '';
+    license.text = homeProvider.loginModel!.data!.meta!.licenseNumber ?? '';
+    street.text = homeProvider.loginModel!.data!.address!.streetName ?? '';
+    streetNumber.text =
+        homeProvider.loginModel!.data!.address!.streetNumber ?? '';
+    suburb.text = homeProvider.loginModel!.data!.address!.suburb ?? '';
+    postcode.text = homeProvider.loginModel!.data!.address!.postcode ?? '';
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      profileProvider.initialize();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +65,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const TitleText(
-              text: AppString.account,
-              textColor: Colors.white),
+          title:
+              const TitleText(text: AppString.account, textColor: Colors.white),
           titleSpacing: 8,
         ),
-        body: _bodyUI(profileProvider, size, context));
+        body: profileProvider.initialLoading
+            ? const LoadingWidget(color: AppColor.primaryColor)
+            : _bodyUI(profileProvider, size));
   }
 
-  Widget _bodyUI(
-          ProfileProvider profileProvider, Size size, BuildContext context) =>
-      Column(
+  Widget _bodyUI(ProfileProvider profileProvider, Size size) => Column(
         children: [
           ///Save & Cancel Button
           Padding(
@@ -54,14 +83,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                    onPressed: ()=> popScreen(),
+                    onPressed: () => popScreen(),
                     child: const BodyText(
                       text: AppString.cancel,
                       textColor: AppColor.disableColor,
                     )),
                 TextButton(
-                    onPressed: () {},
-                    child: const BodyText(
+                    onPressed: () async {
+                      await saveButtonOnTap(profileProvider);
+                    },
+                    child: profileProvider.functionLoading
+                        ? const LoadingWidget(color: AppColor.primaryColor)
+                        : const BodyText(
                       text: AppString.save,
                       textColor: AppColor.primaryColor,
                     )),
@@ -71,8 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           Expanded(
             child: ListView(
-              padding:
-                  const EdgeInsets.all(TextSize.pagePadding),
+              padding: const EdgeInsets.all(TextSize.pagePadding),
               children: [
                 Center(
                   child: Column(
@@ -96,8 +128,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       TextButton(
                           onPressed: () async {
-                            await AppMediaService().getImageFromCamera().then((File? value){
-                              if(value!=null){
+                            await AppMediaService()
+                                .getImageFromGallery()
+                                .then((File? value) {
+                              if (value != null) {
                                 selectedAttachmentFile = value;
                                 setState(() {});
                               }
@@ -117,11 +151,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold),
                 const SizedBox(height: TextSize.textGap),
 
-                ///Name
+                ///First Name
                 TextFormFieldWidget(
-                  controller: name,
-                  labelText: AppString.name,
-                  hintText: 'Enter ${AppString.name}',
+                  controller: firstName,
+                  labelText: AppString.firstName,
+                  hintText: AppString.firstName,
+                  textCapitalization: TextCapitalization.words,
+                ),
+                const SizedBox(height: TextSize.textGap),
+
+                ///Last Name
+                TextFormFieldWidget(
+                  controller: lastName,
+                  labelText: AppString.lastName,
+                  hintText: AppString.lastName,
                   textCapitalization: TextCapitalization.words,
                 ),
                 const SizedBox(height: TextSize.textGap),
@@ -130,63 +173,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextFormFieldWidget(
                   controller: emailAddress,
                   labelText: AppString.emailAddress,
-                  hintText: 'Enter ${AppString.emailAddress}',
+                  hintText: AppString.emailAddress,
                   textInputType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: TextSize.textGap),
 
                 ///Organization
                 const BodyText(
-                    text: AppString.organization,
-                    fontWeight: FontWeight.bold),
+                    text: AppString.organization, fontWeight: FontWeight.bold),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: organization,
                   labelText: AppString.organization,
-                  hintText: 'Enter ${AppString.organization}',
+                  hintText: AppString.organization,
                   textCapitalization: TextCapitalization.words,
                 ),
                 const SizedBox(height: TextSize.textGap),
 
                 ///License
                 const BodyText(
-                    text: AppString.license,
-                    fontWeight: FontWeight.bold),
+                    text: AppString.license, fontWeight: FontWeight.bold),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: license,
                   labelText: AppString.license,
-                  hintText: 'Enter ${AppString.license}',
+                  hintText: AppString.license,
                 ),
                 const SizedBox(height: TextSize.textGap),
 
                 ///Address
                 const BodyText(
-                    text: AppString.address,
-                    fontWeight: FontWeight.bold),
+                    text: AppString.address, fontWeight: FontWeight.bold),
                 const SizedBox(height: TextSize.textGap),
+
                 TextFormFieldWidget(
-                  controller: vic,
-                  labelText: AppString.vIC,
-                  hintText: 'Enter ${AppString.vIC}',
+                  controller: postcode,
+                  labelText: AppString.postCode,
+                  hintText: AppString.postCode,
+                  textInputType: TextInputType.number,
+                  maxLength: 4,
                 ),
                 const SizedBox(height: TextSize.textGap),
 
-                //Address
                 TextFormFieldWidget(
-                  controller: address,
-                  labelText: AppString.address,
-                  hintText: 'Enter ${AppString.address}',
-                  textCapitalization: TextCapitalization.words,
+                  controller: street,
+                  labelText: AppString.street,
+                  hintText: AppString.street,
                   textInputType: TextInputType.streetAddress,
                 ),
                 const SizedBox(height: TextSize.textGap),
 
-                ///Reservoir
                 TextFormFieldWidget(
-                  controller: reservoir,
-                  labelText: AppString.reservoir,
-                  hintText: 'Enter ${AppString.reservoir}',
+                  controller: streetNumber,
+                  labelText: AppString.streetNumber,
+                  hintText: AppString.streetNumber,
+                  textCapitalization: TextCapitalization.words,
+                  textInputType: TextInputType.number,
+                ),
+                const SizedBox(height: TextSize.textGap),
+
+                TextFormFieldWidget(
+                  controller: suburb,
+                  labelText: AppString.suburb,
+                  hintText: AppString.suburb,
+                ),
+                const SizedBox(height: TextSize.textGap),
+
+                Row(
+                  children: [
+                    const Expanded(
+                        flex: 2, child: BodyText(text: '${AppString.state}:')),
+                    Expanded(
+                      flex: 3,
+                      child: BasicDropdown(
+                          buttonHeight: 40,
+                          dropdownWidth: size.width * .5,
+                          items: profileProvider.stateList,
+                          selectedValue: profileProvider.selectedState,
+                          hintText: 'Select state',
+                          onChanged: (value) =>
+                              profileProvider.changeState(value)),
+                    )
+                  ],
+                ),
+                const SizedBox(height: TextSize.textGap),
+
+                Row(
+                  children: [
+                    const Expanded(
+                        flex: 2,
+                        child: BodyText(text: '${AppString.country}:')),
+                    Expanded(
+                      flex: 3,
+                      child: BasicDropdown(
+                          buttonHeight: 40,
+                          dropdownWidth: size.width * .5,
+                          items: profileProvider.countryList,
+                          selectedValue: profileProvider.selectedCountry,
+                          hintText: 'Select country',
+                          onChanged: (value) =>
+                              profileProvider.changeCountry(value)),
+                    )
+                  ],
                 ),
                 const SizedBox(height: TextSize.textGap),
               ],
@@ -194,4 +282,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       );
+
+  Future<void> saveButtonOnTap(ProfileProvider profileProvider)async{
+    final address = {
+      "street_name": street.text.trim(),
+      "street_number": streetNumber.text.trim(),
+      "suburb": suburb.text.trim(),
+      "state": profileProvider.selectedState,
+      "postcode": postcode.text.trim(),
+      "country": profileProvider.selectedCountry
+    };
+    final requestBody = {
+      'id': HomeProvider.instance.loginModel?.data?.id,
+      'first_name': firstName.text.trim(),
+      'last_name': lastName.text.trim(),
+      'email': emailAddress.text.trim(),
+      'phone': phone.text.trim(),
+      'address': jsonEncode(address),
+      'license_number': license.text.trim(),
+    };
+    await profileProvider.updateProfile(
+        requestBody: requestBody,
+        file: selectedAttachmentFile,
+        fileFieldName: 'profile_image');
+  }
 }

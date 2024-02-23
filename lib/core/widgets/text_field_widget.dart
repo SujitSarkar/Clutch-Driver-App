@@ -21,6 +21,7 @@ class TextFormFieldWidget extends StatefulWidget {
       this.prefixColor,
       this.maxLine,
       this.minLine,
+      this.maxLength,
       this.suffixOnTap,
       this.prefixOnTap,
       this.onChanged,
@@ -43,6 +44,7 @@ class TextFormFieldWidget extends StatefulWidget {
   final bool readOnly;
   final int? maxLine;
   final int? minLine;
+  final int? maxLength;
   final Function()? onTap;
   final Function(String)? onChanged;
   final Function()? onEditingComplete;
@@ -73,6 +75,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           widget.onChanged!(val);
         }
       },
+      maxLength: widget.maxLength,
       onEditingComplete: widget.onEditingComplete,
       readOnly: widget.readOnly,
       obscureText: widget.obscure ? _obscure : false,

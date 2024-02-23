@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:clutch_driver_app/shared/api/parser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,7 @@ import 'dart:convert';
 import '../../core/utils/app_navigator_key.dart';
 import '../../src/features/authentication/provider/authentication_provider.dart';
 import 'api_exception.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiService {
   ApiService._privateConstructor();
@@ -80,6 +82,47 @@ class ApiService {
     final http.Response response =
         await http.delete(Uri.parse(url), headers: headers);
     return _processResponse(response);
+  }
+
+  ///Multipart api request
+  Future<dynamic> multipartRequest(
+      {required String url,
+        required Map<String, dynamic> requestBody,
+        required File file,
+        required String fileFieldName}) async {
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    MediaType contentType;
+
+    // Add fields
+    requestBody.forEach((key, value) => request.fields[key] = value.toString());
+
+    //Get file MediaType
+    try{
+      contentType = getMediaTypeFromFile(file);
+    }on UnsupportedError{
+      throw ApiException(message: 'Unsupported file');
+    }catch(error){
+      throw ApiException(message: '$error');
+    }
+
+    // Add file
+    var stream = http.ByteStream(file.openRead());
+    var length = await file.length();
+    var multipartFile = http.MultipartFile(
+      fileFieldName,
+      stream,
+      length,
+      filename: file.path.split('/').last,
+      contentType: contentType,
+    );
+    request.files.add(multipartFile);
+    // Add headers
+    request.headers.addAll(headers);
+
+    var response = await request.send();
+    var responseString = await response.stream.bytesToString();
+
+    return _processResponse(http.Response(responseString, response.statusCode));
   }
 
   ///check if the response is valid (everything went fine) / else throw error
