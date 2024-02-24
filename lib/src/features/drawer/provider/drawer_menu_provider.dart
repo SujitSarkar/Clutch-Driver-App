@@ -16,7 +16,8 @@ import '../../home/provider/home_provider.dart';
 import '../model/pre_start_data_model.dart';
 
 class DrawerMenuProvider extends ChangeNotifier {
-  static final DrawerMenuProvider instance = Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
+  static final DrawerMenuProvider instance =
+      Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
 
   bool initialLoading = false;
   bool functionLoading = false;
@@ -30,13 +31,16 @@ class DrawerMenuProvider extends ChangeNotifier {
 
   ///Additional Fees
   List<CheckBoxDataModel> additionalFeeCheckBoxItem = [];
+
   ///Pre-Start
   List<CheckBoxDataModel> preStartCheckBoxItem = [];
+
   ///Fatigue Management
   List<CheckBoxDataModel> fatigueManagementCheckBoxItem = [];
 
   Future<void> initialize() async {
     await getTruckList();
+    await HomeProvider.instance.getPendingLoadList();
   }
 
   ///Additional Fees
@@ -45,7 +49,8 @@ class DrawerMenuProvider extends ChangeNotifier {
     bool value,
     CheckBoxDataModel item,
   ) {
-    additionalFeeCheckBoxItem[index] = CheckBoxDataModel(id: item.id, name: item.name, value: value);
+    additionalFeeCheckBoxItem[index] =
+        CheckBoxDataModel(id: item.id, name: item.name, value: value);
     notifyListeners();
   }
 
@@ -72,14 +77,27 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   ///Change Truck
-  void changeTruck(TruckDataModel value) {
+  Future<void> changeTruck(
+      {required TruckDataModel value, required String fromPage}) async {
     selectedTruck = value;
     notifyListeners();
     HomeProvider.instance.notifyListeners();
+    debugPrint('FromPage: $fromPage');
+
+    if (fromPage == AppRouter.pendingLoad) {
+      HomeProvider.instance.getPendingLoadList();
+    } else if (fromPage == AppRouter.upcomingLoad) {
+      HomeProvider.instance.getUpcomingLoadList();
+    } else if (fromPage == AppRouter.completeLoad) {
+      HomeProvider.instance.getCompletedLoadList();
+    } else if (fromPage == AppRouter.preStartChecklist ||
+        fromPage == AppRouter.dailyLogbook ||
+        fromPage == AppRouter.fatigueManagementChecklist) {
+      getPreStartChecks(fromPage: fromPage);
+    }
   }
 
   ///Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 
   Future<void> getTruckList() async {
     final companyId =
@@ -105,13 +123,14 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getPreStartChecks({required fromPage}) async {
-    if(initialLoading == true){
+    if (initialLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
     initialLoading = true;
     notifyListeners();
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId =
+        HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final assetId = selectedTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -127,8 +146,9 @@ class DrawerMenuProvider extends ChangeNotifier {
       initialLoading = false;
       notifyListeners();
       debugPrint(fromPage);
-      if(fromPage==AppRouter.pendingLoad){
-        if(preStartDataModel?.message?.toLowerCase() == 'Pre Check List Data'.toLowerCase()){
+      if (fromPage == AppRouter.pendingLoad) {
+        if (preStartDataModel?.message?.toLowerCase() ==
+            'Pre Check List Data'.toLowerCase()) {
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -142,14 +162,15 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getDailySummary() async {
-    if(initialLoading == true){
+    if (initialLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
     initialLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId =
+        HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final assetId = selectedTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -168,7 +189,7 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   Future<void> getFatigueBreaks() async {
-    if(fatigueManagementLoading == true){
+    if (fatigueManagementLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
@@ -179,7 +200,8 @@ class DrawerMenuProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.getFatigueBreaks}?random_code=${preStartDataModel?.data?.randomCode}');
     }, onSuccess: (response) async {
-      fatigueManagementBreakModel = fatigueManagementBreakModelFromJson(response.body);
+      fatigueManagementBreakModel =
+          fatigueManagementBreakModelFromJson(response.body);
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -188,20 +210,20 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> savePreStartCheckList({
-    required String startTime,
-    required String odoMeterReading,
-    required String notes,
-    required fromPage
-  }) async {
-    if(functionLoading == true){
+  Future<void> savePreStartCheckList(
+      {required String startTime,
+      required String odoMeterReading,
+      required String notes,
+      required fromPage}) async {
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
     functionLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId =
+        HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final orgId = HomeProvider.instance.loginModel?.data?.organizations?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedTruck?.id;
@@ -221,24 +243,21 @@ class DrawerMenuProvider extends ChangeNotifier {
       'pre_start_checks': jsonEncode(preStartChecks),
     };
     debugPrint('$requestBody\n');
-    await ApiService.instance.apiCall(
-        execute: () async {
-          return await ApiService.instance.post(
-              '${ApiEndpoint.baseUrl}${ApiEndpoint.savePreStartChecklist}',
-              body: requestBody);
-        },
-        onSuccess: (response) async {
-          final jsonData = jsonDecode(response.body);
-          showToast('${jsonData['message']}');
-          debugPrint(fromPage);
-          if(fromPage==AppRouter.pendingLoad){
-            popAndPushTo(AppRouter.loadDetails);
-          }
-        },
-        onError: (error) {
-          debugPrint('Error: ${error.message}');
-          showToast('Error: ${error.message}');
-        });
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.savePreStartChecklist}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      final jsonData = jsonDecode(response.body);
+      showToast('${jsonData['message']}');
+      debugPrint(fromPage);
+      if (fromPage == AppRouter.pendingLoad) {
+        popAndPushTo(AppRouter.loadDetails);
+      }
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
     functionLoading = false;
     notifyListeners();
   }
@@ -248,14 +267,15 @@ class DrawerMenuProvider extends ChangeNotifier {
     required String endingOdoMeterReading,
     required String notes,
   }) async {
-    if(functionLoading == true){
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
     functionLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId =
+        HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedTruck?.id;
     List<Map<String, dynamic>> additionalFees = [];
@@ -272,20 +292,17 @@ class DrawerMenuProvider extends ChangeNotifier {
       'log_end_time': endTime,
       'additional_fees': jsonEncode(additionalFees),
     };
-    await ApiService.instance.apiCall(
-        execute: () async {
-          return await ApiService.instance.post(
-              '${ApiEndpoint.baseUrl}${ApiEndpoint.saveDailyLogbook}',
-              body: requestBody);
-        },
-        onSuccess: (response) async {
-          final jsonData = jsonDecode(response.body);
-          showToast('${jsonData['message']}');
-        },
-        onError: (error) {
-          debugPrint('Error: ${error.message}');
-          showToast('Error: ${error.message}');
-        });
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.saveDailyLogbook}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      final jsonData = jsonDecode(response.body);
+      showToast('${jsonData['message']}');
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
     functionLoading = false;
     notifyListeners();
   }
@@ -295,7 +312,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     required String endTime,
     required String breakDetails,
   }) async {
-    if(functionLoading == true){
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
@@ -312,37 +329,33 @@ class DrawerMenuProvider extends ChangeNotifier {
       'break_details': breakDetails,
     };
     debugPrint('$requestBody');
-    await ApiService.instance.apiCall(
-        execute: () async {
-          return await ApiService.instance.post(
-              '${ApiEndpoint.baseUrl}${ApiEndpoint.saveFatigueBreak}',
-              body: requestBody);
-        },
-        onSuccess: (response) async {
-          final jsonData = jsonDecode(response.body);
-          showToast('${jsonData['message']}');
-          getFatigueBreaks();
-          popScreen();
-        },
-        onError: (error) {
-          debugPrint('Error: ${error.message}');
-          showToast('Error: ${error.message}');
-        });
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.saveFatigueBreak}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      final jsonData = jsonDecode(response.body);
+      showToast('${jsonData['message']}');
+      getFatigueBreaks();
+      popScreen();
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
     functionLoading = false;
     notifyListeners();
   }
 
-  Future<void> saveFatigueManagement({
-    required String notes
-  }) async {
-    if(functionLoading == true){
+  Future<void> saveFatigueManagement({required String notes}) async {
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
     functionLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId =
+        HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedTruck?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -359,23 +372,19 @@ class DrawerMenuProvider extends ChangeNotifier {
       'fatigue_checks': jsonEncode(fatigueChecks),
       'logs_date': logsDate,
     };
-    await ApiService.instance.apiCall(
-        execute: () async {
-          return await ApiService.instance.post(
-              '${ApiEndpoint.baseUrl}${ApiEndpoint.saveFatigueManagement}',
-              body: requestBody);
-        },
-        onSuccess: (response) async {
-          final jsonData = jsonDecode(response.body);
-          showToast('${jsonData['message']}');
-          getPreStartChecks(fromPage: 'Fatigue Management');
-        },
-        onError: (error) {
-          debugPrint('Error: ${error.message}');
-          showToast('Error: ${error.message}');
-        });
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.saveFatigueManagement}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      final jsonData = jsonDecode(response.body);
+      showToast('${jsonData['message']}');
+      getPreStartChecks(fromPage: 'Fatigue Management');
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
     functionLoading = false;
     notifyListeners();
   }
-
 }

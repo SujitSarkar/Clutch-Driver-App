@@ -110,7 +110,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                     hintText: 'Select Truck',
                     buttonHeight: 35,
                     onChanged: (value) {
-                      drawerMenuProvider.changeTruck(value);
+                      drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.preStartChecklist);
                     }),
                 const SizedBox(height: TextSize.textFieldGap),
 

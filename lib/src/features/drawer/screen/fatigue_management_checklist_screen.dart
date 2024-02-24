@@ -59,7 +59,9 @@ class _FatigueManagementCheckListScreenState
             )
           ],
         ),
-        body: _bodyUI(drawerMenuProvider, size));
+        body: drawerMenuProvider.initialLoading
+            ? const LoadingWidget(color: AppColor.primaryColor)
+            : _bodyUI(drawerMenuProvider, size));
   }
 
   Widget _bodyUI(DrawerMenuProvider drawerMenuProvider, Size size) =>
@@ -101,7 +103,7 @@ class _FatigueManagementCheckListScreenState
                   hintText: 'Select Slot',
                   buttonHeight: 35,
                   onChanged: (value) {
-                    drawerMenuProvider.changeTruck(value);
+                    drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.fatigueManagementChecklist);
                   }),
               const SizedBox(height: TextSize.textFieldGap),
 

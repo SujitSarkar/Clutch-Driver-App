@@ -1,6 +1,7 @@
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/widgets/refresh_indicator.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/static_list.dart';
@@ -102,7 +103,7 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
                       buttonHeight: 35,
                       dropdownWidth: 150,
                       onChanged: (value) {
-                        drawerMenuProvider.changeTruck(value);
+                        drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.upcomingLoad);
                       })
                 ],
               ),
@@ -115,15 +116,18 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
   }
 
   Widget _bodyUI(HomeProvider homeProvider,Size size, BuildContext context) =>
-      homeProvider.upcomingLoadList.isNotEmpty? ListView.separated(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding:const EdgeInsets.symmetric(
-            horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
-        itemCount: homeProvider.upcomingLoadList.length,
-        itemBuilder: (context, index) =>
-            LoadTile(loadType: StaticList.loadTypeList[1],loadModel: homeProvider.upcomingLoadList[index],),
-        separatorBuilder: (context, index) =>
-        const SizedBox(height: TextSize.pagePadding),
+      homeProvider.upcomingLoadList.isNotEmpty? RefreshIndicatorWidget(
+        onRefresh: () async => await homeProvider.getUpcomingLoadList(),
+        child: ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding:const EdgeInsets.symmetric(
+              horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
+          itemCount: homeProvider.upcomingLoadList.length,
+          itemBuilder: (context, index) =>
+              LoadTile(loadType: StaticList.loadTypeList[1],loadModel: homeProvider.upcomingLoadList[index],),
+          separatorBuilder: (context, index) =>
+          const SizedBox(height: TextSize.pagePadding),
+        ),
       ): NoLoadFoundWidget(
           onRefresh: () async => homeProvider.getUpcomingLoadList());
 }

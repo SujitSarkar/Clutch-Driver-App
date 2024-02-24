@@ -123,7 +123,7 @@ class PendingLoadListScreen extends StatelessWidget {
                         buttonHeight: 35,
                         dropdownWidth: 150,
                         onChanged: (value) {
-                          drawerMenuProvider.changeTruck(value);
+                          drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.pendingLoad);
                         })
                   ],
                 ),
@@ -139,7 +139,7 @@ class PendingLoadListScreen extends StatelessWidget {
 
   Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
       RefreshIndicatorWidget(
-        onRefresh: () async => await homeProvider.initialize(),
+        onRefresh: () async => await homeProvider.getPendingLoadList(),
         child: homeProvider.pendingLoadList.isNotEmpty
             ? ListView.separated(
                 padding: const EdgeInsets.symmetric(

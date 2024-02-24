@@ -1,3 +1,4 @@
+import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../src/features/authentication/provider/authentication_provider.dart';
@@ -39,12 +40,12 @@ class AppDrawer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${HomeProvider.instance.loginModel?.data?.firstName} ${HomeProvider.instance.loginModel?.data?.lastName}',
+                              '${ProfileProvider.instance.loginModel?.data?.firstName} ${HomeProvider.instance.loginModel?.data?.lastName}',
                               style: const TextStyle(fontSize: TextSize.bodyText),
                             ),
                             FittedBox(
                               child: Text(
-                                '${HomeProvider.instance.loginModel?.data?.email}',
+                                '${ProfileProvider.instance.loginModel?.data?.email}',
                                 style: const TextStyle(
                                     fontSize: TextSize.bodyText, color: Colors.grey),
                               ),

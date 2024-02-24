@@ -15,6 +15,7 @@ class ApiEndpoint {
   static const String updateProfile = '/index.php/api/app-update-profile';
   static const String stateList = '/index.php/api/state-list';
   static const String countryList = '/index.php/api/country-list';
+  static const String getUserInfo = '/index.php/api/app-user-info';
 
   ///Drawer
   static const String assetList = '/index.php/api/driver_app/asset-list';

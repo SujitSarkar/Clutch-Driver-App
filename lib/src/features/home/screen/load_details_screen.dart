@@ -137,7 +137,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                 TextFormFieldWidget(
                   controller: note,
                   labelText: AppString.note,
-                  hintText: 'Enter ${AppString.note}',
+                  hintText: AppString.note,
                   minLine: 3,
                   maxLine: 5,
                   textCapitalization: TextCapitalization.sentences,
@@ -148,14 +148,14 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                 TextFormFieldWidget(
                   controller: pickupTareWeight,
                   labelText: AppString.pickupTareWeight,
-                  hintText: 'Enter ${AppString.pickupTareWeight}',
+                  hintText: AppString.pickupTareWeight,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: pickupGrossWeight,
                   labelText: AppString.pickupGrossWeight,
-                  hintText: 'Enter ${AppString.pickupGrossWeight}',
+                  hintText: AppString.pickupGrossWeight,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),
@@ -171,14 +171,14 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                 TextFormFieldWidget(
                   controller: deliveryGrossWeight,
                   labelText: AppString.deliveryGrossWeight,
-                  hintText: 'Enter ${AppString.deliveryGrossWeight}',
+                  hintText: AppString.deliveryGrossWeight,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),
                 TextFormFieldWidget(
                   controller: deliveryTareWeight,
                   labelText: AppString.deliveryTareWeight,
-                  hintText: 'Enter ${AppString.deliveryTareWeight}',
+                  hintText: AppString.deliveryTareWeight,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textGap),

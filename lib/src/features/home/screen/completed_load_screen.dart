@@ -1,3 +1,4 @@
+import '../../../../core/widgets/refresh_indicator.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +104,7 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
                       buttonHeight: 35,
                       dropdownWidth: 150,
                       onChanged: (value) {
-                        drawerMenuProvider.changeTruck(value);
+                        drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.completeLoad);
                       })
                 ],
               ),
@@ -116,17 +117,20 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
   }
 
   Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
-      homeProvider.completedLoadList.isNotEmpty? ListView.separated(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(
-            horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
-        itemCount: homeProvider.completedLoadList.length,
-        itemBuilder: (context, index) => LoadTile(
-          loadType: StaticList.loadTypeList.last,
-          loadModel: homeProvider.completedLoadList[index],
+      homeProvider.completedLoadList.isNotEmpty? RefreshIndicatorWidget(
+        onRefresh: () async => await homeProvider.getCompletedLoadList(),
+        child: ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(
+              horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
+          itemCount: homeProvider.completedLoadList.length,
+          itemBuilder: (context, index) => LoadTile(
+            loadType: StaticList.loadTypeList.last,
+            loadModel: homeProvider.completedLoadList[index],
+          ),
+          separatorBuilder: (context, index) =>
+              const SizedBox(height: TextSize.pagePadding),
         ),
-        separatorBuilder: (context, index) =>
-            const SizedBox(height: TextSize.pagePadding),
       ):NoLoadFoundWidget(
               onRefresh: () async => homeProvider.getCompletedLoadList());
 }

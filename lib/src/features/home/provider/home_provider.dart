@@ -3,7 +3,7 @@ import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import '../../../../core/constants/app_string.dart';
+import '../../../../src/features/profile/provider/profile_provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/constants/static_list.dart';
 import '../../../../core/router/app_router.dart';
@@ -47,7 +47,7 @@ class HomeProvider extends ChangeNotifier {
     pendingLoadLoading=true;
     notifyListeners();
     await getLocalData();
-    await getPendingLoadList();
+    ProfileProvider.instance.getUserInfo();
     pendingLoadLoading=false;
     notifyListeners();
   }
@@ -114,14 +114,17 @@ class HomeProvider extends ChangeNotifier {
 
   ///API Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   Future<void> getPendingLoadList() async {
+    pendingLoadLoading=true;
+    notifyListeners();
     pendingLoadList = [];
     final driverId = HomeProvider.instance.loginModel?.data?.id;
+    final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-23&end_date=$endDate?status=2');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&asset_id=$assetId&start_date=2023-02-23&end_date=$endDate?status=2');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -130,27 +133,27 @@ class HomeProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
+    pendingLoadLoading=false;
+    notifyListeners();
   }
 
   Future<void> getUpcomingLoadList() async {
-    if(upcomingLoadLoading == true){
-      showToast(AppString.anotherProcessRunning);
-      return;
-    }
     upcomingLoadList = [];
     upcomingLoadLoading=true;
     notifyListeners();
     final driverId = HomeProvider.instance.loginModel?.data?.id;
+    final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-23&end_date=$endDate?status=3');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&asset_id=$assetId&start_date=2023-02-23&end_date=$endDate?status=3');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
       notifyListeners();
+      getPendingLoadList();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -160,24 +163,22 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getCompletedLoadList() async {
-    if(completeLoadLoading == true){
-      showToast(AppString.anotherProcessRunning);
-      return;
-    }
     completedLoadList = [];
     completeLoadLoading=true;
     notifyListeners();
     final driverId = HomeProvider.instance.loginModel?.data?.id;
+    final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&start_date=2023-02-23&end_date=$endDate?status=4');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&asset_id=$assetId&start_date=2023-02-23&end_date=$endDate?status=4');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];
       notifyListeners();
+      getPendingLoadList();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');

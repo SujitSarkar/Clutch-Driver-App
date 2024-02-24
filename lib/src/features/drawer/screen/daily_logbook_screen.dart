@@ -113,7 +113,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
                 hintText: 'Select Truck',
                 buttonHeight: 35,
                 onChanged: (value) {
-                  drawerMenuProvider.changeTruck(value);
+                  drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.dailyLogbook);
                 }),
             const SizedBox(height: TextSize.textGap),
 
@@ -121,7 +121,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             TextFormFieldWidget(
               controller: startTime,
               labelText: AppString.startTime,
-              hintText: 'Enter ${AppString.startTime}',
+              hintText: AppString.startTime,
               readOnly: true,
             ),
             const SizedBox(height: TextSize.textGap),
@@ -130,7 +130,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             TextFormFieldWidget(
               controller: endTime,
               labelText: AppString.endTime,
-              hintText: 'Enter ${AppString.endTime}',
+              hintText: AppString.endTime,
               readOnly: true,
               onTap: ()async{
                 TimeOfDay? timeOfDay = await pickTime(context);
@@ -145,7 +145,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             TextFormFieldWidget(
               controller: startingOdometerReading,
               labelText: AppString.startingOdometerReading,
-              hintText: 'Enter ${AppString.startingOdometerReading}',
+              hintText: AppString.startingOdometerReading,
               readOnly: true,
             ),
             const SizedBox(height: TextSize.textGap),
@@ -154,7 +154,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             TextFormFieldWidget(
               controller: endingOdometerReading,
               labelText: AppString.endingOdometerReading,
-              hintText: 'Enter ${AppString.endingOdometerReading}',
+              hintText: AppString.endingOdometerReading,
               textInputType: TextInputType.number,
             ),
             const SizedBox(height: TextSize.textFieldGap),
@@ -206,7 +206,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
             TextFormFieldWidget(
               controller: note,
               labelText: AppString.note,
-              hintText: 'Enter ${AppString.note}',
+              hintText: AppString.note,
               minLine: 3,
               maxLine: 5,
               textCapitalization: TextCapitalization.sentences,
