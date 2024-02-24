@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 import '../../../../core/widgets/basic_dropdown.dart';
 import '../../../../core/widgets/loading_widget.dart';
-import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
@@ -37,25 +36,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    final HomeProvider homeProvider = Provider.of(context, listen: false);
-    final ProfileProvider profileProvider = Provider.of(context, listen: false);
-    firstName.text = homeProvider.loginModel!.data!.firstName ?? '';
-    lastName.text = homeProvider.loginModel!.data!.lastName ?? '';
-    emailAddress.text = homeProvider.loginModel!.data!.email ?? '';
-    phone.text = homeProvider.loginModel!.data!.phone ?? '';
-    organization.text =
-        homeProvider.loginModel!.data!.organizations!.orgName ?? '';
-    license.text = homeProvider.loginModel!.data!.meta!.licenseNumber ?? '';
-    street.text = homeProvider.loginModel!.data!.address!.streetName ?? '';
-    streetNumber.text =
-        homeProvider.loginModel!.data!.address!.streetNumber ?? '';
-    suburb.text = homeProvider.loginModel!.data!.address!.suburb ?? '';
-    postcode.text = homeProvider.loginModel!.data!.address!.postcode ?? '';
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      profileProvider.initialize();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      onInit();
     });
     super.initState();
+  }
+
+  Future<void> onInit() async {
+    final ProfileProvider profileProvider = Provider.of(context, listen: false);
+    await profileProvider.initialize();
+
+    firstName.text = profileProvider.loginModel!.data!.firstName ?? '';
+    lastName.text = profileProvider.loginModel!.data!.lastName ?? '';
+    emailAddress.text = profileProvider.loginModel!.data!.email ?? '';
+    phone.text = profileProvider.loginModel!.data!.phone ?? '';
+    organization.text =
+        profileProvider.loginModel!.data!.organizations!.orgName ?? '';
+    license.text = profileProvider.loginModel!.data!.meta!.licenseNumber ?? '';
+    street.text = profileProvider.loginModel!.data!.address!.streetName ?? '';
+    streetNumber.text =
+        profileProvider.loginModel!.data!.address!.streetNumber ?? '';
+    suburb.text = profileProvider.loginModel!.data!.address!.suburb ?? '';
+    postcode.text = profileProvider.loginModel!.data!.address!.postcode ?? '';
   }
 
   @override
@@ -95,9 +97,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: profileProvider.functionLoading
                         ? const LoadingWidget(color: AppColor.primaryColor)
                         : const BodyText(
-                      text: AppString.save,
-                      textColor: AppColor.primaryColor,
-                    )),
+                            text: AppString.save,
+                            textColor: AppColor.primaryColor,
+                          )),
               ],
             ),
           ),
@@ -123,8 +125,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: double.infinity,
                                   width: double.infinity,
                                 ))
-                            : const Icon(Icons.person,
-                                color: AppColor.primaryColor, size: 100),
+                            : profileProvider
+                                        .loginModel?.data?.meta?.profileImage !=
+                                    null
+                                ? ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(100)),
+                                  child: Image.network(
+                                      profileProvider
+                                          .loginModel!.data!.meta!.profileImage!,
+                                      height: 120,
+                                      width: 120,
+                                      fit: BoxFit.cover,
+                                    ),
+                                )
+                                : const Icon(Icons.person,
+                                    color: AppColor.primaryColor, size: 100),
                       ),
                       TextButton(
                           onPressed: () async {
@@ -239,51 +255,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: TextSize.textGap),
 
-                Row(
-                  children: [
-                    const Expanded(
-                        flex: 2, child: BodyText(text: '${AppString.state}:')),
-                    Expanded(
-                      flex: 3,
-                      child: BasicDropdown(
-                          buttonHeight: 40,
-                          dropdownWidth: size.width * .5,
-                          items: profileProvider.stateList,
-                          selectedValue: profileProvider.selectedState,
-                          hintText: 'Select state',
-                          onChanged: (value) =>
-                              profileProvider.changeState(value)),
-                    )
-                  ],
-                ),
-                const SizedBox(height: TextSize.textGap),
-
-                Row(
-                  children: [
-                    const Expanded(
-                        flex: 2,
-                        child: BodyText(text: '${AppString.country}:')),
-                    Expanded(
-                      flex: 3,
-                      child: BasicDropdown(
-                          buttonHeight: 40,
-                          dropdownWidth: size.width * .5,
-                          items: profileProvider.countryList,
-                          selectedValue: profileProvider.selectedCountry,
-                          hintText: 'Select country',
-                          onChanged: (value) =>
-                              profileProvider.changeCountry(value)),
-                    )
-                  ],
-                ),
-                const SizedBox(height: TextSize.textGap),
+                profileProvider.stateCountryLoading
+                    ? const LoadingWidget(color: AppColor.primaryColor)
+                    : Column(
+                        children: [
+                          Row(
+                            children: [
+                              const Expanded(
+                                  flex: 2,
+                                  child: BodyText(text: '${AppString.state}:')),
+                              Expanded(
+                                flex: 3,
+                                child: BasicDropdown(
+                                    buttonHeight: 40,
+                                    dropdownWidth: size.width * .5,
+                                    items: profileProvider.stateList,
+                                    selectedValue:
+                                        profileProvider.selectedState,
+                                    hintText: 'Select state',
+                                    onChanged: (value) =>
+                                        profileProvider.changeState(value)),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: TextSize.textGap),
+                          Row(
+                            children: [
+                              const Expanded(
+                                  flex: 2,
+                                  child:
+                                      BodyText(text: '${AppString.country}:')),
+                              Expanded(
+                                flex: 3,
+                                child: BasicDropdown(
+                                    buttonHeight: 40,
+                                    dropdownWidth: size.width * .5,
+                                    items: profileProvider.countryList,
+                                    selectedValue:
+                                        profileProvider.selectedCountry,
+                                    hintText: 'Select country',
+                                    onChanged: (value) =>
+                                        profileProvider.changeCountry(value)),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: TextSize.textGap),
+                        ],
+                      ),
               ],
             ),
           )
         ],
       );
 
-  Future<void> saveButtonOnTap(ProfileProvider profileProvider)async{
+  Future<void> saveButtonOnTap(ProfileProvider profileProvider) async {
     final address = {
       "street_name": street.text.trim(),
       "street_number": streetNumber.text.trim(),
@@ -293,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       "country": profileProvider.selectedCountry
     };
     final requestBody = {
-      'id': HomeProvider.instance.loginModel?.data?.id,
+      'id': profileProvider.loginModel?.data?.id,
       'first_name': firstName.text.trim(),
       'last_name': lastName.text.trim(),
       'email': emailAddress.text.trim(),

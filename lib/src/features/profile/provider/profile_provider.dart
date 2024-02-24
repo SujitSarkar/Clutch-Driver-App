@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/Material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../src/features/profile/model/country_model.dart';
 import '../../../../src/features/profile/model/state_model.dart';
@@ -10,17 +13,31 @@ import '../../../../shared/api/api_service.dart';
 import '../../authentication/model/login_model.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  static final ProfileProvider instance =
+  Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
+
   bool initialLoading = false;
   bool functionLoading = false;
+  bool stateCountryLoading = false;
   LoginModel? loginResponseModel;
 
+  LoginModel? loginModel;
   List<String> countryList = [];
   List<String> stateList = [];
   String? selectedState;
   String? selectedCountry;
 
   Future<void> initialize() async {
-    initialLoading = true;
+    if(loginModel==null){
+      initialLoading = true;
+      notifyListeners();
+      await getUserInfo();
+      initialLoading = false;
+      notifyListeners();
+    }
+
+    ///Get country state list
+    stateCountryLoading = true;
     notifyListeners();
     if (stateList.isEmpty) {
       await getStateList();
@@ -28,7 +45,7 @@ class ProfileProvider extends ChangeNotifier {
     if (countryList.isEmpty) {
       await getCountryList();
     }
-    initialLoading = false;
+    stateCountryLoading = false;
     notifyListeners();
   }
 
@@ -70,6 +87,20 @@ class ProfileProvider extends ChangeNotifier {
     });
   }
 
+  Future<void> getUserInfo() async {
+    final userId = HomeProvider.instance.loginModel?.data?.id;
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance
+          .get('${ApiEndpoint.baseUrl}${ApiEndpoint.getUserInfo}?id=$userId');
+    }, onSuccess: (response) async {
+      loginModel = loginModelFromJson(response.body);
+      notifyListeners();
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+  }
+
   Future<void> updateProfile(
       {required Map<String, dynamic> requestBody,
       required File? file,
@@ -94,6 +125,7 @@ class ProfileProvider extends ChangeNotifier {
             body: requestBody);
       }
     }, onSuccess: (response) async {
+      await getUserInfo();
       var jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
     }, onError: (error) {
