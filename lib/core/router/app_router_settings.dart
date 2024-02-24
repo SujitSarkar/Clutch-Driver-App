@@ -81,11 +81,12 @@ class GeneratedRoute {
                 const LoadDetailsScreen());
 
       case AppRouter.loadAttachment:
+        final String arguments = settings.arguments as String;
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-                const LoadAttachmentScreen());
+                LoadAttachmentScreen(loadWeightType: arguments));
 
       case AppRouter.dailyLogbook:
         return PageRouteBuilder(

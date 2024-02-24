@@ -84,7 +84,7 @@ class Note {
 }
 
 class Pickup {
-  final int? loadId;
+  final String? loadId;
   final String? pickupTime;
   final DateTime? pickupDate;
   final String? pickupTareWeight;
@@ -105,7 +105,7 @@ class Pickup {
   });
 
   factory Pickup.fromJson(Map<String, dynamic> json) => Pickup(
-    loadId: json["load_id"],
+    loadId: '${json["load_id"]}',
     pickupTime: json["pickup_time"],
     pickupDate: json["pickup_date"] == null ? null : DateTime.parse(json["pickup_date"]),
     pickupTareWeight: json["pickup_tare_weight"],

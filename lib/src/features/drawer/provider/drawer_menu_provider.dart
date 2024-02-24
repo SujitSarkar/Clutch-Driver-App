@@ -129,8 +129,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     }
     initialLoading = true;
     notifyListeners();
-    final companyId =
-        HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final assetId = selectedTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -147,8 +146,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       notifyListeners();
       debugPrint(fromPage);
       if (fromPage == AppRouter.pendingLoad) {
-        if (preStartDataModel?.message?.toLowerCase() ==
-            'Pre Check List Data'.toLowerCase()) {
+        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false) {
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -250,6 +248,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     }, onSuccess: (response) async {
       final jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
+      HomeProvider.instance.getPendingLoadList();
       debugPrint(fromPage);
       if (fromPage == AppRouter.pendingLoad) {
         popAndPushTo(AppRouter.loadDetails);

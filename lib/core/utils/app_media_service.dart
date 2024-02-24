@@ -13,7 +13,7 @@ class AppMediaService {
     }
     try {
       final XFile? image = await ImagePicker().pickImage(
-          source: ImageSource.camera, imageQuality: 70, maxHeight: 500);
+          source: ImageSource.camera, imageQuality: 70);
       if (image != null) {
         file = File(image.path);
       } else {

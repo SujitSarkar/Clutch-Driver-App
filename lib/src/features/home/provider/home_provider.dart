@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:clutch_driver_app/src/features/home/model/load_weight_model.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import '../../../../core/constants/app_string.dart';
 import '../../../../src/features/profile/provider/profile_provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/constants/static_list.dart';
@@ -27,6 +31,7 @@ class HomeProvider extends ChangeNotifier {
   bool pendingLoadLoading = false;
   bool upcomingLoadLoading = false;
   bool completeLoadLoading = false;
+  bool loadDetailsLoading = false;
   LoginModel? loginModel;
   // int selectedCompanyIndex = 0;
 
@@ -42,6 +47,7 @@ class HomeProvider extends ChangeNotifier {
   List<LoadDataModel> upcomingLoadList = [];
   List<LoadDataModel> completedLoadList = [];
   LoadDataModel? selectedPendingLoadModel;
+  LoadWeightModel? loadWeightModel;
 
   Future<void> initialize() async {
     pendingLoadLoading=true;
@@ -117,14 +123,15 @@ class HomeProvider extends ChangeNotifier {
     pendingLoadLoading=true;
     notifyListeners();
     pendingLoadList = [];
-    final driverId = HomeProvider.instance.loginModel?.data?.id;
+    final driverId = loginModel?.data?.id;
     final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
+    final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&asset_id=$assetId&start_date=2023-02-23&end_date=$endDate?status=2');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=1&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -141,14 +148,15 @@ class HomeProvider extends ChangeNotifier {
     upcomingLoadList = [];
     upcomingLoadLoading=true;
     notifyListeners();
-    final driverId = HomeProvider.instance.loginModel?.data?.id;
+    final driverId = loginModel?.data?.id;
     final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
+    final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&asset_id=$assetId&start_date=2023-02-23&end_date=$endDate?status=3');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=2&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
@@ -166,14 +174,15 @@ class HomeProvider extends ChangeNotifier {
     completedLoadList = [];
     completeLoadLoading=true;
     notifyListeners();
-    final driverId = HomeProvider.instance.loginModel?.data?.id;
+    final driverId = loginModel?.data?.id;
     final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
+    final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?driver_id=$driverId&asset_id=$assetId&start_date=2023-02-23&end_date=$endDate?status=4');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=4&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];
@@ -184,6 +193,66 @@ class HomeProvider extends ChangeNotifier {
       showToast('Error: ${error.message}');
     });
     completeLoadLoading=false;
+    notifyListeners();
+  }
+
+  Future<void> getLoadWeight() async {
+    loadDetailsLoading = true;
+    notifyListeners();
+    final loadId = selectedPendingLoadModel?.id;
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.get(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.getLoadWeight}?load_id=$loadId');
+    }, onSuccess: (response) async {
+      loadWeightModel = loadWeightModelFromJson(response.body);
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+    loadDetailsLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> saveLoadWeightAttachment(
+      {required String loadWeightType,
+        required List<File> files}) async {
+    if(functionLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
+    if(files.isEmpty){
+      showToast('Attach $loadWeightType file');
+      return;
+    }
+    functionLoading=true;
+    notifyListeners();
+    final loadId = selectedPendingLoadModel?.id;
+    String fileFieldName = '';
+
+    if(loadWeightType==StaticList.loadWeightType.first){
+      fileFieldName = 'pickup_attachments';
+    }else{
+      fileFieldName = 'delivery_attachments';
+    }
+    
+    await Future.forEach(files, (File element)async{
+      await ApiService.instance.apiCall(execute: () async {
+        return await ApiService.instance.multipartRequest(
+          url: '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightAttachment}',
+          requestBody: {'load_id': loadId},
+          file: element,
+          fileFieldName: fileFieldName,
+        );
+      }, onSuccess: (response) async {
+        var jsonData = jsonDecode(response.body);
+        showToast(jsonData['message']);
+      }, onError: (error) {
+        debugPrint('Error: ${error.message}');
+        showToast('Error: ${error.message}');
+      });
+    });
+
+    functionLoading=false;
     notifyListeners();
   }
 

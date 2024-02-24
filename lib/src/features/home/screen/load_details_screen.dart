@@ -1,3 +1,5 @@
+import '../../../../core/constants/static_list.dart';
+import '../../../../core/widgets/loading_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_string.dart';
@@ -28,11 +30,27 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      onInit();
+    });
+    super.initState();
+  }
+
+  Future<void> onInit()async{
     pickupTareWeight.addListener(calculateNett);
     pickupGrossWeight.addListener(calculateNett);
     deliveryTareWeight.addListener(calculateNett);
     deliveryGrossWeight.addListener(calculateNett);
-    super.initState();
+
+    final HomeProvider homeProvider = Provider.of(context,listen: false);
+    await homeProvider.getLoadWeight();
+
+    pickupTareWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight??'';
+    pickupGrossWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupNetWeight??'';
+
+    deliveryTareWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight??'';
+    deliveryGrossWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight??'';
+    note.text = homeProvider.loadWeightModel!.data!.note!.noteByDriver??'';
   }
 
   void calculateNett() {
@@ -71,7 +89,9 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
             )
           ],
         ),
-        body: _bodyUI(homeProvider, size));
+        body: homeProvider.loadDetailsLoading
+            ? const LoadingWidget(color: AppColor.primaryColor)
+            : _bodyUI(homeProvider, size));
   }
 
   Widget _bodyUI(HomeProvider homeProvider, Size size) =>
@@ -84,18 +104,13 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => popScreen(),
                     child: const BodyText(
                       text: AppString.cancel,
                       textColor: AppColor.disableColor,
                     )),
                 TextButton(
-                    onPressed: () {
-                      Navigator.popUntil(
-                          context,
-                          (route) =>
-                              route.settings.name == AppRouter.pendingLoad);
-                    },
+                    onPressed: ()=>popScreen(),
                     child: const BodyText(
                       text: AppString.save,
                       textColor: AppColor.primaryColor,
@@ -161,7 +176,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                 const SizedBox(height: TextSize.textGap),
                 SolidButton(
                     onTap: () {
-                      Navigator.pushNamed(context, AppRouter.loadAttachment);
+                      pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.first);
                     },
                     backgroundColor: AppColor.disableColor,
                     child: const ButtonText(text: AppString.upload)),
@@ -185,7 +200,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
 
                 SolidButton(
                     onTap: () {
-                      Navigator.pushNamed(context, AppRouter.loadAttachment);
+                      pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.last);
                     },
                     backgroundColor: AppColor.disableColor,
                     child: const ButtonText(text: AppString.upload)),

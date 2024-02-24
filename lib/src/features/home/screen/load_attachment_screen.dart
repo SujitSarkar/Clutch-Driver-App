@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:clutch_driver_app/core/widgets/loading_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/app_media_service.dart';
@@ -12,7 +13,8 @@ import '../../../../core/widgets/text_widget.dart';
 import '../provider/home_provider.dart';
 
 class LoadAttachmentScreen extends StatefulWidget {
-  const LoadAttachmentScreen({super.key});
+  const LoadAttachmentScreen({super.key, required this.loadWeightType});
+  final String loadWeightType;
 
   @override
   State<LoadAttachmentScreen> createState() => _LoadAttachmentScreenState();
@@ -21,6 +23,11 @@ class LoadAttachmentScreen extends StatefulWidget {
 class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
   File? selectedAttachmentFile;
   List<File> attachmentFileList = [];
+  @override
+  void initState() {
+    debugPrint('Weight type: ${widget.loadWeightType}');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +59,21 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => popScreen(),
                     child: const BodyText(
                       text: AppString.cancel,
                       textColor: AppColor.disableColor,
                     )),
                 TextButton(
-                    onPressed: () {},
-                    child: const BodyText(
+                    onPressed: () async{
+                      await homeProvider.saveLoadWeightAttachment(
+                          loadWeightType: widget.loadWeightType,
+                          files: attachmentFileList,
+                      );
+                    },
+                    child: homeProvider.functionLoading
+                        ? const LoadingWidget(color: AppColor.primaryColor)
+                        : const BodyText(
                       text: AppString.save,
                       textColor: AppColor.primaryColor,
                     )),

@@ -23,6 +23,10 @@ class LoadModel {
 class LoadDataModel {
   final int? id;
   final int? assetId;
+  final bool? requiredPrecheck;
+  final int? status;
+  final String? statusName;
+  final int? companyId;
   final String? loadRef;
   final String? qty;
   final String? contractNo;
@@ -33,6 +37,10 @@ class LoadDataModel {
   LoadDataModel({
     this.id,
     this.assetId,
+    this.requiredPrecheck,
+    this.status,
+    this.statusName,
+    this.companyId,
     this.loadRef,
     this.qty,
     this.contractNo,
@@ -44,6 +52,10 @@ class LoadDataModel {
   factory LoadDataModel.fromJson(Map<String, dynamic> json) => LoadDataModel(
     id: json["id"],
     assetId: json["asset_id"],
+    requiredPrecheck: json["required_precheck"],
+    status: json["status"],
+    statusName: json["status_name"],
+    companyId: json["company_id"],
     loadRef: json["load_Ref"],
     qty: json["qty"],
     contractNo: json["contract_no"],

@@ -154,6 +154,6 @@ class PendingLoadListScreen extends StatelessWidget {
                     const SizedBox(height: TextSize.pagePadding),
               )
             : NoLoadFoundWidget(
-                onRefresh: () async => homeProvider.initialize()),
+                onRefresh: () async => homeProvider.getPendingLoadList()),
       );
 }
