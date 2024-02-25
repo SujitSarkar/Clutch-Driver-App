@@ -28,14 +28,14 @@ class ProfileProvider extends ChangeNotifier {
   String? selectedCountry;
 
   Future<void> initialize() async {
-    initialLoading = true;
-    notifyListeners();
-    if (loginModel == null) {
-      await getUserInfo();
-    }
-    initialLoading = false;
-    notifyListeners();
 
+    if (loginModel == null) {
+      initialLoading = true;
+      notifyListeners();
+      await getUserInfo();
+      initialLoading = false;
+      notifyListeners();
+    }
     ///Get country state list
     stateCountryLoading = true;
     notifyListeners();

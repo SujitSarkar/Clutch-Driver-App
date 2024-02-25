@@ -1,7 +1,6 @@
 class ApiEndpoint {
   ///Base URL
   static const String baseUrl = 'https://app.clutchit.com.au';
-  static const String imageUrlPath = '$baseUrl/storage/settings';
 
   ///Auth
   static const String login = '/index.php/api/applogin';
