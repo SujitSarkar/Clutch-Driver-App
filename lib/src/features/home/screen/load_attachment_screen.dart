@@ -212,6 +212,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                           final url = widget.loadWeightType == StaticList.loadWeightType.first
                               ? '${homeProvider.loadWeightModel!.data!.pickup!.url}/${homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments![index]}'
                               : '${homeProvider.loadWeightModel!.data!.deli!.url}/${homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments![index]}';
+                          debugPrint(url);
                           pushTo(AppRouter.filePreview,arguments: url);
                         },
                         child: BodyText(

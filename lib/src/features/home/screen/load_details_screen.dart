@@ -37,6 +37,10 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
 
   @override
   void initState() {
+    pickupTareWeight.addListener(calculateNett);
+    pickupGrossWeight.addListener(calculateNett);
+    deliveryTareWeight.addListener(calculateNett);
+    deliveryGrossWeight.addListener(calculateNett);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       onInit();
     });
@@ -44,17 +48,16 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
   }
 
   Future<void> onInit()async{
-    pickupTareWeight.addListener(calculateNett);
-    pickupGrossWeight.addListener(calculateNett);
-    deliveryTareWeight.addListener(calculateNett);
-    deliveryGrossWeight.addListener(calculateNett);
-
     final HomeProvider homeProvider = Provider.of(context,listen: false);
     await homeProvider.getLoadWeight();
 
+    pickupDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
+    pickupTime.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTime??'';
     pickupTareWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight??'';
-    pickupGrossWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupNetWeight??'';
+    pickupGrossWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight??'';
 
+    deliveryDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
+    deliveryTime.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTime??'';
     deliveryTareWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight??'';
     deliveryGrossWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight??'';
     note.text = homeProvider.loadWeightModel!.data!.note!.noteByDriver??'';
@@ -135,6 +138,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
               child: Form(
                 key: homeProvider.loadDetailsFormKey,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ///Details
                     Row(
@@ -196,7 +201,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       onTap: ()async{
                         TimeOfDay? timeOfDay = await pickTime(context);
                         if(timeOfDay!=null){
-                          pickupTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                          pickupTime.text = formatTimeOfDay(timeOfDay);
                         }
                       },
                     ),
@@ -249,7 +254,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       onTap: ()async{
                         TimeOfDay? timeOfDay = await pickTime(context);
                         if(timeOfDay!=null){
-                          deliveryTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                          deliveryTime.text = formatTimeOfDay(timeOfDay);
                         }
                       },
                     ),
@@ -325,6 +330,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
       'delivery_tare_weight': deliveryTareWeight.text,
       'delivery_gross_weight': deliveryGrossWeight.text,
       'delivery_net_weight': homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
+      'note_by_driver': note.text.trim(),
       'status': 3,
     };
     await homeProvider.saveOrCompleteLoadWeight(body: body);
@@ -347,6 +353,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
       'delivery_tare_weight': deliveryTareWeight.text,
       'delivery_gross_weight': deliveryGrossWeight.text,
       'delivery_net_weight': homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
+      'note_by_driver': note.text.trim(),
       'status': 4,
     };
     await homeProvider.saveOrCompleteLoadWeight(body: body);

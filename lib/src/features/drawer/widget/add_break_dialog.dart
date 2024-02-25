@@ -37,7 +37,7 @@ class AddBreakDialogWidget extends StatelessWidget {
             onTap: () async {
               TimeOfDay? timeOfDay = await pickTime(context);
               if (timeOfDay != null) {
-                startTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                startTime.text = formatTimeOfDay(timeOfDay);
               }
             },
           ),
@@ -52,7 +52,7 @@ class AddBreakDialogWidget extends StatelessWidget {
             onTap: () async {
               TimeOfDay? timeOfDay = await pickTime(context);
               if (timeOfDay != null) {
-                endTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                endTime.text = formatTimeOfDay(timeOfDay);
               }
             },
           ),

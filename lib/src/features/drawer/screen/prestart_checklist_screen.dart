@@ -132,7 +132,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                   onTap: ()async{
                     TimeOfDay? timeOfDay = await pickTime(context);
                     if(timeOfDay!=null){
-                      startTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                      startTime.text = formatTimeOfDay(timeOfDay);
                     }
                   },
                 ),

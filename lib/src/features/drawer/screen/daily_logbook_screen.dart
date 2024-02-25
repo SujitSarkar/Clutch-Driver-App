@@ -135,7 +135,7 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
               onTap: ()async{
                 TimeOfDay? timeOfDay = await pickTime(context);
                 if(timeOfDay!=null){
-                  endTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                  endTime.text = formatTimeOfDay(timeOfDay);
                 }
               },
             ),

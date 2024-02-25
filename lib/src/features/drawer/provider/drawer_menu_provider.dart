@@ -248,7 +248,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     }, onSuccess: (response) async {
       final jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
-      HomeProvider.instance.getPendingLoadList();
+      await HomeProvider.instance.getPendingLoadList();
       debugPrint(fromPage);
       if (fromPage == AppRouter.pendingLoad) {
         popAndPushTo(AppRouter.loadDetails);

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 LoadWeightModel loadWeightModelFromJson(String str) => LoadWeightModel.fromJson(json.decode(str));
 
-
 class LoadWeightModel {
   final String? message;
   final int? statusCode;
@@ -51,7 +50,7 @@ class Deli {
   final DateTime? deliveryDate;
   final String? deliveryTareWeight;
   final String? deliveryGrossWeight;
-  final String? deliveryNetWeight;
+  final dynamic deliveryNetWeight;
   final List<String>? deliveryAttachments;
   final String? url;
 
@@ -95,8 +94,8 @@ class Pickup {
   final String? pickupTime;
   final DateTime? pickupDate;
   final String? pickupTareWeight;
-  final String? pickupGrossRate;
-  final String? pickupNetWeight;
+  final String? pickupGrossWeight;
+  final dynamic pickupNetWeight;
   final List<String>? pickupAttachments;
   final String? url;
 
@@ -105,7 +104,7 @@ class Pickup {
     this.pickupTime,
     this.pickupDate,
     this.pickupTareWeight,
-    this.pickupGrossRate,
+    this.pickupGrossWeight,
     this.pickupNetWeight,
     this.pickupAttachments,
     this.url,
@@ -116,7 +115,7 @@ class Pickup {
     pickupTime: json["pickup_time"],
     pickupDate: json["pickup_date"] == null ? null : DateTime.parse(json["pickup_date"]),
     pickupTareWeight: json["pickup_tare_weight"],
-    pickupGrossRate: json["pickup_gross_rate"],
+    pickupGrossWeight: json["pickup_gross_weight"],
     pickupNetWeight: json["pickup_net_weight"],
     pickupAttachments: json["pickup_attachments"] == null ? [] : List<String>.from(json["pickup_attachments"]!.map((x) => x)),
     url: json["url"],

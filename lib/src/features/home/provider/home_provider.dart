@@ -135,7 +135,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=3&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -160,7 +160,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=2&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
@@ -186,7 +186,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=4&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];
@@ -222,6 +222,7 @@ class HomeProvider extends ChangeNotifier {
       showToast(AppString.anotherProcessRunning);
       return;
     }
+    debugPrint('RequestBody: $body');
     //save=3, complete=4
     functionLoading = true;
     notifyListeners();
@@ -229,10 +230,10 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightCreateEdit}',body: body);
     }, onSuccess: (response) async {
-      await getLoadWeight();
       final jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
       if(body['status']==4){
+        await getPendingLoadList();
         popUntilOf(AppRouter.pendingLoad);
       }
     }, onError: (error) {
