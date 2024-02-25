@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> onInit() async {
-    final ProfileProvider profileProvider = Provider.of(context);
+    final ProfileProvider profileProvider = Provider.of(context, listen: false);
     await profileProvider.initialize();
 
     firstName.text = profileProvider.loginModel!.data!.firstName ?? '';
@@ -64,7 +64,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final ProfileProvider profileProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
         appBar: AppBar(
           title:

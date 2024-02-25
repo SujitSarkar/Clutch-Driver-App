@@ -41,11 +41,10 @@ class SignInScreen extends StatelessWidget {
                   const SizedBox(height: TextSize.pagePadding),
 
                   TextFormFieldWidget(
-                    controller: authProvider.emailController,
-                    labelText: AppString.emailAddress,
-                    hintText: 'Enter your ${AppString.emailAddress.toLowerCase()}',
+                    controller: authProvider.usernameController,
+                    labelText: AppString.username,
+                    hintText: AppString.username,
                     required: true,
-                    textInputType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: TextSize.textFieldGap),
 

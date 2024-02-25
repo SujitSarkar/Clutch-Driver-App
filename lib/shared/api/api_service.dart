@@ -135,15 +135,15 @@ class ApiService {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       var jsonData = jsonDecode(response.body);
-      await tokenExpiredAction(jsonData['message']);
+      await tokenExpiredAction(jsonData['message'].replaceAll('[', '').replaceAll(']', ''));
       return response;
     } else if (response.statusCode == 500) {
       throw ApiException(message: 'Internal server error');
     } else {
       try {
         var jsonData = jsonDecode(response.body);
-        await tokenExpiredAction(jsonData['message']);
-        throw ApiException(message: jsonData['message']);
+        await tokenExpiredAction(jsonData['message'].replaceAll('[', '').replaceAll(']', ''));
+        throw ApiException(message: jsonData['message'].replaceAll('[', '').replaceAll(']', ''));
       } catch (e) {
         await tokenExpiredAction(e.toString());
         throw ApiException(message: 'Invalid data format');

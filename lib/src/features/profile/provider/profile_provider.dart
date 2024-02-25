@@ -14,7 +14,7 @@ import '../../authentication/model/login_model.dart';
 
 class ProfileProvider extends ChangeNotifier {
   static final ProfileProvider instance =
-  Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
+      Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
 
   bool initialLoading = false;
   bool functionLoading = false;
@@ -28,13 +28,13 @@ class ProfileProvider extends ChangeNotifier {
   String? selectedCountry;
 
   Future<void> initialize() async {
-    if(loginModel==null){
-      initialLoading = true;
-      notifyListeners();
+    initialLoading = true;
+    notifyListeners();
+    if (loginModel == null) {
       await getUserInfo();
-      initialLoading = false;
-      notifyListeners();
     }
+    initialLoading = false;
+    notifyListeners();
 
     ///Get country state list
     stateCountryLoading = true;
@@ -105,11 +105,11 @@ class ProfileProvider extends ChangeNotifier {
       {required Map<String, dynamic> requestBody,
       required File? file,
       required String fileFieldName}) async {
-    if(functionLoading == true){
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
-    functionLoading=true;
+    functionLoading = true;
     notifyListeners();
     await ApiService.instance.apiCall(execute: () async {
       if (file != null) {
@@ -132,7 +132,7 @@ class ProfileProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
-    functionLoading=false;
+    functionLoading = false;
     notifyListeners();
   }
 }

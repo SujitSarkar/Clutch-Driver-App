@@ -38,8 +38,10 @@ class TruckDropdown extends StatelessWidget {
         items: items
             .map((item) => DropdownMenuItem<TruckDataModel>(
                   value: item,
-                  child: BodyText(text:
-                    'Truck: ${item.registrationNo}',
+                  child: FittedBox(
+                    child: BodyText(text:
+                      'Truck: ${item.registrationNo}',
+                    ),
                   ),
                 ))
             .toList(),

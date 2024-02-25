@@ -25,7 +25,7 @@ class AuthenticationProvider extends ChangeNotifier {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -33,7 +33,7 @@ class AuthenticationProvider extends ChangeNotifier {
     loading = false;
     passwordController.clear();
     confirmPasswordController.clear();
-    emailController.clear();
+    usernameController.clear();
     phoneController.clear();
   }
 
@@ -50,7 +50,7 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     final Map<String, dynamic> requestBody = {
-      "email": emailController.text.trim(),
+      "username": usernameController.text.trim(),
       "password": passwordController.text,
     };
 

@@ -94,6 +94,7 @@ class AppString {
   static const String firstName = 'First Name';
   static const String lastName = 'Last Name';
   static const String emailAddress = 'Email Address';
+  static const String username = 'Username';
   static const String organization = 'Organization';
   static const String uploadPhoto = 'Upload Photo';
   static const String license = 'License';
