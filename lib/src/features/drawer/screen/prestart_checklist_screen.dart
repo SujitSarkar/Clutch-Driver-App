@@ -9,7 +9,7 @@ import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
-import '../../../../shared/time_picker.dart';
+import '../../../../shared/date_time_picker.dart';
 import '../provider/drawer_menu_provider.dart';
 import '../widget/pre_start_checkbox_widget.dart';
 

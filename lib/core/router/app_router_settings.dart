@@ -1,3 +1,4 @@
+import 'package:clutch_driver_app/src/features/home/screen/file_preview_screen.dart';
 import 'package:flutter/material.dart';
 import '../../src/features/authentication/screen/change_password_screen.dart';
 import '../../src/features/drawer/screen/daily_logbook_screen.dart';
@@ -87,6 +88,14 @@ class GeneratedRoute {
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
                 LoadAttachmentScreen(loadWeightType: arguments));
+
+      case AppRouter.filePreview:
+        final String arguments = settings.arguments as String;
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                FilePreviewScreen(fileUrl: arguments));
 
       case AppRouter.dailyLogbook:
         return PageRouteBuilder(

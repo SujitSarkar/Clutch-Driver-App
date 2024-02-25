@@ -11,6 +11,7 @@ class ApiEndpoint {
   static const String loadList = '/index.php/api/driver_app/load-list';
   static const String singleLoad = '/index.php/api/driver_app/load-single';
   static const String getLoadWeight = '/index.php/api/driver_app/get-load-weight';
+  static const String loadWeightCreateEdit = '/index.php/api/driver_app/load-weight-create-edit';
   static const String loadWeightAttachment = '/index.php/api/driver_app/load-weight-attachment';
 
   ///Profile

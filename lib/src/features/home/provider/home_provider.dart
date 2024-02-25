@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:clutch_driver_app/src/features/home/model/load_weight_model.dart';
 import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import '../../../../src/features/home/model/load_weight_model.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../src/features/profile/provider/profile_provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
@@ -43,6 +43,7 @@ class HomeProvider extends ChangeNotifier {
   DateTime? filterEndDate = DateTime.now();
 
   ///Load
+  final GlobalKey<FormState> loadDetailsFormKey = GlobalKey();
   List<LoadDataModel> pendingLoadList = [];
   List<LoadDataModel> upcomingLoadList = [];
   List<LoadDataModel> completedLoadList = [];
@@ -119,6 +120,9 @@ class HomeProvider extends ChangeNotifier {
   }
 
   ///API Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  // 2=Upcoming load
+  // 3=Pending load (progress)
+  // 4=Completed load
   Future<void> getPendingLoadList() async {
     pendingLoadLoading=true;
     notifyListeners();
@@ -131,7 +135,7 @@ class HomeProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=1&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=2023-02-18&end_date=$endDate&status=3&asset_id=$assetId');
     }, onSuccess: (response) async {
       final LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -213,6 +217,32 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> saveOrCompleteLoadWeight({required Map<String, dynamic> body}) async {
+    if(functionLoading == true){
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
+    //save=3, complete=4
+    functionLoading = true;
+    notifyListeners();
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightCreateEdit}',body: body);
+    }, onSuccess: (response) async {
+      await getLoadWeight();
+      final jsonData = jsonDecode(response.body);
+      showToast(jsonData['message']);
+      if(body['status']==4){
+        popUntilOf(AppRouter.pendingLoad);
+      }
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+    functionLoading = false;
+    notifyListeners();
+  }
+
   Future<void> saveLoadWeightAttachment(
       {required String loadWeightType,
         required List<File> files}) async {
@@ -234,7 +264,6 @@ class HomeProvider extends ChangeNotifier {
     }else{
       fileFieldName = 'delivery_attachments';
     }
-    
     await Future.forEach(files, (File element)async{
       await ApiService.instance.apiCall(execute: () async {
         return await ApiService.instance.multipartRequest(
@@ -246,6 +275,7 @@ class HomeProvider extends ChangeNotifier {
       }, onSuccess: (response) async {
         var jsonData = jsonDecode(response.body);
         showToast(jsonData['message']);
+        await getLoadWeight();
       }, onError: (error) {
         debugPrint('Error: ${error.message}');
         showToast('Error: ${error.message}');

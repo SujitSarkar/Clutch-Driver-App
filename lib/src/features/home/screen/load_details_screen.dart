@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import '../../../../core/constants/static_list.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import 'package:flutter/Material.dart';
@@ -11,6 +12,7 @@ import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/utils/validator.dart';
+import '../../../../shared/date_time_picker.dart';
 import '../provider/home_provider.dart';
 
 class LoadDetailsScreen extends StatefulWidget {
@@ -21,8 +23,13 @@ class LoadDetailsScreen extends StatefulWidget {
 }
 
 class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
+  final TextEditingController pickupDate = TextEditingController();
+  final TextEditingController pickupTime= TextEditingController();
   final TextEditingController pickupTareWeight = TextEditingController();
   final TextEditingController pickupGrossWeight = TextEditingController();
+
+  final TextEditingController deliveryDate = TextEditingController();
+  final TextEditingController deliveryTime = TextEditingController();
   final TextEditingController deliveryTareWeight = TextEditingController();
   final TextEditingController deliveryGrossWeight = TextEditingController();
   final TextEditingController note = TextEditingController();
@@ -110,8 +117,10 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       textColor: AppColor.disableColor,
                     )),
                 TextButton(
-                    onPressed: ()=>popScreen(),
-                    child: const BodyText(
+                    onPressed: () async=> await saveButtonOnTap(homeProvider),
+                    child: homeProvider.functionLoading
+                        ? const LoadingWidget(color: AppColor.primaryColor)
+                        : const BodyText(
                       text: AppString.save,
                       textColor: AppColor.primaryColor,
                     )),
@@ -120,117 +129,226 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
           ),
 
           Expanded(
-            child: ListView(
+            child: SingleChildScrollView(
               padding:
-                  const EdgeInsets.all(TextSize.pagePadding),
-              children: [
-                ///Details
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const EdgeInsets.all(TextSize.pagePadding),
+              child: Form(
+                key: homeProvider.loadDetailsFormKey,
+                child: Column(
                   children: [
-                    BodyText(text: '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo}'),
-                    BodyText(text: '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty}'),
-                  ],
-                ),
-                BodyText(text: '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef}'),
-                BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country}'),
-                BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country}'),
-                BodyText(text: '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity}'),
-                const SizedBox(height: TextSize.textGap),
-
-                ///Open Route in Google Map
-                SolidButton(
-                    onTap: () async {
-                      // await openGoogleMaps(
-                      //     23.829315406238095, 90.42004168093032);
-                    },
-                    child: const ButtonText(text: 'Open Route in Google Map')),
-                const SizedBox(height: TextSize.pagePadding),
-
-                ///Note
-                TextFormFieldWidget(
-                  controller: note,
-                  labelText: AppString.note,
-                  hintText: AppString.note,
-                  minLine: 3,
-                  maxLine: 5,
-                  textCapitalization: TextCapitalization.sentences,
-                ),
-                const SizedBox(height: TextSize.textGap),
-
-                ///Pickup Weight
-                TextFormFieldWidget(
-                  controller: pickupTareWeight,
-                  labelText: AppString.pickupTareWeight,
-                  hintText: AppString.pickupTareWeight,
-                  textInputType: TextInputType.number,
-                ),
-                const SizedBox(height: TextSize.textGap),
-                TextFormFieldWidget(
-                  controller: pickupGrossWeight,
-                  labelText: AppString.pickupGrossWeight,
-                  hintText: AppString.pickupGrossWeight,
-                  textInputType: TextInputType.number,
-                ),
-                const SizedBox(height: TextSize.textGap),
-                SolidButton(
-                    onTap: () {
-                      pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.first);
-                    },
-                    backgroundColor: AppColor.disableColor,
-                    child: const ButtonText(text: AppString.upload)),
-                const SizedBox(height: TextSize.pagePadding),
-
-                ///Delivery Weight
-                TextFormFieldWidget(
-                  controller: deliveryGrossWeight,
-                  labelText: AppString.deliveryGrossWeight,
-                  hintText: AppString.deliveryGrossWeight,
-                  textInputType: TextInputType.number,
-                ),
-                const SizedBox(height: TextSize.textGap),
-                TextFormFieldWidget(
-                  controller: deliveryTareWeight,
-                  labelText: AppString.deliveryTareWeight,
-                  hintText: AppString.deliveryTareWeight,
-                  textInputType: TextInputType.number,
-                ),
-                const SizedBox(height: TextSize.textGap),
-
-                SolidButton(
-                    onTap: () {
-                      pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.last);
-                    },
-                    backgroundColor: AppColor.disableColor,
-                    child: const ButtonText(text: AppString.upload)),
-                const SizedBox(height: TextSize.pagePadding),
-
-                ///Calculated Nett
-                Row(
-                  children: [
-                    const BodyText(text: '${AppString.calculatedNett}:'),
-                    const SizedBox(width: TextSize.pagePadding),
-                    Expanded(
-                      child: TextFormFieldWidget(
-                        controller: calculatedNett,
-                        labelText: AppString.calculatedNett,
-                        hintText: AppString.calculatedNett,
-                        readOnly: true,
-                      ),
+                    ///Details
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BodyText(text: '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo}'),
+                        BodyText(text: '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty}'),
+                      ],
                     ),
+                    BodyText(text: '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef}'),
+                    BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country}'),
+                    BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country}'),
+                    BodyText(text: '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity}'),
+                    const SizedBox(height: TextSize.textGap),
+
+                    ///Open Route in Google Map
+                    SolidButton(
+                        onTap: () async {
+                          // await openGoogleMaps(
+                          //     23.829315406238095, 90.42004168093032);
+                        },
+                        child: const ButtonText(text: 'Open Route in Google Map')),
+                    const SizedBox(height: TextSize.pagePadding),
+
+                    ///Note
+                    TextFormFieldWidget(
+                      controller: note,
+                      labelText: AppString.note,
+                      hintText: AppString.note,
+                      minLine: 2,
+                      maxLine: 3,
+                      textCapitalization: TextCapitalization.sentences,
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+
+                    ///Pickup Date
+                    TextFormFieldWidget(
+                      controller: pickupDate,
+                      labelText: AppString.pickupDate,
+                      hintText: AppString.pickupDate,
+                      textInputType: TextInputType.number,
+                      required: true,
+                      readOnly: true,
+                      onTap: ()async{
+                        DateTime? dateTime = await pickDate(context);
+                        if(dateTime!=null){
+                          pickupDate.text = DateFormat('yyyy-MM-dd').format(dateTime);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    TextFormFieldWidget(
+                      controller: pickupTime,
+                      labelText: AppString.pickupTime,
+                      hintText: AppString.pickupTime,
+                      required: true,
+                      readOnly: true,
+                      onTap: ()async{
+                        TimeOfDay? timeOfDay = await pickTime(context);
+                        if(timeOfDay!=null){
+                          pickupTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                        }
+                      },
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    TextFormFieldWidget(
+                      controller: pickupTareWeight,
+                      labelText: AppString.pickupTareWeight,
+                      hintText: AppString.pickupTareWeight,
+                      textInputType: TextInputType.number,
+                      required: true,
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    TextFormFieldWidget(
+                      controller: pickupGrossWeight,
+                      labelText: AppString.pickupGrossWeight,
+                      hintText: AppString.pickupGrossWeight,
+                      textInputType: TextInputType.number,
+                      required: true,
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    SolidButton(
+                        onTap: () {
+                          pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.first);
+                        },
+                        backgroundColor: AppColor.disableColor,
+                        child: const ButtonText(text: AppString.upload)),
+                    const SizedBox(height: TextSize.pagePadding),
+
+                    ///Delivery Date
+                    TextFormFieldWidget(
+                      controller: deliveryDate,
+                      labelText: AppString.deliveryDate,
+                      hintText: AppString.deliveryDate,
+                      required: true,
+                      readOnly: true,
+                      onTap: ()async{
+                        DateTime? dateTime = await pickDate(context);
+                        if(dateTime!=null){
+                          deliveryDate.text = DateFormat('yyyy-MM-dd').format(dateTime);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    TextFormFieldWidget(
+                      controller: deliveryTime,
+                      labelText: AppString.deliveryTime,
+                      hintText: AppString.deliveryTime,
+                      required: true,
+                      readOnly: true,
+                      onTap: ()async{
+                        TimeOfDay? timeOfDay = await pickTime(context);
+                        if(timeOfDay!=null){
+                          deliveryTime.text = '${timeOfDay.hour}:${timeOfDay.minute}:00';
+                        }
+                      },
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    ///Delivery Weight
+                    TextFormFieldWidget(
+                      controller: deliveryGrossWeight,
+                      labelText: AppString.deliveryGrossWeight,
+                      hintText: AppString.deliveryGrossWeight,
+                      textInputType: TextInputType.number,
+                      required: true,
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+                    TextFormFieldWidget(
+                      controller: deliveryTareWeight,
+                      labelText: AppString.deliveryTareWeight,
+                      hintText: AppString.deliveryTareWeight,
+                      textInputType: TextInputType.number,
+                      required: true,
+                    ),
+                    const SizedBox(height: TextSize.textGap),
+
+                    SolidButton(
+                        onTap: () {
+                          pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.last);
+                        },
+                        backgroundColor: AppColor.disableColor,
+                        child: const ButtonText(text: AppString.upload)),
+                    const SizedBox(height: TextSize.pagePadding),
+
+                    ///Calculated Nett
+                    Row(
+                      children: [
+                        const BodyText(text: '${AppString.calculatedNett}:'),
+                        const SizedBox(width: TextSize.pagePadding),
+                        Expanded(
+                          child: TextFormFieldWidget(
+                            controller: calculatedNett,
+                            labelText: AppString.calculatedNett,
+                            hintText: AppString.calculatedNett,
+                            readOnly: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: TextSize.pagePadding),
+
+                    ///Complete Delivery Button
+                    SolidButton(
+                        onTap: () async=> await completeButtonOnTap(homeProvider),
+                        child: homeProvider.functionLoading
+                            ? const LoadingWidget()
+                            : const ButtonText(text: AppString.completeDelivery)),
+                    const SizedBox(height: TextSize.pagePadding),
                   ],
                 ),
-                const SizedBox(height: TextSize.pagePadding),
-
-                ///Complete Delivery Button
-                SolidButton(
-                    onTap: () {},
-                    child: const ButtonText(text: AppString.completeDelivery)),
-                const SizedBox(height: TextSize.pagePadding),
-              ],
+              ),
             ),
           ),
         ],
       );
+
+  Future<void> saveButtonOnTap(HomeProvider homeProvider)async{
+    final body = {
+      'load_id': homeProvider.selectedPendingLoadModel?.id,
+      'pickup_time': pickupTime.text,
+      'pickup_date': pickupDate.text,
+      'pickup_tare_weight': pickupTareWeight.text,
+      'pickup_gross_rate': pickupGrossWeight.text,
+      'pickup_net_weight': homeProvider.loadWeightModel?.data?.pickup?.pickupNetWeight,
+      'delivery_time': deliveryTime.text,
+      'delivery_date': deliveryDate.text,
+      'delivery_tare_weight': deliveryTareWeight.text,
+      'delivery_gross_weight': deliveryGrossWeight.text,
+      'delivery_net_weight': homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
+      'status': 3,
+    };
+    await homeProvider.saveOrCompleteLoadWeight(body: body);
+    await onInit();
+  }
+
+  Future<void> completeButtonOnTap(HomeProvider homeProvider)async{
+    if(!homeProvider.loadDetailsFormKey.currentState!.validate()){
+      return;
+    }
+    final body = {
+      'load_id': homeProvider.selectedPendingLoadModel?.id,
+      'pickup_time': pickupTime.text,
+      'pickup_date': pickupDate.text,
+      'pickup_tare_weight': pickupTareWeight.text,
+      'pickup_gross_rate': pickupGrossWeight.text,
+      'pickup_net_weight': homeProvider.loadWeightModel?.data?.pickup?.pickupNetWeight,
+      'delivery_time': deliveryTime.text,
+      'delivery_date': deliveryDate.text,
+      'delivery_tare_weight': deliveryTareWeight.text,
+      'delivery_gross_weight': deliveryGrossWeight.text,
+      'delivery_net_weight': homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
+      'status': 4,
+    };
+    await homeProvider.saveOrCompleteLoadWeight(body: body);
+  }
 }

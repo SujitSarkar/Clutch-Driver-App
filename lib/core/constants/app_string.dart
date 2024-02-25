@@ -68,8 +68,12 @@ class AppString {
   static const String details = 'Details';
 
   static const String note = 'Note';
+  static const String pickupDate = 'Pickup Date';
+  static const String pickupTime = 'Pickup Time';
   static const String pickupTareWeight = 'Pickup Tare Weight';
   static const String pickupGrossWeight = 'Pickup Gross Weight';
+  static const String deliveryDate = 'Delivery Date';
+  static const String deliveryTime = 'Delivery Time';
   static const String deliveryGrossWeight = 'Delivery Gross Weight';
   static const String deliveryTareWeight = 'Delivery Tare Weight';
   static const String calculatedNett = 'Calculated Nett';
@@ -77,6 +81,7 @@ class AppString {
   static const String uploadAttachment = 'Upload Attachment';
   static const String openCamera = 'Open Camera';
   static const String linkedDocument = 'Linked Document';
+  static const String uploadedDocument = 'Uploaded Document';
 
   static const String selectCompanyMgs =
       'These are the trucks on which you have been assigned loads.'

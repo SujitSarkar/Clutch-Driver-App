@@ -11,6 +11,7 @@ class AppRouter {
   static const String completeLoad = '/complete-load';
   static const String loadDetails = '/load-details';
   static const String loadAttachment = '/load-attachment';
+  static const String filePreview = '/file-preview';
 
   ///Drawer
   static const String dailyLogbook = '/daily-logbook';

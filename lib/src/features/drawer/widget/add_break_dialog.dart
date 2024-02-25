@@ -1,7 +1,6 @@
-import 'package:clutch_driver_app/core/utils/app_toast.dart';
-import 'package:clutch_driver_app/core/widgets/loading_widget.dart';
+import '../../../../core/utils/app_toast.dart';
+import '../../../../core/widgets/loading_widget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_widget.dart';
@@ -11,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/widgets/text_field_widget.dart';
-import '../../../../shared/time_picker.dart';
+import '../../../../shared/date_time_picker.dart';
 
 class AddBreakDialogWidget extends StatelessWidget {
   AddBreakDialogWidget({super.key});

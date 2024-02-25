@@ -2,6 +2,7 @@ import 'dart:convert';
 
 LoadWeightModel loadWeightModelFromJson(String str) => LoadWeightModel.fromJson(json.decode(str));
 
+
 class LoadWeightModel {
   final String? message;
   final int? statusCode;
@@ -22,51 +23,57 @@ class LoadWeightModel {
 
 class Data {
   final Pickup? pickup;
-  final Delivery? deli;
+  final Deli? deli;
   final Note? note;
+  final int? status;
+  final String? statusName;
 
   Data({
     this.pickup,
     this.deli,
     this.note,
+    this.status,
+    this.statusName,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     pickup: json["pickup"] == null ? null : Pickup.fromJson(json["pickup"]),
-    deli: json["deli"] == null ? null : Delivery.fromJson(json["deli"]),
+    deli: json["deli"] == null ? null : Deli.fromJson(json["deli"]),
     note: json["note"] == null ? null : Note.fromJson(json["note"]),
+    status: json["status"],
+    statusName: json["status_name"],
   );
 }
 
-class Delivery {
+class Deli {
   final String? loadId;
-  final dynamic deliveryTime;
-  final dynamic deliveryDate;
-  final dynamic deliveryTareWeight;
-  final dynamic deliveryGrossWeight;
-  final dynamic deliveryNetWeight;
-  final List<String>? pickupAttachments;
+  final String? deliveryTime;
+  final DateTime? deliveryDate;
+  final String? deliveryTareWeight;
+  final String? deliveryGrossWeight;
+  final String? deliveryNetWeight;
+  final List<String>? deliveryAttachments;
   final String? url;
 
-  Delivery({
+  Deli({
     this.loadId,
     this.deliveryTime,
     this.deliveryDate,
     this.deliveryTareWeight,
     this.deliveryGrossWeight,
     this.deliveryNetWeight,
-    this.pickupAttachments,
+    this.deliveryAttachments,
     this.url,
   });
 
-  factory Delivery.fromJson(Map<String, dynamic> json) => Delivery(
-    loadId: json["load_id"],
+  factory Deli.fromJson(Map<String, dynamic> json) => Deli(
+    loadId: '${json["load_id"]}',
     deliveryTime: json["delivery_time"],
-    deliveryDate: json["delivery_date"],
+    deliveryDate: json["delivery_date"] == null ? null : DateTime.parse(json["delivery_date"]),
     deliveryTareWeight: json["delivery_tare_weight"],
     deliveryGrossWeight: json["delivery_gross_weight"],
     deliveryNetWeight: json["delivery_net_weight"],
-    pickupAttachments: json["pickup_attachments"] == null ? [] : List<String>.from(json["pickup_attachments"]!.map((x) => x)),
+    deliveryAttachments: json["delivery_attachments"] == null ? [] : List<String>.from(json["delivery_attachments"]!.map((x) => x)),
     url: json["url"],
   );
 }

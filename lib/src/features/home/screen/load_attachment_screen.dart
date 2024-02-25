@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:clutch_driver_app/core/constants/static_list.dart';
 import 'package:clutch_driver_app/core/widgets/loading_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ class LoadAttachmentScreen extends StatefulWidget {
 class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
   File? selectedAttachmentFile;
   List<File> attachmentFileList = [];
+
   @override
   void initState() {
     debugPrint('Weight type: ${widget.loadWeightType}');
@@ -174,15 +176,54 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                           icon: const Icon(Icons.cancel_outlined,
                               color: AppColor.disableColor)),
                       Expanded(
-                        child: BodyText(
-                            text: attachmentFileList[index].uri.pathSegments.last,
-                            textColor: AppColor.textColor),
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              selectedAttachmentFile = attachmentFileList[index];
+                            });
+                          },
+                          child: BodyText(
+                              text: attachmentFileList[index].uri.pathSegments.last,
+                              textColor: AppColor.textColor),
+                        ),
                       ),
                     ],
                   ),
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 0),
-                )
+                ),
+                const SizedBox(height: TextSize.pagePadding),
+
+                ///Uploaded List
+                const BodyText(
+                    text: AppString.uploadedDocument, fontWeight: FontWeight.bold),
+                const Divider(height: 8, thickness: 0.8),
+                if(homeProvider.loadWeightModel!=null)
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.loadWeightType == StaticList.loadWeightType.first
+                      ? homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments!.length
+                      : homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments!.length,
+                  itemBuilder: (context, index) => Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          final url = widget.loadWeightType == StaticList.loadWeightType.first
+                              ? '${homeProvider.loadWeightModel!.data!.pickup!.url}/${homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments![index]}'
+                              : '${homeProvider.loadWeightModel!.data!.deli!.url}/${homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments![index]}';
+                          pushTo(AppRouter.filePreview,arguments: url);
+                        },
+                        child: BodyText(
+                            text: widget.loadWeightType == StaticList.loadWeightType.first
+                                ? homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments![index]
+                                : homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments![index],
+                            textColor: AppColor.primaryColor),
+                      ),
+                    ],
+                  ),
+                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                ),
               ],
             ),
           )
