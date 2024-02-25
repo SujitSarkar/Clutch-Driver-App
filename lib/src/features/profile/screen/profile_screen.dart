@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> onInit() async {
-    final ProfileProvider profileProvider = Provider.of(context, listen: false);
+    final ProfileProvider profileProvider = Provider.of(context);
     await profileProvider.initialize();
 
     firstName.text = profileProvider.loginModel!.data!.firstName ?? '';
