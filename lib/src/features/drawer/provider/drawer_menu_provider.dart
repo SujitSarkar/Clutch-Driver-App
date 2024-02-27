@@ -2,6 +2,7 @@ import 'package:flutter/Material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import '../../../../core/constants/static_list.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../src/features/drawer/model/fatigue_management_break_model.dart';
 import '../../../../src/features/drawer/model/daily_summery_model.dart';
@@ -23,7 +24,7 @@ class DrawerMenuProvider extends ChangeNotifier {
   bool functionLoading = false;
   bool fatigueManagementLoading = false;
 
-  List<TruckDataModel> allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
+  List<TruckDataModel> allTruckList = [];
   List<TruckDataModel> ownTruckList = [];
   TruckDataModel? selectedAllTruck;
   TruckDataModel? selectedOwnTruck;
@@ -79,36 +80,34 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   ///Change All Truck
-  Future<void> changeAllTruck(
-      {required TruckDataModel value, required String fromPage}) async {
+  Future<void> changeAllTruck({required TruckDataModel value, required String fromPage}) async {
     selectedAllTruck = value;
-    notifyListeners();
-    HomeProvider.instance.notifyListeners();
     debugPrint('FromPage: $fromPage');
 
     if (fromPage == AppRouter.pendingLoad) {
-      HomeProvider.instance.getPendingLoadList();
+      await HomeProvider.instance.getPendingLoadList();
     } else if (fromPage == AppRouter.upcomingLoad) {
-      HomeProvider.instance.getUpcomingLoadList();
+      await HomeProvider.instance.getUpcomingLoadList();
     } else if (fromPage == AppRouter.completeLoad) {
-      HomeProvider.instance.getCompletedLoadList();
+      await HomeProvider.instance.getCompletedLoadList();
     }
+    notifyListeners();
+    HomeProvider.instance.notifyListeners();
   }
   ///Change Own Truck
   Future<void>changeOwnTruck({required TruckDataModel value,
     required String fromPage})async{
-    selectedAllTruck = value;
-    notifyListeners();
+    selectedOwnTruck = value;
     await getPreStartChecks(fromPage: fromPage);
   }
 
   ///Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
   Future<void> getTruckList() async {
-    final companyId =
-        HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-
+    allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
+    ownTruckList = [];
     initialLoading = true;
     notifyListeners();
     await ApiService.instance.apiCall(execute: () async {
@@ -119,7 +118,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       allTruckList.addAll(truckModel.data!);
 
       for(int i=0; i<truckModel.data!.length; i++){
-        if(truckModel.data![i].whoOwns =='own'){
+        if(truckModel.data![i].whoOwns == StaticList.assetType.first){
           ownTruckList.add(truckModel.data![i]);
         }
       }
@@ -154,12 +153,13 @@ class DrawerMenuProvider extends ChangeNotifier {
       preStartCheckBoxItem = preStartDataModel!.data!.preStartChecks!;
       fatigueManagementCheckBoxItem = preStartDataModel!.data!.fatigueChecks!;
       additionalFeeCheckBoxItem = preStartDataModel!.data!.additionalFees!;
-      initialLoading = false;
-      notifyListeners();
+
       debugPrint(fromPage);
       if (fromPage == AppRouter.pendingLoad) {
         if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false
-            && response.statusCode == 200) {
+            && response.statusCode == 200
+            && preStartDataModel?.data?.randomCode!=null
+            && preStartDataModel!.data!.randomCode!.isNotEmpty) {
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -180,8 +180,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     initialLoading = true;
     notifyListeners();
 
-    final companyId =
-        HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());

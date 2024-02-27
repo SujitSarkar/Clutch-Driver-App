@@ -72,7 +72,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
   bool canPop() => AppNavigatorKey.key.currentState!.canPop();
-
   // void changeCompanyRadioValue(int value) {
   //   selectedCompanyIndex = value;
   //   notifyListeners();
@@ -107,7 +106,6 @@ class HomeProvider extends ChangeNotifier {
 
   void pendingLoadStartButtonOnTap({required LoadDataModel model}){
     selectedPendingLoadModel = model;
-    notifyListeners();
     pushTo(AppRouter.preStartChecklist,
         arguments: const PreStartChecklistScreen(fromPage: AppRouter.pendingLoad));
   }
@@ -115,7 +113,6 @@ class HomeProvider extends ChangeNotifier {
   void clearFilter() {
     filterStartDate = DateTime.now();
     filterEndDate = DateTime.now();
-    // DrawerMenuProvider.instance.selectedTruck = null;
     DrawerMenuProvider.instance.notifyListeners();
   }
 

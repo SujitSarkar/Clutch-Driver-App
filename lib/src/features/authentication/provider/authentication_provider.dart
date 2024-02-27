@@ -23,10 +23,8 @@ class AuthenticationProvider extends ChangeNotifier {
   final GlobalKey<FormState> changePasswordFormKey = GlobalKey();
 
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
 
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   void clearAllData() {
@@ -34,7 +32,6 @@ class AuthenticationProvider extends ChangeNotifier {
     passwordController.clear();
     confirmPasswordController.clear();
     usernameController.clear();
-    phoneController.clear();
   }
 
   Future<void> signInButtonOnTap() async {
@@ -66,14 +63,12 @@ class AuthenticationProvider extends ChangeNotifier {
           ApiService.instance.addAccessTokenAndCookie(
               token: loginModel.data?.authToken,
               cookie: loginModel.data?.authToken);
-          clearAllData();
-          final BuildContext context =
-              AppNavigatorKey.key.currentState!.context;
+          final BuildContext context = AppNavigatorKey.key.currentState!.context;
           final HomeProvider homeProvider = Provider.of(context, listen: false);
-          final DrawerMenuProvider drawerMenuProvider =
-              Provider.of(context, listen: false);
+          final DrawerMenuProvider drawerMenuProvider = Provider.of(context, listen: false);
           await homeProvider.initialize();
           await drawerMenuProvider.initialize();
+          clearAllData();
           pushAndRemoveUntil(AppRouter.pendingLoad);
         }, onError: (error) {
           showToast(error.toString());
@@ -118,6 +113,7 @@ class AuthenticationProvider extends ChangeNotifier {
       final ChangePasswordModel changePasswordModel = changePasswordModelFromJson(response.body);
       showToast('${changePasswordModel.message}');
       clearAllData();
+      usernameController.text = HomeProvider.instance.loginModel!.data!.email!;
       await logout();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');

@@ -16,7 +16,7 @@ class AppString {
   static const String addBreak = 'Add Break';
 
   ///Auth
-  static const String welcomeMessage = 'Welcome to $appName';
+  static const String welcomeMessage = appName;
   static const String password = 'Password';
   static const String anotherProcessRunning = 'Another process running';
   static const String confirmPassword = 'Confirm Password';

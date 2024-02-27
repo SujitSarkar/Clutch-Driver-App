@@ -41,7 +41,7 @@ class LoadDateRangePickerWidget extends StatelessWidget {
                     )),
                 const SizedBox(height: 16),
                 SfDateRangePicker(
-                  maxDate: DateTime.now(),
+                  maxDate: DateTime.now().add(const Duration(days: 1825)),
                   onSelectionChanged: homeProvider.dateRangeOnSelectionChanged,
                   selectionMode: DateRangePickerSelectionMode.range,
                   todayHighlightColor: AppColor.primaryColor,

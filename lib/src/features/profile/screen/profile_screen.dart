@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -128,16 +129,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .loginModel?.data?.meta?.profileImage !=
                                     null
                                 ? ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(100)),
-                                  child: Image.network(
-                                      profileProvider
-                                          .loginModel!.data!.meta!.profileImage!,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(100)),
+                                    child: CachedNetworkImage(
+                                      imageUrl: profileProvider.loginModel!
+                                          .data!.meta!.profileImage!,
+                                      placeholder: (context, url) =>
+                                          const LoadingWidget(
+                                              color: AppColor.primaryColor),
+                                      errorWidget: (context, url, value) =>
+                                          const Icon(Icons.error,
+                                              color: Colors.grey, size: 40),
                                       height: 120,
                                       width: 120,
                                       fit: BoxFit.cover,
-                                    ),
-                                )
+                                    ))
                                 : const Icon(Icons.person,
                                     color: AppColor.primaryColor, size: 100),
                       ),
