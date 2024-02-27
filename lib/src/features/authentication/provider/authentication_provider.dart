@@ -55,7 +55,7 @@ class AuthenticationProvider extends ChangeNotifier {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.login}', body: requestBody);
     }, onSuccess: (response) async {
-      final LoginModel loginModel = loginModelFromJson(response.body);
+      LoginModel loginModel = loginModelFromJson(response.body);
       if (loginModel.data != null) {
         await setData(
                 LocalStorageKey.loginResponseKey, loginModelToJson(loginModel))
@@ -75,6 +75,7 @@ class AuthenticationProvider extends ChangeNotifier {
         });
       }
       showToast('${loginModel.message}');
+      loginModel = LoginModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -98,6 +99,10 @@ class AuthenticationProvider extends ChangeNotifier {
     if (!changePasswordFormKey.currentState!.validate()) {
       return;
     }
+    if(passwordController.text != confirmPasswordController.text){
+      showToast('Password did not matched');
+      return;
+    }
     loading = true;
     notifyListeners();
 
@@ -110,11 +115,12 @@ class AuthenticationProvider extends ChangeNotifier {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}', body: requestBody);
     }, onSuccess: (response) async {
-      final ChangePasswordModel changePasswordModel = changePasswordModelFromJson(response.body);
+      ChangePasswordModel changePasswordModel = changePasswordModelFromJson(response.body);
       showToast('${changePasswordModel.message}');
       clearAllData();
       usernameController.text = HomeProvider.instance.loginModel!.data!.email!;
       await logout();
+      changePasswordModel = ChangePasswordModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');

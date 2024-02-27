@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Image.asset('assets/images/logo.png',height: 180,width: 180)),
+                    child: Image.asset('assets/images/logo.png',height: 160,width: 160)),
                 const SizedBox(height: TextSize.pagePadding),
                 const LargeTitleText(text:'Driver App',
                     textAlign: TextAlign.center,

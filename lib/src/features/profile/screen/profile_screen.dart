@@ -93,6 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextButton(
                     onPressed: () async {
                       await saveButtonOnTap(profileProvider);
+                      selectedAttachmentFile=null;
                     },
                     child: profileProvider.functionLoading
                         ? const LoadingWidget(color: AppColor.primaryColor)

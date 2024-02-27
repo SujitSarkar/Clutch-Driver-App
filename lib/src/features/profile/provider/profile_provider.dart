@@ -64,9 +64,10 @@ class ProfileProvider extends ChangeNotifier {
       return await ApiService.instance
           .get('${ApiEndpoint.baseUrl}${ApiEndpoint.stateList}');
     }, onSuccess: (response) async {
-      final StateModel stateModel = stateModelFromJson(response.body);
+      StateModel stateModel = stateModelFromJson(response.body);
       stateList = stateModel.data ?? [];
       selectedState = stateList.isNotEmpty ? stateList.first : null;
+      stateModel = StateModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -78,9 +79,10 @@ class ProfileProvider extends ChangeNotifier {
       return await ApiService.instance
           .get('${ApiEndpoint.baseUrl}${ApiEndpoint.countryList}');
     }, onSuccess: (response) async {
-      final CountryModel countryModel = countryModelFromJson(response.body);
+      CountryModel countryModel = countryModelFromJson(response.body);
       countryList = countryModel.data ?? [];
       selectedCountry = countryList.isNotEmpty ? countryList.first : null;
+      countryModel = CountryModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -128,6 +130,7 @@ class ProfileProvider extends ChangeNotifier {
       await getUserInfo();
       var jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
+      jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');

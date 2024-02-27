@@ -31,13 +31,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   PreStartDataModel? preStartDataModel;
   DailySummaryModel? dailySummaryModel;
   FatigueManagementBreakModel? fatigueManagementBreakModel;
-
   ///Additional Fees
   List<CheckBoxDataModel> additionalFeeCheckBoxItem = [];
-
   ///Pre-Start
   List<CheckBoxDataModel> preStartCheckBoxItem = [];
-
   ///Fatigue Management
   List<CheckBoxDataModel> fatigueManagementCheckBoxItem = [];
 
@@ -94,6 +91,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
     HomeProvider.instance.notifyListeners();
   }
+
   ///Change Own Truck
   Future<void>changeOwnTruck({required TruckDataModel value,
     required String fromPage})async{
@@ -114,7 +112,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.assetList}?company_id=$companyId&driver_id=$driverId');
     }, onSuccess: (response) async {
-      final TruckModel truckModel = truckModelFromJson(response.body);
+      TruckModel truckModel = truckModelFromJson(response.body);
       allTruckList.addAll(truckModel.data!);
 
       for(int i=0; i<truckModel.data!.length; i++){
@@ -124,6 +122,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       }
       selectedAllTruck = allTruckList.isNotEmpty ? allTruckList.first : null;
       selectedOwnTruck = ownTruckList.isNotEmpty ? ownTruckList.first : null;
+      truckModel = TruckModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -259,13 +258,14 @@ class DrawerMenuProvider extends ChangeNotifier {
           '${ApiEndpoint.baseUrl}${ApiEndpoint.savePreStartChecklist}',
           body: requestBody);
     }, onSuccess: (response) async {
-      final jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
       await HomeProvider.instance.getPendingLoadList();
       debugPrint(fromPage);
       if (fromPage == AppRouter.pendingLoad) {
         popAndPushTo(AppRouter.loadDetails);
       }
+      jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -309,8 +309,9 @@ class DrawerMenuProvider extends ChangeNotifier {
           '${ApiEndpoint.baseUrl}${ApiEndpoint.saveDailyLogbook}',
           body: requestBody);
     }, onSuccess: (response) async {
-      final jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
+      jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -351,10 +352,11 @@ class DrawerMenuProvider extends ChangeNotifier {
           '${ApiEndpoint.baseUrl}${ApiEndpoint.saveFatigueBreak}',
           body: requestBody);
     }, onSuccess: (response) async {
-      final jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
       getFatigueBreaks();
       popScreen();
+      jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -394,9 +396,10 @@ class DrawerMenuProvider extends ChangeNotifier {
           '${ApiEndpoint.baseUrl}${ApiEndpoint.saveFatigueManagement}',
           body: requestBody);
     }, onSuccess: (response) async {
-      final jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
       getPreStartChecks(fromPage: 'Fatigue Management');
+      jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');

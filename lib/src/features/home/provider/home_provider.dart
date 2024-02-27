@@ -134,9 +134,10 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3&asset_id=$assetId');
     }, onSuccess: (response) async {
-      final LoadModel loadModel = loadModelFromJson(response.body);
+      LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
       notifyListeners();
+      loadModel = LoadModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -159,10 +160,11 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2&asset_id=$assetId');
     }, onSuccess: (response) async {
-      final LoadModel loadModel = loadModelFromJson(response.body);
+      LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
       notifyListeners();
       getPendingLoadList();
+      loadModel = LoadModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -185,10 +187,11 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4&asset_id=$assetId');
     }, onSuccess: (response) async {
-      final LoadModel loadModel = loadModelFromJson(response.body);
+      LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];
       notifyListeners();
       getPendingLoadList();
+      loadModel = LoadModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -227,12 +230,13 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.post(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightCreateEdit}',body: body);
     }, onSuccess: (response) async {
-      final jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
       if(body['status']==4){
         await getPendingLoadList();
         popUntilOf(AppRouter.pendingLoad);
       }
+      jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -274,6 +278,7 @@ class HomeProvider extends ChangeNotifier {
         var jsonData = jsonDecode(response.body);
         showToast(jsonData['message']);
         await getLoadWeight();
+        jsonData = null;
       }, onError: (error) {
         debugPrint('Error: ${error.message}');
         showToast('Error: ${error.message}');
