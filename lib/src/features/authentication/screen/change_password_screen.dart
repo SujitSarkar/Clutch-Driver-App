@@ -62,7 +62,7 @@ class ChangePasswordScreen extends StatelessWidget {
                   TextFormFieldWidget(
                     controller: authProvider.passwordController,
                     labelText: AppString.password,
-                    hintText: 'Enter ${AppString.password.toLowerCase()}',
+                    hintText: AppString.password.toLowerCase(),
                     required: true,
                     obscure: true,
                   ),
@@ -72,7 +72,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     controller: authProvider.confirmPasswordController,
                     labelText: AppString.confirmPassword,
                     hintText:
-                        'Enter ${AppString.confirmPassword.toLowerCase()}',
+                        AppString.confirmPassword.toLowerCase(),
                     required: true,
                     obscure: true,
                   ),

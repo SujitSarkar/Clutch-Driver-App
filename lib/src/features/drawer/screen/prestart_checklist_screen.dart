@@ -34,9 +34,9 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp)async{
       await drawerMenuProvider.getPreStartChecks(fromPage: widget.fromPage);
       ///Set data to textField
-      startingOdometerReading.text = drawerMenuProvider.preStartDataModel!.data!.startOdoReading??'';
-      startTime.text = drawerMenuProvider.preStartDataModel!.data!.logStartTime??'';
-      note.text = drawerMenuProvider.preStartDataModel!.data!.preStartNotes??'';
+      startingOdometerReading.text = drawerMenuProvider.preStartDataModel?.data?.startOdoReading??'';
+      startTime.text = drawerMenuProvider.preStartDataModel?.data?.logStartTime??'';
+      note.text = drawerMenuProvider.preStartDataModel?.data?.preStartNotes??'';
     });
     super.initState();
   }
@@ -105,12 +105,12 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
               children: [
                 ///Truck dropdown
                 TruckDropdown(
-                    items: drawerMenuProvider.truckList,
-                    selectedValue: drawerMenuProvider.selectedTruck,
+                    items: drawerMenuProvider.ownTruckList,
+                    selectedValue: drawerMenuProvider.selectedOwnTruck,
                     hintText: 'Select Truck',
                     buttonHeight: 35,
                     onChanged: (value) {
-                      drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.preStartChecklist);
+                      drawerMenuProvider.changeOwnTruck(value:value,fromPage: AppRouter.dailyLogbook);
                     }),
                 const SizedBox(height: TextSize.textFieldGap),
 
@@ -118,7 +118,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                 TextFormFieldWidget(
                   controller: startingOdometerReading,
                   labelText: AppString.endingOdometerReading,
-                  hintText: 'Enter ${AppString.startingOdometerReading}',
+                  hintText: AppString.startingOdometerReading,
                   textInputType: TextInputType.number,
                 ),
                 const SizedBox(height: TextSize.textFieldGap),
@@ -127,7 +127,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                 TextFormFieldWidget(
                   controller: startTime,
                   labelText: AppString.startTime,
-                  hintText: 'Enter ${AppString.startTime}',
+                  hintText: AppString.startTime,
                   readOnly: true,
                   onTap: ()async{
                     TimeOfDay? timeOfDay = await pickTime(context);
@@ -148,7 +148,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                 TextFormFieldWidget(
                   controller: note,
                   labelText: AppString.note,
-                  hintText: 'Enter ${AppString.note}',
+                  hintText: AppString.note,
                   minLine: 3,
                   maxLine: 5,
                   textCapitalization: TextCapitalization.sentences,

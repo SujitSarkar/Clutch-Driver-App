@@ -32,7 +32,7 @@ class AddBreakDialogWidget extends StatelessWidget {
           TextFormFieldWidget(
             controller: startTime,
             labelText: AppString.startTime,
-            hintText: 'Enter ${AppString.startTime}',
+            hintText: AppString.startTime,
             readOnly: true,
             onTap: () async {
               TimeOfDay? timeOfDay = await pickTime(context);
@@ -47,7 +47,7 @@ class AddBreakDialogWidget extends StatelessWidget {
           TextFormFieldWidget(
             controller: endTime,
             labelText: AppString.endTime,
-            hintText: 'Enter ${AppString.endTime}',
+            hintText: AppString.endTime,
             readOnly: true,
             onTap: () async {
               TimeOfDay? timeOfDay = await pickTime(context);
@@ -62,7 +62,7 @@ class AddBreakDialogWidget extends StatelessWidget {
           TextFormFieldWidget(
             controller: breakDetails,
             labelText: 'Break Details',
-            hintText: 'Enter Break Details',
+            hintText: 'Break Details',
             minLine: 1,
             maxLine: 5,
             textCapitalization: TextCapitalization.sentences,

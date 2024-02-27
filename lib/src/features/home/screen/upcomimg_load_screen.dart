@@ -96,14 +96,14 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
 
                   ///Truck dropdown
                   TruckDropdown(
-                      items: drawerMenuProvider.truckList,
-                      selectedValue: drawerMenuProvider.selectedTruck,
+                      items: drawerMenuProvider.allTruckList,
+                      selectedValue: drawerMenuProvider.selectedAllTruck,
                       hintText: 'Select Truck',
                       width: 150,
                       buttonHeight: 35,
                       dropdownWidth: 150,
                       onChanged: (value) {
-                        drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.upcomingLoad);
+                        drawerMenuProvider.changeAllTruck(value:value,fromPage: AppRouter.completeLoad);
                       })
                 ],
               ),

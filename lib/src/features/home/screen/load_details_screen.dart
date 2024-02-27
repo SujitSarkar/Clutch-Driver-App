@@ -51,12 +51,16 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
     final HomeProvider homeProvider = Provider.of(context,listen: false);
     await homeProvider.getLoadWeight();
 
-    pickupDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
+    if(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!=null){
+      pickupDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
+    }
     pickupTime.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTime??'';
     pickupTareWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight??'';
     pickupGrossWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight??'';
 
-    deliveryDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
+    if(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!=null){
+      deliveryDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
+    }
     deliveryTime.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTime??'';
     deliveryTareWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight??'';
     deliveryGrossWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight??'';
@@ -73,7 +77,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
               '${parseTextFieldDataToDouble(deliveryGrossWeight) - parseTextFieldDataToDouble(deliveryTareWeight)}';
         } else {
           calculatedNett.text =
-              '${parseTextFieldDataToDouble(pickupTareWeight) - parseTextFieldDataToDouble(pickupGrossWeight)}';
+              '${parseTextFieldDataToDouble(pickupGrossWeight) - parseTextFieldDataToDouble(pickupTareWeight)}';
         }
       },
     );

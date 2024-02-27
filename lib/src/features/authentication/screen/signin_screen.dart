@@ -52,7 +52,7 @@ class SignInScreen extends StatelessWidget {
                     controller: authProvider.passwordController,
                     obscure: true,
                     labelText: AppString.password,
-                    hintText: 'Enter your ${AppString.password.toLowerCase()}',
+                    hintText: AppString.password.toLowerCase(),
                     required: true,
                   ),
                   const SizedBox(height: TextSize.textFieldGap),

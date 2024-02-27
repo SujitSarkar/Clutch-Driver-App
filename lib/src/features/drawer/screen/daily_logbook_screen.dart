@@ -108,12 +108,12 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
           children: [
             ///Truck dropdown
             TruckDropdown(
-                items: drawerMenuProvider.truckList,
-                selectedValue: drawerMenuProvider.selectedTruck,
+                items: drawerMenuProvider.ownTruckList,
+                selectedValue: drawerMenuProvider.selectedOwnTruck,
                 hintText: 'Select Truck',
                 buttonHeight: 35,
                 onChanged: (value) {
-                  drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.dailyLogbook);
+                  drawerMenuProvider.changeOwnTruck(value:value,fromPage: AppRouter.dailyLogbook);
                 }),
             const SizedBox(height: TextSize.textGap),
 

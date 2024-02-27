@@ -23,8 +23,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   bool functionLoading = false;
   bool fatigueManagementLoading = false;
 
-  List<TruckDataModel> truckList = [];
-  TruckDataModel? selectedTruck;
+  List<TruckDataModel> allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
+  List<TruckDataModel> ownTruckList = [];
+  TruckDataModel? selectedAllTruck;
+  TruckDataModel? selectedOwnTruck;
   PreStartDataModel? preStartDataModel;
   DailySummaryModel? dailySummaryModel;
   FatigueManagementBreakModel? fatigueManagementBreakModel;
@@ -76,10 +78,10 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///Change Truck
-  Future<void> changeTruck(
+  ///Change All Truck
+  Future<void> changeAllTruck(
       {required TruckDataModel value, required String fromPage}) async {
-    selectedTruck = value;
+    selectedAllTruck = value;
     notifyListeners();
     HomeProvider.instance.notifyListeners();
     debugPrint('FromPage: $fromPage');
@@ -90,11 +92,14 @@ class DrawerMenuProvider extends ChangeNotifier {
       HomeProvider.instance.getUpcomingLoadList();
     } else if (fromPage == AppRouter.completeLoad) {
       HomeProvider.instance.getCompletedLoadList();
-    } else if (fromPage == AppRouter.preStartChecklist ||
-        fromPage == AppRouter.dailyLogbook ||
-        fromPage == AppRouter.fatigueManagementChecklist) {
-      getPreStartChecks(fromPage: fromPage);
     }
+  }
+  ///Change Own Truck
+  Future<void>changeOwnTruck({required TruckDataModel value,
+    required String fromPage})async{
+    selectedAllTruck = value;
+    notifyListeners();
+    await getPreStartChecks(fromPage: fromPage);
   }
 
   ///Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -111,8 +116,15 @@ class DrawerMenuProvider extends ChangeNotifier {
           '${ApiEndpoint.baseUrl}${ApiEndpoint.assetList}?company_id=$companyId&driver_id=$driverId');
     }, onSuccess: (response) async {
       final TruckModel truckModel = truckModelFromJson(response.body);
-      truckList = truckModel.data ?? [];
-      selectedTruck = truckList.isNotEmpty ? truckList.first : null;
+      allTruckList.addAll(truckModel.data!);
+
+      for(int i=0; i<truckModel.data!.length; i++){
+        if(truckModel.data![i].whoOwns =='own'){
+          ownTruckList.add(truckModel.data![i]);
+        }
+      }
+      selectedAllTruck = allTruckList.isNotEmpty ? allTruckList.first : null;
+      selectedOwnTruck = ownTruckList.isNotEmpty ? ownTruckList.first : null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
@@ -130,7 +142,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     initialLoading = true;
     notifyListeners();
     final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
-    final assetId = selectedTruck?.id;
+    final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -146,7 +158,8 @@ class DrawerMenuProvider extends ChangeNotifier {
       notifyListeners();
       debugPrint(fromPage);
       if (fromPage == AppRouter.pendingLoad) {
-        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false) {
+        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false
+            && response.statusCode == 200) {
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -169,7 +182,7 @@ class DrawerMenuProvider extends ChangeNotifier {
 
     final companyId =
         HomeProvider.instance.loginModel?.data?.companies?.first.id;
-    final assetId = selectedTruck?.id;
+    final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -191,12 +204,13 @@ class DrawerMenuProvider extends ChangeNotifier {
       showToast(AppString.anotherProcessRunning);
       return;
     }
+    final randomCode = preStartDataModel?.data?.randomCode;
     fatigueManagementLoading = true;
     notifyListeners();
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.getFatigueBreaks}?random_code=${preStartDataModel?.data?.randomCode}');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.getFatigueBreaks}?random_code=$randomCode');
     }, onSuccess: (response) async {
       fatigueManagementBreakModel =
           fatigueManagementBreakModelFromJson(response.body);
@@ -224,7 +238,7 @@ class DrawerMenuProvider extends ChangeNotifier {
         HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final orgId = HomeProvider.instance.loginModel?.data?.organizations?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final assetId = selectedTruck?.id;
+    final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> preStartChecks = [];
 
     for (CheckBoxDataModel model in preStartCheckBoxItem) {
@@ -276,7 +290,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId =
         HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final assetId = selectedTruck?.id;
+    final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> additionalFees = [];
 
     for (CheckBoxDataModel model in additionalFeeCheckBoxItem) {
@@ -315,10 +329,15 @@ class DrawerMenuProvider extends ChangeNotifier {
       showToast(AppString.anotherProcessRunning);
       return;
     }
+    final randomCode = preStartDataModel?.data?.randomCode;
+    if(randomCode==null || randomCode.isEmpty){
+      showToast('You can\'t add break to this truck');
+      return;
+    }
+
     functionLoading = true;
     notifyListeners();
-    final assetId = selectedTruck?.id;
-    final randomCode = preStartDataModel?.data?.randomCode;
+    final assetId = selectedOwnTruck?.id;
 
     final requestBody = {
       'asset_id': assetId,
@@ -356,7 +375,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId =
         HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final assetId = selectedTruck?.id;
+    final assetId = selectedOwnTruck?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     List<Map<String, dynamic>> fatigueChecks = [];
 

@@ -98,12 +98,12 @@ class _FatigueManagementCheckListScreenState
             children: [
               ///Truck dropdown
               TruckDropdown(
-                  items: drawerMenuProvider.truckList,
-                  selectedValue: drawerMenuProvider.selectedTruck,
-                  hintText: 'Select Slot',
+                  items: drawerMenuProvider.ownTruckList,
+                  selectedValue: drawerMenuProvider.selectedOwnTruck,
+                  hintText: 'Select Truck',
                   buttonHeight: 35,
                   onChanged: (value) {
-                    drawerMenuProvider.changeTruck(value:value,fromPage: AppRouter.fatigueManagementChecklist);
+                    drawerMenuProvider.changeOwnTruck(value:value,fromPage: AppRouter.dailyLogbook);
                   }),
               const SizedBox(height: TextSize.textFieldGap),
 
@@ -205,7 +205,7 @@ class _FatigueManagementCheckListScreenState
                       child: BodyText(text: "${AppString.totalHoursDriven}:")),
                   BodyText(
                       text:
-                          '${drawerMenuProvider.fatigueManagementBreakModel?.data?.totaltime}')
+                          '${drawerMenuProvider.fatigueManagementBreakModel?.data?.totaltime??0}')
                 ],
               ),
               const SizedBox(
@@ -215,7 +215,7 @@ class _FatigueManagementCheckListScreenState
               TextFormFieldWidget(
                   controller: note,
                   labelText: AppString.note,
-                  hintText: 'Enter ${AppString.note}',
+                  hintText: AppString.note,
                   textCapitalization: TextCapitalization.sentences,
                   minLine: 3,
                   maxLine: 5),

@@ -128,7 +128,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
     pendingLoadList = [];
     final driverId = loginModel?.data?.id;
-    final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
+    final assetId = DrawerMenuProvider.instance.selectedAllTruck?.id;
     final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
@@ -153,7 +153,7 @@ class HomeProvider extends ChangeNotifier {
     upcomingLoadLoading=true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
-    final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
+    final assetId = DrawerMenuProvider.instance.selectedAllTruck?.id;
     final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
@@ -179,7 +179,7 @@ class HomeProvider extends ChangeNotifier {
     completeLoadLoading=true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
-    final assetId = DrawerMenuProvider.instance.selectedTruck?.id;
+    final assetId = DrawerMenuProvider.instance.selectedAllTruck?.id;
     final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
