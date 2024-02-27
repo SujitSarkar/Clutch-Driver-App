@@ -1,3 +1,5 @@
+import 'package:clutch_driver_app/core/utils/app_toast.dart';
+
 import '../../../../src/features/drawer/widget/add_break_dialog.dart';
 import '../../../../src/features/drawer/widget/fatigue_break_tile.dart';
 import 'package:flutter/Material.dart';
@@ -132,10 +134,15 @@ class _FatigueManagementCheckListScreenState
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                     ),
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) => AddBreakDialogWidget());
+                      if(drawerMenuProvider.preStartDataModel?.data?.randomCode!=null
+                          && drawerMenuProvider.preStartDataModel!.data!.randomCode!.isNotEmpty){
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => AddBreakDialogWidget());
+                      }else{
+                       showToast('You are not eligible to add break of this truck');
+                      }
                     },
                     child: const ButtonText(
                       text: AppString.addBreak,

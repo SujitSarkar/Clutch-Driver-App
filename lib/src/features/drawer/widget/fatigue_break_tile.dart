@@ -20,7 +20,7 @@ class FatigueBreakTile extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: BodyText(text: '${model.breakDetails}'),
+          child: BodyText(text: model.breakDetails??''),
         ),
       ],
     );

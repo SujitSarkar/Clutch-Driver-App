@@ -329,15 +329,10 @@ class DrawerMenuProvider extends ChangeNotifier {
       showToast(AppString.anotherProcessRunning);
       return;
     }
-    final randomCode = preStartDataModel?.data?.randomCode;
-    if(randomCode==null || randomCode.isEmpty){
-      showToast('You can\'t add break to this truck');
-      return;
-    }
-
     functionLoading = true;
     notifyListeners();
     final assetId = selectedOwnTruck?.id;
+    final randomCode = preStartDataModel?.data?.randomCode;
 
     final requestBody = {
       'asset_id': assetId,
