@@ -9,11 +9,11 @@ import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/search_field.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
-import '../../drawer/provider/drawer_menu_provider.dart';
 import '../provider/home_provider.dart';
-import '../tile/load_tile.dart';
+import '../tile/completed_load_tile.dart';
 import '../widget/load_date_range_picker_widget.dart';
 import '../widget/no_load_found_widget.dart';
 
@@ -35,7 +35,6 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
   @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = Provider.of(context);
-    final DrawerMenuProvider drawerMenuProvider = Provider.of(context);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -53,59 +52,76 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
             )
           ],
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
+            preferredSize: const Size.fromHeight(88),
             child: Container(
               color: AppColor.appBodyBg,
               padding:
                   const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
-              child: Row(
+              child: Column(
                 children: [
-                  ///Calender icon
-                  IconButton(
-                    icon: const Icon(Icons.calendar_month,
-                        color: AppColor.primaryColor),
-                    onPressed: () {
-                      showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => LoadDateRangePickerWidget(
-                              loadType: StaticList.loadTypeList.last));
-                    },
+                  Row(
+                    children: [
+                      ///Calender icon
+                      IconButton(
+                        icon: const Icon(Icons.calendar_month,
+                            color: AppColor.primaryColor),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => LoadDateRangePickerWidget(
+                                  loadType: StaticList.loadTypeList.last));
+                        },
+                      ),
+
+                      ///Date text
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) => LoadDateRangePickerWidget(
+                                    loadType: StaticList.loadTypeList.last));
+                          },
+                          child: BodyText(
+                              text: homeProvider.filterStartDate!
+                                          .millisecondsSinceEpoch ==
+                                      homeProvider
+                                          .filterEndDate!.millisecondsSinceEpoch
+                                  ? DateFormat("MMM dd")
+                                      .format(homeProvider.filterStartDate!)
+                                  : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} '
+                                      '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                        ),
+                      ),
+
+                      ///Truck dropdown
+                      TruckDropdown(
+                          items: homeProvider.allTruckList,
+                          selectedValue: homeProvider.selectedAllTruck,
+                          hintText: 'Select Truck',
+                          width: 150,
+                          buttonHeight: 35,
+                          dropdownWidth: 150,
+                          onChanged: (value) {
+                            homeProvider.changeAllTruck(value:value,fromPage: AppRouter.completeLoad);
+                          })
+                    ],
                   ),
 
-                  ///Date text
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => LoadDateRangePickerWidget(
-                                loadType: StaticList.loadTypeList.last));
+                  ///Search field
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: SearchField(
+                      controller: homeProvider.searchController,
+                      hintText: AppString.search,
+                      onChanged: (value){
+                        homeProvider.loadSearchOnChange(loadType: StaticList.loadTypeList.last);
                       },
-                      child: BodyText(
-                          text: homeProvider.filterStartDate!
-                                      .millisecondsSinceEpoch ==
-                                  homeProvider
-                                      .filterEndDate!.millisecondsSinceEpoch
-                              ? DateFormat("MMM dd")
-                                  .format(homeProvider.filterStartDate!)
-                              : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} '
-                                  '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                      suffixOnTap: ()=>homeProvider.clearSearchOnTap(loadType: StaticList.loadTypeList.last),
                     ),
-                  ),
-
-                  ///Truck dropdown
-                  TruckDropdown(
-                      items: drawerMenuProvider.allTruckList,
-                      selectedValue: drawerMenuProvider.selectedAllTruck,
-                      hintText: 'Select Truck',
-                      width: 150,
-                      buttonHeight: 35,
-                      dropdownWidth: 150,
-                      onChanged: (value) {
-                        drawerMenuProvider.changeAllTruck(value:value,fromPage: AppRouter.completeLoad);
-                      })
+                  )
                 ],
               ),
             ),
@@ -124,8 +140,7 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
           padding: const EdgeInsets.symmetric(
               horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
           itemCount: homeProvider.completedLoadList.length,
-          itemBuilder: (context, index) => LoadTile(
-            loadType: StaticList.loadTypeList.last,
+          itemBuilder: (context, index) => CompletedLoadTile(
             loadModel: homeProvider.completedLoadList[index],
           ),
           separatorBuilder: (context, index) =>

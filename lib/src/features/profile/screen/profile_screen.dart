@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextButton(
                     onPressed: () async {
                       await saveButtonOnTap(profileProvider);
-                      selectedAttachmentFile=null;
+                      selectedAttachmentFile = null;
                     },
                     child: profileProvider.functionLoading
                         ? const LoadingWidget(color: AppColor.primaryColor)
@@ -308,6 +308,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(height: TextSize.textGap),
                         ],
                       ),
+                const SizedBox(height: TextSize.textGap),
+
+                TextButton(
+                    onPressed: () {},
+                    child: ButtonText(
+                      text:
+                          '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.companies?.first.companyName ?? 'N/A'}',
+                      textColor: AppColor.primaryColor,
+                    ))
               ],
             ),
           )

@@ -21,6 +21,7 @@ import '../../authentication/model/login_model.dart';
 import '../../drawer/provider/drawer_menu_provider.dart';
 import '../../drawer/screen/prestart_checklist_screen.dart';
 import '../model/load_model.dart';
+import '../model/truck_model.dart';
 
 class HomeProvider extends ChangeNotifier {
   static final HomeProvider instance =
@@ -42,8 +43,13 @@ class HomeProvider extends ChangeNotifier {
   DateTime? filterStartDate = DateTime.now();
   DateTime? filterEndDate = DateTime.now();
 
+  ///Truck
+  List<TruckDataModel> allTruckList = [];
+  TruckDataModel? selectedAllTruck;
+
   ///Load
   final GlobalKey<FormState> loadDetailsFormKey = GlobalKey();
+  final TextEditingController searchController = TextEditingController();
   List<LoadDataModel> pendingLoadList = [];
   List<LoadDataModel> upcomingLoadList = [];
   List<LoadDataModel> completedLoadList = [];
@@ -72,10 +78,26 @@ class HomeProvider extends ChangeNotifier {
   }
 
   bool canPop() => AppNavigatorKey.key.currentState!.canPop();
+
   // void changeCompanyRadioValue(int value) {
   //   selectedCompanyIndex = value;
   //   notifyListeners();
   // }
+
+  ///Change All Truck
+  Future<void> changeAllTruck({required TruckDataModel value, required String fromPage}) async {
+    selectedAllTruck = value;
+    debugPrint('FromPage: $fromPage');
+
+    if (fromPage == AppRouter.pendingLoad) {
+       getPendingLoadList();
+    } else if (fromPage == AppRouter.upcomingLoad) {
+       getUpcomingLoadList();
+    } else if (fromPage == AppRouter.completeLoad) {
+       getCompletedLoadList();
+    }
+    notifyListeners();
+  }
 
   ///Load Filter
   void dateRangeOnSelectionChanged(DateRangePickerSelectionChangedArgs args) async{
@@ -111,6 +133,7 @@ class HomeProvider extends ChangeNotifier {
   }
 
   void clearFilter() {
+    searchController.clear();
     filterStartDate = DateTime.now();
     filterEndDate = DateTime.now();
     DrawerMenuProvider.instance.notifyListeners();
@@ -120,12 +143,40 @@ class HomeProvider extends ChangeNotifier {
   // 2=Upcoming load
   // 3=Pending load (progress)
   // 4=Completed load
+
+  Future<void> loadSearchOnChange({required String loadType})async{
+    debouncing(fn: (){
+      notifyListeners();
+      debugPrint('Load Type: $loadType');
+      if (loadType == StaticList.loadTypeList.first) {
+        getPendingLoadList();
+      } else if (loadType == StaticList.loadTypeList[1]) {
+        getUpcomingLoadList();
+      } else if (loadType == StaticList.loadTypeList.last) {
+        getCompletedLoadList();
+      }
+    });
+  }
+
+  Future<void> clearSearchOnTap({required String loadType})async{
+    searchController.clear();
+    notifyListeners();
+    debugPrint('Load Type: $loadType');
+    if (loadType == StaticList.loadTypeList.first) {
+      getPendingLoadList();
+    } else if (loadType == StaticList.loadTypeList[1]) {
+      getUpcomingLoadList();
+    } else if (loadType == StaticList.loadTypeList.last) {
+      getCompletedLoadList();
+    }
+  }
+
   Future<void> getPendingLoadList() async {
     pendingLoadLoading=true;
     notifyListeners();
     pendingLoadList = [];
     final driverId = loginModel?.data?.id;
-    final assetId = DrawerMenuProvider.instance.selectedAllTruck?.id;
+    final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
@@ -151,7 +202,7 @@ class HomeProvider extends ChangeNotifier {
     upcomingLoadLoading=true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
-    final assetId = DrawerMenuProvider.instance.selectedAllTruck?.id;
+    final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
@@ -178,7 +229,7 @@ class HomeProvider extends ChangeNotifier {
     completeLoadLoading=true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
-    final assetId = DrawerMenuProvider.instance.selectedAllTruck?.id;
+    final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companies?.first.companyId;
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
@@ -289,7 +340,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void debouncing({required Function() fn, int waitForMs = 800}) {
+  void debouncing({required Function() fn, int waitForMs = 1000}) {
     debounceTimer?.cancel();
     debounceTimer = Timer(Duration(milliseconds: waitForMs), fn);
   }

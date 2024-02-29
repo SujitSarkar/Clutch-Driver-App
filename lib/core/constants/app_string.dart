@@ -24,6 +24,7 @@ class AppString {
   static const String login = 'Login';
   static const String logout = 'Logout';
   static const String changePassword = 'Change Password';
+  static const String unlinkFrom = 'Unlink from';
   static const String signInMessage =
       'Please sign-in to your account and start the\nadventure';
   static const String noInternetConnection = 'No internet connection';
@@ -64,8 +65,10 @@ class AppString {
   static const String pickup = 'Pickup';
   static const String destination = 'Destination';
   static const String commodity = 'Commodity';
+  static const String noteForDriver = 'Note for driver';
   static const String quantity = 'QTY';
   static const String details = 'Details';
+  static const String search = 'Search';
 
   static const String note = 'Note';
   static const String pickupDate = 'Pickup Date';

@@ -2,14 +2,12 @@ import '../../../../src/features/home/provider/home_provider.dart';
 import 'package:flutter/Material.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
-import '../../../../core/constants/static_list.dart';
 import '../../../../core/widgets/normal_card.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../src/features/home/model/load_model.dart';
 
-class LoadTile extends StatelessWidget {
-  const LoadTile({super.key,required this.loadType, required this.loadModel});
-  final String loadType;
+class CompletedLoadTile extends StatelessWidget {
+  const CompletedLoadTile({super.key,required this.loadModel});
   final LoadDataModel loadModel;
 
   @override
@@ -41,21 +39,17 @@ class LoadTile extends StatelessWidget {
               children: [
                 BodyText(text: '${AppString.quantity}: ${loadModel.qty}'),
                 const SizedBox(height: 30),
-                loadType == StaticList.loadTypeList.first
-                    ? ElevatedButton(
+                ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColor.primaryColor,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5))
-                      ),
-                      minimumSize: const Size(80, 28)),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))
+                        ),
+                        minimumSize: const Size(80, 28)),
                     onPressed: () {
                       HomeProvider.instance.pendingLoadStartButtonOnTap(model: loadModel);
                     },
                     child: const BodyText(text: AppString.start, textColor: Colors.white))
-                    : loadType == StaticList.loadTypeList.last
-                    ? const Icon(Icons.check_circle_outline_outlined,color: AppColor.enableColor)
-                    : const SizedBox.shrink()
               ],
             ),
           )

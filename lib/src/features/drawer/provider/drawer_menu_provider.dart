@@ -24,9 +24,7 @@ class DrawerMenuProvider extends ChangeNotifier {
   bool functionLoading = false;
   bool fatigueManagementLoading = false;
 
-  List<TruckDataModel> allTruckList = [];
   List<TruckDataModel> ownTruckList = [];
-  TruckDataModel? selectedAllTruck;
   TruckDataModel? selectedOwnTruck;
   PreStartDataModel? preStartDataModel;
   DailySummaryModel? dailySummaryModel;
@@ -76,22 +74,6 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///Change All Truck
-  Future<void> changeAllTruck({required TruckDataModel value, required String fromPage}) async {
-    selectedAllTruck = value;
-    debugPrint('FromPage: $fromPage');
-
-    if (fromPage == AppRouter.pendingLoad) {
-      await HomeProvider.instance.getPendingLoadList();
-    } else if (fromPage == AppRouter.upcomingLoad) {
-      await HomeProvider.instance.getUpcomingLoadList();
-    } else if (fromPage == AppRouter.completeLoad) {
-      await HomeProvider.instance.getCompletedLoadList();
-    }
-    notifyListeners();
-    HomeProvider.instance.notifyListeners();
-  }
-
   ///Change Own Truck
   Future<void>changeOwnTruck({required TruckDataModel value,
     required String fromPage})async{
@@ -104,7 +86,7 @@ class DrawerMenuProvider extends ChangeNotifier {
   Future<void> getTruckList() async {
     final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
+    HomeProvider.instance.allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
     ownTruckList = [];
     initialLoading = true;
     notifyListeners();
@@ -113,14 +95,15 @@ class DrawerMenuProvider extends ChangeNotifier {
           '${ApiEndpoint.baseUrl}${ApiEndpoint.assetList}?company_id=$companyId&driver_id=$driverId');
     }, onSuccess: (response) async {
       TruckModel truckModel = truckModelFromJson(response.body);
-      allTruckList.addAll(truckModel.data!);
+      HomeProvider.instance.allTruckList.addAll(truckModel.data!);
 
       for(int i=0; i<truckModel.data!.length; i++){
         if(truckModel.data![i].whoOwns == StaticList.assetType.first){
           ownTruckList.add(truckModel.data![i]);
         }
       }
-      selectedAllTruck = allTruckList.isNotEmpty ? allTruckList.first : null;
+      HomeProvider.instance.selectedAllTruck = HomeProvider.instance.allTruckList.isNotEmpty
+          ? HomeProvider.instance.allTruckList.first : null;
       selectedOwnTruck = ownTruckList.isNotEmpty ? ownTruckList.first : null;
       truckModel = TruckModel();
     }, onError: (error) {
@@ -128,8 +111,8 @@ class DrawerMenuProvider extends ChangeNotifier {
       showToast('Error: ${error.message}');
     });
     initialLoading = false;
-    notifyListeners();
     HomeProvider.instance.notifyListeners();
+    notifyListeners();
   }
 
   Future<void> getPreStartChecks({required fromPage}) async {
@@ -154,11 +137,11 @@ class DrawerMenuProvider extends ChangeNotifier {
       additionalFeeCheckBoxItem = preStartDataModel!.data!.additionalFees!;
 
       debugPrint(fromPage);
-      if (fromPage == AppRouter.pendingLoad) {
-        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false
-            && response.statusCode == 200
-            && preStartDataModel?.data?.randomCode!=null
-            && preStartDataModel!.data!.randomCode!.isNotEmpty) {
+      if (fromPage == AppRouter.pendingLoad || fromPage == AppRouter.completeLoad) {
+        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false) {
+          popAndPushTo(AppRouter.loadDetails);
+        }else if(HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == true
+            && response.statusCode == 200){
           popAndPushTo(AppRouter.loadDetails);
         }
       }

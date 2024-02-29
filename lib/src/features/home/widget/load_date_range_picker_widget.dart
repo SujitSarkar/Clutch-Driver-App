@@ -1,8 +1,9 @@
-import 'package:clutch_driver_app/core/constants/app_string.dart';
-import 'package:clutch_driver_app/core/widgets/text_widget.dart';
-import 'package:clutch_driver_app/src/features/home/provider/home_provider.dart';
+import 'package:clutch_driver_app/core/constants/static_list.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_string.dart';
+import '../../../../core/widgets/text_widget.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/widgets/loading_widget.dart';
@@ -10,6 +11,7 @@ import '../../../../core/widgets/solid_button.dart';
 
 class LoadDateRangePickerWidget extends StatelessWidget {
   const LoadDateRangePickerWidget({super.key, required this.loadType});
+
   final String loadType;
 
   @override
@@ -33,15 +35,20 @@ class LoadDateRangePickerWidget extends StatelessWidget {
                 const SizedBox(height: 4),
                 Center(
                     child: Container(
-                      height: 4,
-                      width: 50,
-                      decoration: const BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    )),
+                  height: 4,
+                  width: 50,
+                  decoration: const BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                )),
                 const SizedBox(height: 16),
                 SfDateRangePicker(
-                  maxDate: DateTime.now().add(const Duration(days: 1825)),
+                  minDate: loadType == StaticList.loadTypeList[1]
+                      ? DateTime.now()
+                      : null,
+                  maxDate: loadType == StaticList.loadTypeList.first
+                      ? DateTime.now()
+                      : null,
                   onSelectionChanged: homeProvider.dateRangeOnSelectionChanged,
                   selectionMode: DateRangePickerSelectionMode.range,
                   todayHighlightColor: AppColor.primaryColor,
@@ -63,14 +70,14 @@ class LoadDateRangePickerWidget extends StatelessWidget {
                   endRangeSelectionColor: AppColor.primaryColor,
                   rangeSelectionColor: AppColor.primaryColor.withOpacity(0.1),
                   initialSelectedRange: PickerDateRange(
-                      homeProvider.filterStartDate,
-                      homeProvider.filterEndDate),
+                      homeProvider.filterStartDate, homeProvider.filterEndDate),
                 ),
                 const SizedBox(height: 20),
                 SolidButton(
                     onTap: () async {
                       setState(() {});
-                      await homeProvider.dateFilterButtonOnTap(loadType: loadType);
+                      await homeProvider.dateFilterButtonOnTap(
+                          loadType: loadType);
                     },
                     child: homeProvider.functionLoading
                         ? const LoadingWidget()

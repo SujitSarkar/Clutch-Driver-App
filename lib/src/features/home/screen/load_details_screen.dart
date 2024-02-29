@@ -24,7 +24,7 @@ class LoadDetailsScreen extends StatefulWidget {
 
 class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
   final TextEditingController pickupDate = TextEditingController();
-  final TextEditingController pickupTime= TextEditingController();
+  final TextEditingController pickupTime = TextEditingController();
   final TextEditingController pickupTareWeight = TextEditingController();
   final TextEditingController pickupGrossWeight = TextEditingController();
 
@@ -47,24 +47,32 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
     super.initState();
   }
 
-  Future<void> onInit()async{
-    final HomeProvider homeProvider = Provider.of(context,listen: false);
+  Future<void> onInit() async {
+    final HomeProvider homeProvider = Provider.of(context, listen: false);
     await homeProvider.getLoadWeight();
 
-    if(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!=null){
-      pickupDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
+    if (homeProvider.loadWeightModel!.data!.pickup!.pickupDate != null) {
+      pickupDate.text = DateFormat('yyyy-MM-dd')
+          .format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
     }
-    pickupTime.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTime??'';
-    pickupTareWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight??'';
-    pickupGrossWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight??'';
+    pickupTime.text =
+        homeProvider.loadWeightModel!.data!.pickup!.pickupTime ?? '';
+    pickupTareWeight.text =
+        homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight ?? '';
+    pickupGrossWeight.text =
+        homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight ?? '';
 
-    if(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!=null){
-      deliveryDate.text = DateFormat('yyyy-MM-dd').format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
+    if (homeProvider.loadWeightModel!.data!.deli!.deliveryDate != null) {
+      deliveryDate.text = DateFormat('yyyy-MM-dd')
+          .format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
     }
-    deliveryTime.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTime??'';
-    deliveryTareWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight??'';
-    deliveryGrossWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight??'';
-    note.text = homeProvider.loadWeightModel!.data!.note!.noteByDriver??'';
+    deliveryTime.text =
+        homeProvider.loadWeightModel!.data!.deli!.deliveryTime ?? '';
+    deliveryTareWeight.text =
+        homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight ?? '';
+    deliveryGrossWeight.text =
+        homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight ?? '';
+    note.text = homeProvider.loadWeightModel!.data!.note!.noteByDriver ?? '';
   }
 
   void calculateNett() {
@@ -74,10 +82,10 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
         if (deliveryGrossWeight.text.isNotEmpty &&
             deliveryTareWeight.text.isNotEmpty) {
           calculatedNett.text =
-              '${parseTextFieldDataToDouble(deliveryGrossWeight) - parseTextFieldDataToDouble(deliveryTareWeight)}';
+              '${roundDouble(parseTextFieldDataToDouble(deliveryGrossWeight) - parseTextFieldDataToDouble(deliveryTareWeight))}';
         } else {
           calculatedNett.text =
-              '${parseTextFieldDataToDouble(pickupGrossWeight) - parseTextFieldDataToDouble(pickupTareWeight)}';
+              '${roundDouble(parseTextFieldDataToDouble(pickupGrossWeight) - parseTextFieldDataToDouble(pickupTareWeight))}';
         }
       },
     );
@@ -108,8 +116,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
             : _bodyUI(homeProvider, size));
   }
 
-  Widget _bodyUI(HomeProvider homeProvider, Size size) =>
-      Column(
+  Widget _bodyUI(HomeProvider homeProvider, Size size) => Column(
         children: [
           ///Cancel & Save Button
           Padding(
@@ -124,21 +131,20 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       textColor: AppColor.disableColor,
                     )),
                 TextButton(
-                    onPressed: () async=> await saveButtonOnTap(homeProvider),
+                    onPressed: () async => await saveButtonOnTap(homeProvider),
                     child: homeProvider.functionLoading
                         ? const LoadingWidget(color: AppColor.primaryColor)
                         : const BodyText(
-                      text: AppString.save,
-                      textColor: AppColor.primaryColor,
-                    )),
+                            text: AppString.save,
+                            textColor: AppColor.primaryColor,
+                          )),
               ],
             ),
           ),
 
           Expanded(
             child: SingleChildScrollView(
-              padding:
-              const EdgeInsets.all(TextSize.pagePadding),
+              padding: const EdgeInsets.all(TextSize.pagePadding),
               child: Form(
                 key: homeProvider.loadDetailsFormKey,
                 child: Column(
@@ -150,14 +156,27 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BodyText(text: '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo}'),
-                        BodyText(text: '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty}'),
+                        BodyText(
+                            text:
+                                '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo??''}'),
+                        BodyText(
+                            text:
+                                '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty??'0'}'),
                       ],
                     ),
-                    BodyText(text: '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef}'),
-                    BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country}'),
-                    BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country}'),
-                    BodyText(text: '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity}'),
+                    BodyText(
+                        text:
+                            '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef??''}'),
+                    BodyText(
+                        text:
+                            '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country??''}'),
+                    BodyText(
+                        text:
+                            '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country??''}'),
+                    BodyText(
+                        text:
+                            '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity??''}'),
+                    const BodyText(text: '${AppString.noteForDriver}: N/A'),
                     const SizedBox(height: TextSize.textGap),
 
                     ///Open Route in Google Map
@@ -188,10 +207,11 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       textInputType: TextInputType.number,
                       required: true,
                       readOnly: true,
-                      onTap: ()async{
+                      onTap: () async {
                         DateTime? dateTime = await pickDate(context);
-                        if(dateTime!=null){
-                          pickupDate.text = DateFormat('yyyy-MM-dd').format(dateTime);
+                        if (dateTime != null) {
+                          pickupDate.text =
+                              DateFormat('yyyy-MM-dd').format(dateTime);
                         }
                       },
                     ),
@@ -202,9 +222,9 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       hintText: AppString.pickupTime,
                       required: true,
                       readOnly: true,
-                      onTap: ()async{
+                      onTap: () async {
                         TimeOfDay? timeOfDay = await pickTime(context);
-                        if(timeOfDay!=null){
+                        if (timeOfDay != null) {
                           pickupTime.text = formatTimeOfDay(timeOfDay);
                         }
                       },
@@ -228,7 +248,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                     const SizedBox(height: TextSize.textGap),
                     SolidButton(
                         onTap: () {
-                          pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.first);
+                          pushTo(AppRouter.loadAttachment,
+                              arguments: StaticList.loadWeightType.first);
                         },
                         backgroundColor: AppColor.disableColor,
                         child: const ButtonText(text: AppString.upload)),
@@ -241,10 +262,11 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       hintText: AppString.deliveryDate,
                       required: true,
                       readOnly: true,
-                      onTap: ()async{
+                      onTap: () async {
                         DateTime? dateTime = await pickDate(context);
-                        if(dateTime!=null){
-                          deliveryDate.text = DateFormat('yyyy-MM-dd').format(dateTime);
+                        if (dateTime != null) {
+                          deliveryDate.text =
+                              DateFormat('yyyy-MM-dd').format(dateTime);
                         }
                       },
                     ),
@@ -255,14 +277,15 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       hintText: AppString.deliveryTime,
                       required: true,
                       readOnly: true,
-                      onTap: ()async{
+                      onTap: () async {
                         TimeOfDay? timeOfDay = await pickTime(context);
-                        if(timeOfDay!=null){
+                        if (timeOfDay != null) {
                           deliveryTime.text = formatTimeOfDay(timeOfDay);
                         }
                       },
                     ),
                     const SizedBox(height: TextSize.textGap),
+
                     ///Delivery Weight
                     TextFormFieldWidget(
                       controller: deliveryGrossWeight,
@@ -283,7 +306,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
 
                     SolidButton(
                         onTap: () {
-                          pushTo(AppRouter.loadAttachment,arguments: StaticList.loadWeightType.last);
+                          pushTo(AppRouter.loadAttachment,
+                              arguments: StaticList.loadWeightType.last);
                         },
                         backgroundColor: AppColor.disableColor,
                         child: const ButtonText(text: AppString.upload)),
@@ -308,10 +332,12 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
 
                     ///Complete Delivery Button
                     SolidButton(
-                        onTap: () async=> await completeButtonOnTap(homeProvider),
+                        onTap: () async =>
+                            await completeButtonOnTap(homeProvider),
                         child: homeProvider.functionLoading
                             ? const LoadingWidget()
-                            : const ButtonText(text: AppString.completeDelivery)),
+                            : const ButtonText(
+                                text: AppString.completeDelivery)),
                     const SizedBox(height: TextSize.pagePadding),
                   ],
                 ),
@@ -321,19 +347,21 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
         ],
       );
 
-  Future<void> saveButtonOnTap(HomeProvider homeProvider)async{
+  Future<void> saveButtonOnTap(HomeProvider homeProvider) async {
     final body = {
       'load_id': homeProvider.selectedPendingLoadModel?.id,
       'pickup_time': pickupTime.text,
       'pickup_date': pickupDate.text,
       'pickup_tare_weight': pickupTareWeight.text,
       'pickup_gross_weight': pickupGrossWeight.text,
-      'pickup_net_weight': homeProvider.loadWeightModel?.data?.pickup?.pickupNetWeight,
+      'pickup_net_weight':
+          homeProvider.loadWeightModel?.data?.pickup?.pickupNetWeight,
       'delivery_time': deliveryTime.text,
       'delivery_date': deliveryDate.text,
       'delivery_tare_weight': deliveryTareWeight.text,
       'delivery_gross_weight': deliveryGrossWeight.text,
-      'delivery_net_weight': homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
+      'delivery_net_weight':
+          homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
       'note_by_driver': note.text.trim(),
       'status': 3,
     };
@@ -341,8 +369,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
     await onInit();
   }
 
-  Future<void> completeButtonOnTap(HomeProvider homeProvider)async{
-    if(!homeProvider.loadDetailsFormKey.currentState!.validate()){
+  Future<void> completeButtonOnTap(HomeProvider homeProvider) async {
+    if (!homeProvider.loadDetailsFormKey.currentState!.validate()) {
       return;
     }
     final body = {
@@ -351,12 +379,14 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
       'pickup_date': pickupDate.text,
       'pickup_tare_weight': pickupTareWeight.text,
       'pickup_gross_weight': pickupGrossWeight.text,
-      'pickup_net_weight': homeProvider.loadWeightModel?.data?.pickup?.pickupNetWeight,
+      'pickup_net_weight':
+          homeProvider.loadWeightModel?.data?.pickup?.pickupNetWeight,
       'delivery_time': deliveryTime.text,
       'delivery_date': deliveryDate.text,
       'delivery_tare_weight': deliveryTareWeight.text,
       'delivery_gross_weight': deliveryGrossWeight.text,
-      'delivery_net_weight': homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
+      'delivery_net_weight':
+          homeProvider.loadWeightModel?.data?.deli?.deliveryNetWeight,
       'note_by_driver': note.text.trim(),
       'status': 4,
     };

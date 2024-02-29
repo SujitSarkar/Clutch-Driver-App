@@ -109,6 +109,10 @@ class AppDrawer extends StatelessWidget {
                   pushTo(AppRouter.changePassword);
                 }),
             DrawerItemTile(
+                leadingIcon: Icons.link_off,
+                title: '${AppString.unlinkFrom} ${homeProvider.loginModel?.data?.companies?.first.companyName??'N/A'}',
+                onTap: () async {}),
+            DrawerItemTile(
                 leadingIcon: Icons.logout,
                 title: AppString.logout,
                 onTap: () async {
