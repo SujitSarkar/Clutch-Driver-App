@@ -14,10 +14,13 @@ class LoadModel {
   });
 
   factory LoadModel.fromJson(Map<String, dynamic> json) => LoadModel(
-    message: json["message"],
-    statusCode: json["status_code"],
-    data: json["data"] == null ? [] : List<LoadDataModel>.from(json["data"]!.map((x) => LoadDataModel.fromJson(x))),
-  );
+        message: json["message"],
+        statusCode: json["status_code"],
+        data: json["data"] == null
+            ? []
+            : List<LoadDataModel>.from(
+                json["data"]!.map((x) => LoadDataModel.fromJson(x))),
+      );
 }
 
 class LoadDataModel {
@@ -31,6 +34,12 @@ class LoadDataModel {
   final String? qty;
   final String? contractNo;
   final String? commodity;
+  final String? noteForDriver;
+  final dynamic noteByDriver;
+  final bool? editable;
+  final DateTime? loadStartDate;
+  final String? releaseNo;
+  final String? deliveryNo;
   final Destination? pickup;
   final Destination? destination;
 
@@ -45,33 +54,51 @@ class LoadDataModel {
     this.qty,
     this.contractNo,
     this.commodity,
+    this.noteForDriver,
+    this.noteByDriver,
+    this.editable,
+    this.loadStartDate,
+    this.releaseNo,
+    this.deliveryNo,
     this.pickup,
     this.destination,
   });
 
   factory LoadDataModel.fromJson(Map<String, dynamic> json) => LoadDataModel(
-    id: json["id"],
-    assetId: json["asset_id"],
-    requiredPrecheck: json["required_precheck"],
-    status: json["status"],
-    statusName: json["status_name"],
-    companyId: json["company_id"],
-    loadRef: json["load_Ref"],
-    qty: json["qty"],
-    contractNo: json["contract_no"],
-    commodity: json["commodity"],
-    pickup: json["pickup"] == null ? null : Destination.fromJson(json["pickup"]),
-    destination: json["destination"] == null ? null : Destination.fromJson(json["destination"]),
-  );
+        id: json["id"],
+        assetId: json["asset_id"],
+        requiredPrecheck: json["required_precheck"],
+        status: json["status"],
+        statusName: json["status_name"],
+        companyId: json["company_id"],
+        loadRef: json["load_Ref"],
+        qty: json["qty"],
+        contractNo: json["contract_no"],
+        commodity: json["commodity"],
+        noteForDriver: json["note_for_driver"],
+        noteByDriver: json["note_by_driver"],
+        editable: json["editable"],
+        loadStartDate: json["load_start_date"] == null
+            ? null
+            : DateTime.parse(json["load_start_date"]),
+        releaseNo: json["release_no"],
+        deliveryNo: json["delivery_no"],
+        pickup: json["pickup"] == null
+            ? null
+            : Destination.fromJson(json["pickup"]),
+        destination: json["destination"] == null
+            ? null
+            : Destination.fromJson(json["destination"]),
+      );
 }
 
 class Destination {
   final String? state;
-  final dynamic suburb;
-  final dynamic postcode;
-  final dynamic streetAddress;
-  final dynamic streetNumber;
-  final dynamic unitType;
+  final String? suburb;
+  final String? postcode;
+  final String? streetAddress;
+  final String? streetNumber;
+  final String? unitType;
   final String? country;
   final String? customAddress;
 
@@ -87,13 +114,13 @@ class Destination {
   });
 
   factory Destination.fromJson(Map<String, dynamic> json) => Destination(
-    state: json["state"],
-    suburb: json["suburb"],
-    postcode: json["postcode"],
-    streetAddress: json["street_address"],
-    streetNumber: json["street_number"],
-    unitType: json["unit_type"],
-    country: json["country"],
-    customAddress: json["custom_address"],
-  );
+        state: json["state"],
+        suburb: json["suburb"],
+        postcode: json["postcode"],
+        streetAddress: json["street_address"],
+        streetNumber: json["street_number"],
+        unitType: json["unit_type"],
+        country: json["country"],
+        customAddress: json["custom_address"],
+      );
 }

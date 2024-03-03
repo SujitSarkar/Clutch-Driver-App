@@ -84,7 +84,7 @@ class DrawerMenuProvider extends ChangeNotifier {
   ///Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
   Future<void> getTruckList() async {
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     HomeProvider.instance.allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
     ownTruckList = [];
@@ -122,7 +122,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     }
     initialLoading = true;
     notifyListeners();
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -162,7 +162,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     initialLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companies?.first.id;
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -216,8 +216,8 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
 
     final companyId =
-        HomeProvider.instance.loginModel?.data?.companies?.first.id;
-    final orgId = HomeProvider.instance.loginModel?.data?.organizations?.id;
+        HomeProvider.instance.loginModel?.data?.companyId??'';
+    const orgId = '';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> preStartChecks = [];
@@ -270,7 +270,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
 
     final companyId =
-        HomeProvider.instance.loginModel?.data?.companies?.first.id;
+        HomeProvider.instance.loginModel?.data?.companyId??'';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> additionalFees = [];
@@ -352,7 +352,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
 
     final companyId =
-        HomeProvider.instance.loginModel?.data?.companies?.first.id;
+        HomeProvider.instance.loginModel?.data?.companyId??'';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());

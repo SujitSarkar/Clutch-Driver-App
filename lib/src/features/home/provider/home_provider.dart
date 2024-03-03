@@ -145,7 +145,7 @@ class HomeProvider extends ChangeNotifier {
   // 4=Completed load
 
   Future<void> loadSearchOnChange({required String loadType})async{
-    debouncing(fn: (){
+    debouncing(waitForMs: 2000,fn: (){
       notifyListeners();
       debugPrint('Load Type: $loadType');
       if (loadType == StaticList.loadTypeList.first) {
@@ -177,13 +177,14 @@ class HomeProvider extends ChangeNotifier {
     pendingLoadList = [];
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
-    final companyId = loginModel?.data?.companies?.first.companyId;
+    final companyId = loginModel?.data?.companyId??'';
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
+    final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.pendingLoadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3&asset_id=$assetId&load_ref=$loadRef');
     }, onSuccess: (response) async {
       LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
@@ -203,13 +204,14 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
-    final companyId = loginModel?.data?.companies?.first.companyId;
+    final companyId = loginModel?.data?.companyId??'';
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
+    final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2&asset_id=$assetId&load_ref=$loadRef');
     }, onSuccess: (response) async {
       LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
@@ -230,13 +232,14 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
-    final companyId = loginModel?.data?.companies?.first.companyId;
+    final companyId = loginModel?.data?.companyId??'';
     final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
     final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
+    final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4&asset_id=$assetId');
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4&asset_id=$assetId&load_ref=$loadRef');
     }, onSuccess: (response) async {
       LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];
@@ -249,6 +252,24 @@ class HomeProvider extends ChangeNotifier {
     });
     completeLoadLoading=false;
     notifyListeners();
+  }
+
+  Future<void> loadDecline({required int loadId}) async {
+    final requestBody = {
+      'user_id': loadId,
+      'load_id': loginModel?.data?.id};
+
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadDecline}',body: requestBody);
+    }, onSuccess: (response) async {
+      var jsonData = jsonDecode(response.body);
+      showToast(jsonData['message']);
+      getPendingLoadList();
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
   }
 
   Future<void> getLoadWeight() async {

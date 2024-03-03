@@ -46,7 +46,7 @@ class LoadDateRangePickerWidget extends StatelessWidget {
                   minDate: loadType == StaticList.loadTypeList[1]
                       ? DateTime.now()
                       : null,
-                  maxDate: loadType == StaticList.loadTypeList.first
+                  maxDate: loadType == StaticList.loadTypeList.first ||loadType == StaticList.loadTypeList.last
                       ? DateTime.now()
                       : null,
                   onSelectionChanged: homeProvider.dateRangeOnSelectionChanged,

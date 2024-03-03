@@ -1,8 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/widgets/basic_dropdown.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/constants/app_color.dart';
@@ -51,10 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     lastName.text = profileProvider.loginModel!.data!.lastName ?? '';
     emailAddress.text = profileProvider.loginModel!.data!.email ?? '';
     phone.text = profileProvider.loginModel!.data!.phone ?? '';
-    organization.text =
-        profileProvider.loginModel!.data!.organizations!.orgName ?? '';
     license.text = profileProvider.loginModel!.data!.meta!.licenseNumber ?? '';
-    street.text = profileProvider.loginModel!.data!.address!.streetName ?? '';
+    street.text = profileProvider.loginModel!.data!.address!.streetAddress ?? '';
     streetNumber.text =
         profileProvider.loginModel!.data!.address!.streetNumber ?? '';
     suburb.text = profileProvider.loginModel!.data!.address!.suburb ?? '';
@@ -310,11 +309,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                 const SizedBox(height: TextSize.textGap),
 
+                if(HomeProvider.instance.loginModel?.data?.linkdCompanyName!=null)
                 TextButton(
-                    onPressed: () {},
-                    child: ButtonText(
-                      text:
-                          '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.companies?.first.companyName ?? 'N/A'}',
+                    onPressed: () {
+                      profileProvider.unlinkDriver();
+                    },
+                    child: profileProvider.unlinkLoading
+                        ? const LoadingWidget(color: AppColor.primaryColor)
+                        : ButtonText(
+                      text: '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.linkdCompanyName ?? 'N/A'}',
                       textColor: AppColor.primaryColor,
                     ))
               ],

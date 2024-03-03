@@ -10,6 +10,7 @@ import '../constants/text_size.dart';
 import '../router/app_router.dart';
 import '../router/page_navigator.dart';
 import '../../src/features/drawer/widget/drawer_item_tile.dart';
+import 'loading_widget.dart';
 import 'normal_card.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -47,7 +48,7 @@ class AppDrawer extends StatelessWidget {
                             ),
                             FittedBox(
                               child: Text(
-                                ProfileProvider.instance.loginModel?.data?.email?? 'N/A',
+                                ProfileProvider.instance.loginModel?.data?.email?? ProfileProvider.instance.loginModel?.data?.phone??'N/A',
                                 maxLines: 1,
                                 style: const TextStyle(
                                     fontSize: TextSize.bodyText, color: Colors.grey),
@@ -108,10 +109,15 @@ class AppDrawer extends StatelessWidget {
                   Scaffold.of(context).closeDrawer();
                   pushTo(AppRouter.changePassword);
                 }),
-            DrawerItemTile(
+            if(homeProvider.loginModel?.data?.linkdCompanyName!=null)
+              ProfileProvider.instance.unlinkLoading
+                  ? const LoadingWidget(color: AppColor.primaryColor)
+                  : DrawerItemTile(
                 leadingIcon: Icons.link_off,
-                title: '${AppString.unlinkFrom} ${homeProvider.loginModel?.data?.companies?.first.companyName??'N/A'}',
-                onTap: () async {}),
+                title: '${AppString.unlinkFrom} ${homeProvider.loginModel?.data?.linkdCompanyName??'N/A'}',
+                onTap: () async {
+                  ProfileProvider.instance.unlinkDriver();
+                }),
             DrawerItemTile(
                 leadingIcon: Icons.logout,
                 title: AppString.logout,

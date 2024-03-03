@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/local_storage_key.dart';
 import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../core/utils/local_storage.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../src/features/profile/model/country_model.dart';
@@ -16,9 +18,10 @@ class ProfileProvider extends ChangeNotifier {
   static final ProfileProvider instance =
       Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
 
-  bool initialLoading = false;
+  bool initialLoading = true;
   bool functionLoading = false;
   bool stateCountryLoading = false;
+  bool unlinkLoading = false;
   LoginModel? loginResponseModel;
 
   LoginModel? loginModel;
@@ -28,14 +31,10 @@ class ProfileProvider extends ChangeNotifier {
   String? selectedCountry;
 
   Future<void> initialize() async {
+    await getUserInfo();
+    initialLoading = false;
+    notifyListeners();
 
-    if (loginModel == null) {
-      initialLoading = true;
-      notifyListeners();
-      await getUserInfo();
-      initialLoading = false;
-      notifyListeners();
-    }
     ///Get country state list
     stateCountryLoading = true;
     notifyListeners();
@@ -101,6 +100,38 @@ class ProfileProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
+  }
+
+  Future<void> unlinkDriver() async {
+    unlinkLoading=true;
+    notifyListeners();
+    HomeProvider.instance.notifyListeners();
+    final requestBody = {
+      'id': HomeProvider.instance.loginModel?.data?.id,
+      'company_id': HomeProvider.instance.loginModel?.data?.companyId??''};
+
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance
+          .post('${ApiEndpoint.baseUrl}${ApiEndpoint.unlinkDriver}',body: requestBody);
+    }, onSuccess: (response) async {
+      HomeProvider.instance.loginModel?.data?.linkdCompanyName=null;
+      HomeProvider.instance.loginModel?.data?.companyId=null;
+      await setData(LocalStorageKey.loginResponseKey, loginModelToJson(HomeProvider.instance.loginModel!))
+          .then((value) async {
+            await HomeProvider.instance.getLocalData();
+            ApiService.instance.addAccessTokenAndCookie(
+                token: loginModel?.data?.authToken,
+                cookie: loginModel?.data?.authToken);
+      });
+      var jsonData = jsonDecode(response.body);
+      showToast(jsonData['message']);
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+    unlinkLoading=false;
+    notifyListeners();
+    HomeProvider.instance.notifyListeners();
   }
 
   Future<void> updateProfile(

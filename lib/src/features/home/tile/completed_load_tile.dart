@@ -28,6 +28,8 @@ class CompletedLoadTile extends StatelessWidget {
                 BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state}'),
                 BodyText(text: '${AppString.destination}: ${loadModel.destination?.country}'),
                 BodyText(text: '${AppString.commodity}: ${loadModel.commodity}'),
+                BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
+                BodyText(text: '${AppString.deliveryNo}: ${loadModel.deliveryNo??''}'),
               ],
             ),
           ),

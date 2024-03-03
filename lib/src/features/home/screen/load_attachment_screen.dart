@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:clutch_driver_app/core/constants/static_list.dart';
-import 'package:clutch_driver_app/core/widgets/loading_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/static_list.dart';
+import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/utils/app_media_service.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
@@ -37,6 +37,8 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          title: TitleText(text: 'Upload ${widget.loadWeightType} attachment', textColor: Colors.white),
+          titleSpacing: 0,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),

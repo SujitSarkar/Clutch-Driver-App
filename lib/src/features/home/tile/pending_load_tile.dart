@@ -1,4 +1,5 @@
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import 'package:flutter/Material.dart';
 import '../../../../core/constants/app_color.dart';
@@ -13,10 +14,13 @@ class PendingLoadTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeProvider homeProvider = Provider.of(context);
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
-          onPressed: (context) {},
+          onPressed: (context) {
+            homeProvider.loadDecline(loadId: loadModel.id??0);
+          },
           backgroundColor: Colors.redAccent,
           foregroundColor: Colors.white,
           icon: Icons.delete,
@@ -35,16 +39,13 @@ class PendingLoadTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BodyText(
-                      text: '${AppString.contact}: ${loadModel.contractNo}'),
-                  BodyText(text: '${AppString.load}: ${loadModel.loadRef}'),
-                  BodyText(
-                      text: '${AppString.pickup}: ${loadModel.pickup?.state}'),
-                  BodyText(
-                      text:
-                          '${AppString.destination}: ${loadModel.destination?.country}'),
-                  BodyText(
-                      text: '${AppString.commodity}: ${loadModel.commodity}'),
+                  BodyText(text: '${AppString.contact}: ${loadModel.contractNo??''}'),
+                  BodyText(text: '${AppString.load}: ${loadModel.loadRef}??'),
+                  BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??""}'),
+                  BodyText(text: '${AppString.destination}: ${loadModel.destination?.country??''}'),
+                  BodyText(text: '${AppString.commodity}: ${loadModel.commodity??''}'),
+                  BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
+                  BodyText(text: '${AppString.deliveryNo}: ${loadModel.deliveryNo??''}'),
                 ],
               ),
             ),

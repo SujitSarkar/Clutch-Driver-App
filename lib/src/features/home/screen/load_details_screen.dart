@@ -156,27 +156,15 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BodyText(
-                            text:
-                                '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo??''}'),
-                        BodyText(
-                            text:
-                                '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty??'0'}'),
+                        BodyText(text: '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo??''}'),
+                        BodyText(text: '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty??'0'}'),
                       ],
                     ),
-                    BodyText(
-                        text:
-                            '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef??''}'),
-                    BodyText(
-                        text:
-                            '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country??''}'),
-                    BodyText(
-                        text:
-                            '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country??''}'),
-                    BodyText(
-                        text:
-                            '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity??''}'),
-                    const BodyText(text: '${AppString.noteForDriver}: N/A'),
+                    BodyText(text: '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef??''}'),
+                    BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country??''}'),
+                    BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country??''}'),
+                    BodyText(text: '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity??''}'),
+                    BodyText(text: '${AppString.noteForDriver}: ${homeProvider.selectedPendingLoadModel?.noteForDriver??''}'),
                     const SizedBox(height: TextSize.textGap),
 
                     ///Open Route in Google Map

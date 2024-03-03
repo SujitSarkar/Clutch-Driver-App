@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:clutch_driver_app/shared/api/parser.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -42,7 +41,7 @@ class ApiService {
       Function(dynamic)? onError}) async {
     try {
       // hide keyboard
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      // SystemChannels.textInput.invokeMethod('TextInput.hide');
       var response = await execute();
       return onSuccess(response);
     } on SocketException {
