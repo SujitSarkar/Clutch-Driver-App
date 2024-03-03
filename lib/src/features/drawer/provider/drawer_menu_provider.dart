@@ -215,9 +215,8 @@ class DrawerMenuProvider extends ChangeNotifier {
     functionLoading = true;
     notifyListeners();
 
-    final companyId =
-        HomeProvider.instance.loginModel?.data?.companyId??'';
-    const orgId = '';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
+    final orgId = HomeProvider.instance.loginModel?.data?.organizationId??'';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> preStartChecks = [];
@@ -264,6 +263,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   }) async {
     if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
+      return;
+    }
+    if(HomeProvider.instance.loginModel?.data?.companyId==null){
+      showToast('Organization not found');
       return;
     }
     functionLoading = true;
@@ -346,6 +349,10 @@ class DrawerMenuProvider extends ChangeNotifier {
   Future<void> saveFatigueManagement({required String notes}) async {
     if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
+      return;
+    }
+    if(HomeProvider.instance.loginModel?.data?.companyId==null){
+      showToast('Organization not found');
       return;
     }
     functionLoading = true;

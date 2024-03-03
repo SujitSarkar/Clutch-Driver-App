@@ -51,6 +51,7 @@ class Data {
   final String? authToken;
   late int? companyId;
   late String? linkdCompanyName;
+  final int? organizationId;
 
   Data({
     this.id,
@@ -71,6 +72,7 @@ class Data {
     this.authToken,
     this.companyId,
     this.linkdCompanyName,
+    this.organizationId
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -92,6 +94,7 @@ class Data {
     authToken: json["auth_token"],
     companyId: json["company_id"],
     linkdCompanyName: json["linkd_company_name"],
+    organizationId: json["organization_id"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -113,6 +116,7 @@ class Data {
     "auth_token": authToken,
     "company_id": companyId,
     "linkd_company_name": linkdCompanyName,
+    "organization_id": organizationId,
   };
 }
 

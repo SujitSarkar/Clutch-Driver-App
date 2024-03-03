@@ -69,7 +69,7 @@ class AppString {
   static const String deliveryNo = 'Delivery No';
   static const String noteForDriver = 'Note for driver';
   static const String quantity = 'QTY';
-  static const String details = 'Details';
+  static const String loadDetails = 'Load Details';
   static const String search = 'Search';
 
   static const String note = 'Note';
