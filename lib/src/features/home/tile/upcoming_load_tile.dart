@@ -23,11 +23,11 @@ class UpcomingLoadTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BodyText(text: '${AppString.contact}: ${loadModel.contractNo}'),
-                BodyText(text: '${AppString.load}: ${loadModel.loadRef}'),
-                BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state}'),
-                BodyText(text: '${AppString.destination}: ${loadModel.destination?.country}'),
-                BodyText(text: '${AppString.commodity}: ${loadModel.commodity}'),
+                BodyText(text: '${AppString.contact}: ${loadModel.contractNo??''}'),
+                BodyText(text: '${AppString.load}: ${loadModel.loadRef??''}'),
+                BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??''}'),
+                BodyText(text: '${AppString.destination}: ${loadModel.destination?.country??''}'),
+                BodyText(text: '${AppString.commodity}: ${loadModel.commodity??''}'),
                 BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
                 BodyText(text: '${AppString.deliveryNo}: ${loadModel.deliveryNo??''}'),
               ],
@@ -38,7 +38,7 @@ class UpcomingLoadTile extends StatelessWidget {
             child: Align(
                 alignment: Alignment.topRight,
                 child: BodyText(
-                    text: '${AppString.quantity}: ${loadModel.qty}',
+                    text: '${AppString.quantity}: ${loadModel.qty??'0'}',
                     textAlign: TextAlign.end)),
           )
         ],

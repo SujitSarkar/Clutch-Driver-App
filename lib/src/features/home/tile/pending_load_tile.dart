@@ -40,8 +40,8 @@ class PendingLoadTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BodyText(text: '${AppString.contact}: ${loadModel.contractNo??''}'),
-                  BodyText(text: '${AppString.load}: ${loadModel.loadRef}??'),
-                  BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??""}'),
+                  BodyText(text: '${AppString.load}: ${loadModel.loadRef??''}'),
+                  BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??''}'),
                   BodyText(text: '${AppString.destination}: ${loadModel.destination?.country??''}'),
                   BodyText(text: '${AppString.commodity}: ${loadModel.commodity??''}'),
                   BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
@@ -55,7 +55,7 @@ class PendingLoadTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  BodyText(text: '${AppString.quantity}: ${loadModel.qty}'),
+                  BodyText(text: '${AppString.quantity}: ${loadModel.qty??'0'}'),
                   const SizedBox(height: 30),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
