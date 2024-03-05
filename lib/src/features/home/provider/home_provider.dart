@@ -174,7 +174,6 @@ class HomeProvider extends ChangeNotifier {
   Future<void> getPendingLoadList() async {
     pendingLoadLoading=true;
     notifyListeners();
-    pendingLoadList = [];
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companyId??'';
@@ -186,6 +185,7 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.pendingLoadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=3&asset_id=$assetId&load_ref=$loadRef');
     }, onSuccess: (response) async {
+      pendingLoadList = [];
       LoadModel loadModel = loadModelFromJson(response.body);
       pendingLoadList = loadModel.data??[];
       notifyListeners();
@@ -199,7 +199,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getUpcomingLoadList() async {
-    upcomingLoadList = [];
     upcomingLoadLoading=true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
@@ -213,6 +212,7 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=2&asset_id=$assetId&load_ref=$loadRef');
     }, onSuccess: (response) async {
+      upcomingLoadList = [];
       LoadModel loadModel = loadModelFromJson(response.body);
       upcomingLoadList = loadModel.data??[];
       notifyListeners();
@@ -227,7 +227,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getCompletedLoadList() async {
-    completedLoadList = [];
     completeLoadLoading=true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
@@ -241,6 +240,7 @@ class HomeProvider extends ChangeNotifier {
       return await ApiService.instance.get(
           '${ApiEndpoint.baseUrl}${ApiEndpoint.loadList}?company_id=$companyId&driver_id=$driverId&start_date=$startDate&end_date=$endDate&status=4&asset_id=$assetId&load_ref=$loadRef');
     }, onSuccess: (response) async {
+      completedLoadList = [];
       LoadModel loadModel = loadModelFromJson(response.body);
       completedLoadList = loadModel.data??[];
       notifyListeners();
@@ -255,6 +255,8 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> loadDecline({required int loadId}) async {
+    pendingLoadLoading=true;
+    notifyListeners();
     final requestBody = {
       'user_id': loadId,
       'load_id': loginModel?.data?.id};
@@ -270,6 +272,8 @@ class HomeProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
+    pendingLoadLoading=false;
+    notifyListeners();
   }
 
   Future<void> getLoadWeight() async {

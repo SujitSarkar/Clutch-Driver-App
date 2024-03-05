@@ -98,7 +98,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
     return Scaffold(
         appBar: AppBar(
           title:
-              const TitleText(text: AppString.details, textColor: Colors.white),
+              const TitleText(text: AppString.loadDetails, textColor: Colors.white),
           titleSpacing: 0,
           actions: [
             Padding(
