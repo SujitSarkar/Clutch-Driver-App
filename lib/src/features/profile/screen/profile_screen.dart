@@ -196,7 +196,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   labelText: AppString.emailAddress,
                   hintText: AppString.emailAddress,
                   textInputType: TextInputType.emailAddress,
-                  required: true,
                 ),
                 const SizedBox(height: TextSize.textGap),
 
