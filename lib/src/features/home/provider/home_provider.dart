@@ -258,8 +258,8 @@ class HomeProvider extends ChangeNotifier {
     pendingLoadLoading=true;
     notifyListeners();
     final requestBody = {
-      'user_id': loadId,
-      'load_id': loginModel?.data?.id};
+      'user_id': loginModel?.data?.id,
+      'load_id': loadId};
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
@@ -299,7 +299,8 @@ class HomeProvider extends ChangeNotifier {
       return;
     }
     debugPrint('RequestBody: $body');
-    //save=3, complete=4
+    // save=3 means save
+    // complete=4 means complete
     functionLoading = true;
     notifyListeners();
     await ApiService.instance.apiCall(execute: () async {

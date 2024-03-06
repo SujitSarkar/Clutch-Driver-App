@@ -1,5 +1,5 @@
-import '../../../../src/features/home/provider/home_provider.dart';
 import 'package:flutter/Material.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/widgets/normal_card.dart';
@@ -26,7 +26,7 @@ class CompletedLoadTile extends StatelessWidget {
                 BodyText(text: '${AppString.contact}: ${loadModel.contractNo??''}'),
                 BodyText(text: '${AppString.load}: ${loadModel.loadRef??''}'),
                 BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??''}'),
-                BodyText(text: '${AppString.destination}: ${loadModel.destination?.country??''}'),
+                BodyText(text: '${AppString.destination}: ${loadModel.destination?.state??''}'),
                 BodyText(text: '${AppString.commodity}: ${loadModel.commodity??''}'),
                 BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
                 BodyText(text: '${AppString.deliveryNo}: ${loadModel.deliveryNo??''}'),

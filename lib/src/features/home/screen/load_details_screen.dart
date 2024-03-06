@@ -1,8 +1,9 @@
 import 'package:intl/intl.dart';
-import '../../../../core/constants/static_list.dart';
-import '../../../../core/widgets/loading_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/utils/google_map_service.dart';
+import '../../../../core/constants/static_list.dart';
+import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/solid_button.dart';
@@ -55,23 +56,17 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
       pickupDate.text = DateFormat('yyyy-MM-dd')
           .format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
     }
-    pickupTime.text =
-        homeProvider.loadWeightModel!.data!.pickup!.pickupTime ?? '';
-    pickupTareWeight.text =
-        homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight ?? '';
-    pickupGrossWeight.text =
-        homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight ?? '';
+    pickupTime.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTime ?? '';
+    pickupTareWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupTareWeight ?? '';
+    pickupGrossWeight.text = homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight ?? '';
 
     if (homeProvider.loadWeightModel!.data!.deli!.deliveryDate != null) {
       deliveryDate.text = DateFormat('yyyy-MM-dd')
           .format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
     }
-    deliveryTime.text =
-        homeProvider.loadWeightModel!.data!.deli!.deliveryTime ?? '';
-    deliveryTareWeight.text =
-        homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight ?? '';
-    deliveryGrossWeight.text =
-        homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight ?? '';
+    deliveryTime.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTime ?? '';
+    deliveryTareWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryTareWeight ?? '';
+    deliveryGrossWeight.text = homeProvider.loadWeightModel!.data!.deli!.deliveryGrossWeight ?? '';
     note.text = homeProvider.loadWeightModel!.data!.note!.noteByDriver ?? '';
   }
 
@@ -79,13 +74,10 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
     final HomeProvider homeProvider = Provider.of(context, listen: false);
     homeProvider.debouncing(
       fn: () async {
-        if (deliveryGrossWeight.text.isNotEmpty &&
-            deliveryTareWeight.text.isNotEmpty) {
-          calculatedNett.text =
-              '${roundDouble(parseTextFieldDataToDouble(deliveryGrossWeight) - parseTextFieldDataToDouble(deliveryTareWeight))}';
+        if (deliveryGrossWeight.text.isNotEmpty && deliveryTareWeight.text.isNotEmpty) {
+          calculatedNett.text = '${roundDouble(parseTextFieldDataToDouble(deliveryGrossWeight) - parseTextFieldDataToDouble(deliveryTareWeight))}';
         } else {
-          calculatedNett.text =
-              '${roundDouble(parseTextFieldDataToDouble(pickupGrossWeight) - parseTextFieldDataToDouble(pickupTareWeight))}';
+          calculatedNett.text = '${roundDouble(parseTextFieldDataToDouble(pickupGrossWeight) - parseTextFieldDataToDouble(pickupTareWeight))}';
         }
       },
     );
@@ -161,8 +153,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       ],
                     ),
                     BodyText(text: '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef??''}'),
-                    BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.country??''}'),
-                    BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.country??''}'),
+                    BodyText(text: '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.state??''}'),
+                    BodyText(text: '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.state??''}'),
                     BodyText(text: '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity??''}'),
                     BodyText(text: '${AppString.noteForDriver}: ${homeProvider.selectedPendingLoadModel?.noteForDriver??''}'),
                     const SizedBox(height: TextSize.textGap),
@@ -170,8 +162,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                     ///Open Route in Google Map
                     SolidButton(
                         onTap: () async {
-                          // await openGoogleMaps(
-                          //     23.829315406238095, 90.42004168093032);
+                          await openGoogleMapsWithAddress('${homeProvider.selectedPendingLoadModel?.destination?.state??''},'
+                              '${homeProvider.selectedPendingLoadModel?.destination?.country??''}');
                         },
                         child: const ButtonText(text: 'Open Route in Google Map')),
                     const SizedBox(height: TextSize.pagePadding),

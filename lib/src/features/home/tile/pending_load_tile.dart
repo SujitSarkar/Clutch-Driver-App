@@ -1,7 +1,7 @@
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import '../../../../src/features/home/provider/home_provider.dart';
 import 'package:flutter/Material.dart';
+import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/widgets/normal_card.dart';
@@ -18,9 +18,7 @@ class PendingLoadTile extends StatelessWidget {
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
-          onPressed: (context) {
-            homeProvider.loadDecline(loadId: loadModel.id??0);
-          },
+          onPressed: (context) => homeProvider.loadDecline(loadId: loadModel.id??0),
           backgroundColor: Colors.redAccent,
           foregroundColor: Colors.white,
           icon: Icons.delete,
@@ -42,7 +40,7 @@ class PendingLoadTile extends StatelessWidget {
                   BodyText(text: '${AppString.contact}: ${loadModel.contractNo??''}'),
                   BodyText(text: '${AppString.load}: ${loadModel.loadRef??''}'),
                   BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??''}'),
-                  BodyText(text: '${AppString.destination}: ${loadModel.destination?.country??''}'),
+                  BodyText(text: '${AppString.destination}: ${loadModel.destination?.state??''}'),
                   BodyText(text: '${AppString.commodity}: ${loadModel.commodity??''}'),
                   BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
                   BodyText(text: '${AppString.deliveryNo}: ${loadModel.deliveryNo??''}'),
