@@ -9,6 +9,7 @@ class AppString {
   static const String cancel = 'Cancel';
   static const String save = 'Save';
   static const String start = 'Start';
+  static const String edit = 'Edit';
   static const String complete = 'Complete';
   static const String completeDelivery = 'Complete Delivery';
   static const String upload = 'Upload';

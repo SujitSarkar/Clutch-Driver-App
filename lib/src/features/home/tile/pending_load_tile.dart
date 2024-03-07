@@ -23,7 +23,7 @@ class PendingLoadTile extends StatelessWidget {
           foregroundColor: Colors.white,
           icon: Icons.delete,
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          label: 'Load decline',
+          label: 'Decline load',
         ),
       ]),
       child: NormalCard(

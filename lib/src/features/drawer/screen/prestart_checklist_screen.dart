@@ -114,10 +114,10 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                     }),
                 const SizedBox(height: TextSize.textFieldGap),
 
-                ///Ending Odometer Reading
+                ///Starting Odometer Reading
                 TextFormFieldWidget(
                   controller: startingOdometerReading,
-                  labelText: AppString.endingOdometerReading,
+                  labelText: AppString.startingOdometerReading,
                   hintText: AppString.startingOdometerReading,
                   textInputType: TextInputType.number,
                 ),

@@ -51,7 +51,7 @@ class CompletedLoadTile extends StatelessWidget {
                     onPressed: () {
                       HomeProvider.instance.pendingLoadStartButtonOnTap(model: loadModel);
                     },
-                    child: const BodyText(text: AppString.start, textColor: Colors.white))
+                    child: const BodyText(text: AppString.edit, textColor: Colors.white))
               ],
             ),
           )
