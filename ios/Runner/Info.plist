@@ -45,5 +45,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo will be taken for profile picture or delivery details</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Photo will be taken for profile picture or delivery details</string>
 </dict>
 </plist>
