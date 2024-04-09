@@ -1,7 +1,3 @@
-import 'package:clutch_driver_app/src/features/authentication/provider/authentication_provider.dart';
-import 'package:clutch_driver_app/src/features/drawer/provider/drawer_menu_provider.dart';
-import 'package:clutch_driver_app/src/features/home/provider/home_provider.dart';
-import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +6,10 @@ import 'core/constants/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/router/app_router_settings.dart';
 import 'core/utils/app_navigator_key.dart';
+import 'src/features/authentication/provider/authentication_provider.dart';
+import 'src/features/drawer/provider/drawer_menu_provider.dart';
+import 'src/features/home/provider/home_provider.dart';
+import 'src/features/profile/provider/profile_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,5 +1,5 @@
-import 'package:clutch_driver_app/core/utils/app_toast.dart';
 
+import '../../../../core/utils/app_toast.dart';
 import '../../../../src/features/drawer/widget/add_break_dialog.dart';
 import '../../../../src/features/drawer/widget/fatigue_break_tile.dart';
 import 'package:flutter/Material.dart';

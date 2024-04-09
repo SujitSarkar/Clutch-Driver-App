@@ -1,7 +1,7 @@
-import 'package:clutch_driver_app/core/constants/static_list.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_string.dart';
+import '../../../../core/constants/static_list.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';

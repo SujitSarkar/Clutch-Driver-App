@@ -14,6 +14,7 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  
     final AuthenticationProvider authProvider = Provider.of(context);
     return SafeArea(
       child: Scaffold(

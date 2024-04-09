@@ -1,4 +1,4 @@
-import 'package:clutch_driver_app/src/features/home/screen/file_preview_screen.dart';
+import '../../src/features/home/screen/file_preview_screen.dart';
 import 'package:flutter/material.dart';
 import '../../src/features/authentication/screen/change_password_screen.dart';
 import '../../src/features/drawer/screen/daily_logbook_screen.dart';

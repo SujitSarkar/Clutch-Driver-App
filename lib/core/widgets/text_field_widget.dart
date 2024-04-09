@@ -59,6 +59,11 @@ class TextFormFieldWidget extends StatefulWidget {
 
 class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   bool _obscure = true;
+  @override
+  void initState() {
+    widget.focusNode?.requestFocus();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

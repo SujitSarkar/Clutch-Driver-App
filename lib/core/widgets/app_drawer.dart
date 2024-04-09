@@ -1,4 +1,4 @@
-import 'package:clutch_driver_app/src/features/profile/provider/profile_provider.dart';
+import '../../src/features/profile/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../src/features/authentication/provider/authentication_provider.dart';

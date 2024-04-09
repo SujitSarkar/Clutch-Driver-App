@@ -1,4 +1,3 @@
-import 'package:clutch_driver_app/core/widgets/search_field.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +9,7 @@ import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/refresh_indicator.dart';
+import '../../../../core/widgets/search_field.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/widgets/truck_dropdown_button.dart';
 import '../../../../core/widgets/app_drawer.dart';
