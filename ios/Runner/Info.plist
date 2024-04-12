@@ -50,8 +50,8 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo will be taken for profile picture or delivery details</string>
+    <string>photos</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Photo will be taken for profile picture or delivery details</string>
+    <string>camera</string>
 </dict>
 </plist>
