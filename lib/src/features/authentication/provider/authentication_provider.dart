@@ -12,6 +12,7 @@ import '../../../../shared/api/api_service.dart';
 import '../../drawer/provider/drawer_menu_provider.dart';
 import '../../home/provider/home_provider.dart';
 import '../model/change_password_model.dart';
+import '../model/country_code_model.dart';
 import '../model/login_model.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
@@ -23,8 +24,14 @@ class AuthenticationProvider extends ChangeNotifier {
   final GlobalKey<FormState> changePasswordFormKey = GlobalKey();
 
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController usernameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
+
+  List<CountryCode> countryCodeList = [];
+  CountryCode? selectedCountryCode;
 
   ///Functions::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   void clearAllData() {
@@ -32,10 +39,39 @@ class AuthenticationProvider extends ChangeNotifier {
     passwordController.clear();
     confirmPasswordController.clear();
     usernameController.clear();
+    phoneController.clear();
+    otpController.clear();
+  }
+
+  Future<void> initialize() async {
+    await getCountryCodeList();
+  }
+
+  void changeCountryCode(CountryCode value) {
+    selectedCountryCode = value;
+    notifyListeners();
+  }
+
+  Future<void> getCountryCodeList() async {
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance
+          .get('${ApiEndpoint.baseUrl}${ApiEndpoint.countryCodeList}');
+    }, onSuccess: (response) async {
+      CountryCodeModel countryCodeModel =
+          countryCodeModelFromJson(response.body);
+      countryCodeList = countryCodeModel.data ?? [];
+      selectedCountryCode =
+          countryCodeList.isNotEmpty ? countryCodeList.first : null;
+      countryCodeModel = CountryCodeModel();
+      notifyListeners();
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
   }
 
   Future<void> signInButtonOnTap() async {
-    if( loading == true){
+    if (loading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
@@ -53,7 +89,8 @@ class AuthenticationProvider extends ChangeNotifier {
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.login}', body: requestBody);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.login}',
+          body: requestBody);
     }, onSuccess: (response) async {
       LoginModel loginModel = loginModelFromJson(response.body);
       if (loginModel.data != null) {
@@ -63,9 +100,11 @@ class AuthenticationProvider extends ChangeNotifier {
           ApiService.instance.addAccessTokenAndCookie(
               token: loginModel.data?.authToken,
               cookie: loginModel.data?.authToken);
-          final BuildContext context = AppNavigatorKey.key.currentState!.context;
+          final BuildContext context =
+              AppNavigatorKey.key.currentState!.context;
           final HomeProvider homeProvider = Provider.of(context, listen: false);
-          final DrawerMenuProvider drawerMenuProvider = Provider.of(context, listen: false);
+          final DrawerMenuProvider drawerMenuProvider =
+              Provider.of(context, listen: false);
           await homeProvider.initialize();
           await drawerMenuProvider.initialize();
           clearAllData();
@@ -92,14 +131,14 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> changePasswordButtonOnTap({required int? userId}) async {
-    if(loading == true){
+    if (loading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
     if (!changePasswordFormKey.currentState!.validate()) {
       return;
     }
-    if(passwordController.text != confirmPasswordController.text){
+    if (passwordController.text != confirmPasswordController.text) {
       showToast('Password did not matched');
       return;
     }
@@ -113,9 +152,11 @@ class AuthenticationProvider extends ChangeNotifier {
     };
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}', body: requestBody);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}',
+          body: requestBody);
     }, onSuccess: (response) async {
-      ChangePasswordModel changePasswordModel = changePasswordModelFromJson(response.body);
+      ChangePasswordModel changePasswordModel =
+          changePasswordModelFromJson(response.body);
       showToast('${changePasswordModel.message}');
       clearAllData();
       usernameController.text = HomeProvider.instance.loginModel!.data!.email!;

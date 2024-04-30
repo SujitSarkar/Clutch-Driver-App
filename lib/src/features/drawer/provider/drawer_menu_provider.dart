@@ -29,10 +29,13 @@ class DrawerMenuProvider extends ChangeNotifier {
   PreStartDataModel? preStartDataModel;
   DailySummaryModel? dailySummaryModel;
   FatigueManagementBreakModel? fatigueManagementBreakModel;
+
   ///Additional Fees
   List<CheckBoxDataModel> additionalFeeCheckBoxItem = [];
+
   ///Pre-Start
   List<CheckBoxDataModel> preStartCheckBoxItem = [];
+
   ///Fatigue Management
   List<CheckBoxDataModel> fatigueManagementCheckBoxItem = [];
 
@@ -75,8 +78,8 @@ class DrawerMenuProvider extends ChangeNotifier {
   }
 
   ///Change Own Truck
-  Future<void>changeOwnTruck({required TruckDataModel value,
-    required String fromPage})async{
+  Future<void> changeOwnTruck(
+      {required TruckDataModel value, required String fromPage}) async {
     selectedOwnTruck = value;
     await getPreStartChecks(fromPage: fromPage);
   }
@@ -84,9 +87,11 @@ class DrawerMenuProvider extends ChangeNotifier {
   ///Functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
   Future<void> getTruckList() async {
-    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    HomeProvider.instance.allTruckList = [TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')];
+    HomeProvider.instance.allTruckList = [
+      TruckDataModel(id: 0, registrationNo: 'All', whoOwns: 'all')
+    ];
     ownTruckList = [];
     initialLoading = true;
     notifyListeners();
@@ -97,13 +102,15 @@ class DrawerMenuProvider extends ChangeNotifier {
       TruckModel truckModel = truckModelFromJson(response.body);
       HomeProvider.instance.allTruckList.addAll(truckModel.data!);
 
-      for(int i=0; i<truckModel.data!.length; i++){
-        if(truckModel.data![i].whoOwns == StaticList.assetType.first){
+      for (int i = 0; i < truckModel.data!.length; i++) {
+        if (truckModel.data![i].whoOwns == StaticList.assetType.first) {
           ownTruckList.add(truckModel.data![i]);
         }
       }
-      HomeProvider.instance.selectedAllTruck = HomeProvider.instance.allTruckList.isNotEmpty
-          ? HomeProvider.instance.allTruckList.first : null;
+      HomeProvider.instance.selectedAllTruck =
+          HomeProvider.instance.allTruckList.isNotEmpty
+              ? HomeProvider.instance.allTruckList.first
+              : null;
       selectedOwnTruck = ownTruckList.isNotEmpty ? ownTruckList.first : null;
       truckModel = TruckModel();
     }, onError: (error) {
@@ -122,7 +129,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     }
     initialLoading = true;
     notifyListeners();
-    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -137,11 +144,15 @@ class DrawerMenuProvider extends ChangeNotifier {
       additionalFeeCheckBoxItem = preStartDataModel!.data!.additionalFees!;
 
       debugPrint(fromPage);
-      if (fromPage == AppRouter.pendingLoad || fromPage == AppRouter.completeLoad) {
-        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == false) {
+      if (fromPage == AppRouter.pendingLoad ||
+          fromPage == AppRouter.completeLoad) {
+        if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck ==
+            false) {
           popAndPushTo(AppRouter.loadDetails);
-        }else if(HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck == true
-            && response.statusCode == 200){
+        } else if (HomeProvider
+                    .instance.selectedPendingLoadModel?.requiredPrecheck ==
+                true &&
+            response.statusCode == 200) {
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -162,7 +173,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     initialLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -215,8 +226,8 @@ class DrawerMenuProvider extends ChangeNotifier {
     functionLoading = true;
     notifyListeners();
 
-    final companyId = HomeProvider.instance.loginModel?.data?.companyId??'';
-    final orgId = HomeProvider.instance.loginModel?.data?.organizationId??'';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
+    final orgId = HomeProvider.instance.loginModel?.data?.organizationId ?? '';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> preStartChecks = [];
@@ -265,15 +276,14 @@ class DrawerMenuProvider extends ChangeNotifier {
       showToast(AppString.anotherProcessRunning);
       return;
     }
-    if(HomeProvider.instance.loginModel?.data?.companyId==null){
+    if (HomeProvider.instance.loginModel?.data?.companyId == null) {
       showToast('Organization not found');
       return;
     }
     functionLoading = true;
     notifyListeners();
 
-    final companyId =
-        HomeProvider.instance.loginModel?.data?.companyId??'';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     List<Map<String, dynamic>> additionalFees = [];
@@ -282,13 +292,14 @@ class DrawerMenuProvider extends ChangeNotifier {
       additionalFees.add({'id': model.id, 'value': model.value});
     }
     final requestBody = {
-      'company_id': companyId,
-      'asset_id': assetId,
-      'driver_id': driverId,
-      'log_notes': notes,
-      'end_odo_reading': endingOdoMeterReading,
       'log_end_time': endTime,
+      'end_odo_reading': endingOdoMeterReading,
+      'log_notes': notes,
       'additional_fees': jsonEncode(additionalFees),
+      'driver_id': driverId,
+      'asset_id': assetId,
+      'company_id': companyId,
+      'load_start_date': DateFormat('yyyy-MM-dd').format(DateTime.now())
     };
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
@@ -351,15 +362,14 @@ class DrawerMenuProvider extends ChangeNotifier {
       showToast(AppString.anotherProcessRunning);
       return;
     }
-    if(HomeProvider.instance.loginModel?.data?.companyId==null){
+    if (HomeProvider.instance.loginModel?.data?.companyId == null) {
       showToast('Organization not found');
       return;
     }
     functionLoading = true;
     notifyListeners();
 
-    final companyId =
-        HomeProvider.instance.loginModel?.data?.companyId??'';
+    final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
     final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());

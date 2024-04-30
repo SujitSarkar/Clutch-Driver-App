@@ -1,9 +1,8 @@
-
+import 'package:flutter/Material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/utils/app_toast.dart';
 import '../../../../src/features/drawer/widget/add_break_dialog.dart';
 import '../../../../src/features/drawer/widget/fatigue_break_tile.dart';
-import 'package:flutter/Material.dart';
-import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
@@ -30,11 +29,13 @@ class _FatigueManagementCheckListScreenState
 
   @override
   void initState() {
-    final DrawerMenuProvider drawerMenuProvider = Provider.of(context, listen: false);
+    final DrawerMenuProvider drawerMenuProvider =
+        Provider.of(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       ///Set data to textField
-      note.text = drawerMenuProvider.preStartDataModel!.data!.fatigueNotes ?? '';
+      note.text =
+          drawerMenuProvider.preStartDataModel!.data!.fatigueNotes ?? '';
       await drawerMenuProvider.getFatigueBreaks();
     });
     super.initState();
@@ -81,8 +82,9 @@ class _FatigueManagementCheckListScreenState
                     textColor: AppColor.disableColor,
                   )),
               TextButton(
-                  onPressed: () async{
-                    await drawerMenuProvider.saveFatigueManagement(notes: note.text.trim());
+                  onPressed: () async {
+                    await drawerMenuProvider.saveFatigueManagement(
+                        notes: note.text.trim());
                   },
                   child: drawerMenuProvider.functionLoading
                       ? const LoadingWidget(color: AppColor.primaryColor)
@@ -94,139 +96,144 @@ class _FatigueManagementCheckListScreenState
           ),
         ),
 
-          Expanded(
-              child: ListView(
-            padding: const EdgeInsets.all(TextSize.pagePadding),
-            children: [
-              ///Truck dropdown
-              TruckDropdown(
-                  items: drawerMenuProvider.ownTruckList,
-                  selectedValue: drawerMenuProvider.selectedOwnTruck,
-                  hintText: 'Select Truck',
-                  buttonHeight: 35,
-                  onChanged: (value) {
-                    drawerMenuProvider.changeOwnTruck(value:value,fromPage: AppRouter.dailyLogbook);
-                  }),
-              const SizedBox(height: TextSize.textFieldGap),
+        Expanded(
+            child: ListView(
+          padding: const EdgeInsets.all(TextSize.pagePadding),
+          children: [
+            ///Truck dropdown
+            TruckDropdown(
+                items: drawerMenuProvider.ownTruckList,
+                selectedValue: drawerMenuProvider.selectedOwnTruck,
+                hintText: 'Select Truck',
+                buttonHeight: 35,
+                onChanged: (value) {
+                  drawerMenuProvider.changeOwnTruck(
+                      value: value, fromPage: AppRouter.dailyLogbook);
+                }),
+            const SizedBox(height: TextSize.textFieldGap),
 
-              ///Fatigue Management Checklist
-              const BodyText(
-                  text: AppString.fatigueManagementChecklist,
-                  fontWeight: FontWeight.bold),
-              const Divider(),
-              const FatigueManagementCheckboxWidget(),
-              const SizedBox(height: TextSize.textFieldGap),
+            ///Fatigue Management Checklist
+            const BodyText(
+                text: AppString.fatigueManagementChecklist,
+                fontWeight: FontWeight.bold),
+            const Divider(),
+            const FatigueManagementCheckboxWidget(),
+            const SizedBox(height: TextSize.textFieldGap),
 
-              ///Break Times & Add Break Button
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Expanded(
-                    child: BodyText(
-                        text: AppString.breakTimes,
-                        fontWeight: FontWeight.bold),
+            ///Break Times & Add Break Button
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: BodyText(
+                      text: AppString.breakTimes, fontWeight: FontWeight.bold),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.primaryColor,
+                    minimumSize: const Size(130, 28),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.primaryColor,
-                      minimumSize: const Size(130, 28),
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                    ),
-                    onPressed: () {
-                      if(drawerMenuProvider.preStartDataModel?.data?.randomCode!=null
-                          && drawerMenuProvider.preStartDataModel!.data!.randomCode!.isNotEmpty){
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) => AddBreakDialogWidget());
-                      }else{
-                       showToast('You are not eligible to add break of this truck');
-                      }
-                    },
-                    child: const ButtonText(
-                      text: AppString.addBreak,
-                    ),
+                  onPressed: () {
+                    if (drawerMenuProvider
+                                .preStartDataModel?.data?.randomCode !=
+                            null &&
+                        drawerMenuProvider
+                            .preStartDataModel!.data!.randomCode!.isNotEmpty) {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => AddBreakDialogWidget());
+                    } else {
+                      showToast(
+                          'You are not eligible to add break of this truck');
+                    }
+                  },
+                  child: const ButtonText(
+                    text: AppString.addBreak,
                   ),
-                ],
-              ),
-              const Divider(),
+                ),
+              ],
+            ),
+            const Divider(),
 
-              //Header
-              drawerMenuProvider.fatigueManagementLoading
-                  ? const LoadingWidget(color: AppColor.primaryColor)
-                  :drawerMenuProvider.fatigueManagementBreakModel!=null && drawerMenuProvider.fatigueManagementBreakModel!.data!
-                          .breakes!.isNotEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: SmallText(
-                                      text: AppString.startTime,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: SmallText(
-                                      text: AppString.endTime,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: SmallText(
-                                      text: AppString.destination,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const Divider(thickness: 0.5),
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: drawerMenuProvider
-                                  .fatigueManagementBreakModel!
-                                  .data!
-                                  .breakes!
-                                  .length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: TextSize.textGap),
-                              itemBuilder: (context, index) => FatigueBreakTile(
-                                  model: drawerMenuProvider
-                                      .fatigueManagementBreakModel!
-                                      .data!
-                                      .breakes![index]),
-                            ),
-                            const Divider(height: TextSize.textFieldGap),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+            //Header
+            drawerMenuProvider.fatigueManagementLoading
+                ? const LoadingWidget(color: AppColor.primaryColor)
+                : drawerMenuProvider.fatigueManagementBreakModel != null &&
+                        drawerMenuProvider.fatigueManagementBreakModel!.data!
+                            .breakes!.isNotEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: SmallText(
+                                    text: AppString.startTime,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: SmallText(
+                                    text: AppString.endTime,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: SmallText(
+                                    text: AppString.destination,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          const Divider(thickness: 0.5),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: drawerMenuProvider
+                                .fatigueManagementBreakModel!
+                                .data!
+                                .breakes!
+                                .length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: TextSize.textGap),
+                            itemBuilder: (context, index) => FatigueBreakTile(
+                                model: drawerMenuProvider
+                                    .fatigueManagementBreakModel!
+                                    .data!
+                                    .breakes![index]),
+                          ),
+                          const Divider(height: TextSize.textFieldGap),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
 
-              ///Total hours driven
-              Row(
-                children: [
-                  const Expanded(
-                      child: BodyText(text: "${AppString.totalHoursDriven}:")),
-                  BodyText(
-                      text:
-                          '${drawerMenuProvider.fatigueManagementBreakModel?.data?.totaltime??0}')
-                ],
-              ),
-              const SizedBox(
-                  height: TextSize.textFieldGap + TextSize.textFieldGap),
+            ///Total hours driven
+            Row(
+              children: [
+                const Expanded(
+                    child: BodyText(text: "${AppString.totalHoursDriven}:")),
+                BodyText(
+                    text:
+                        '${drawerMenuProvider.fatigueManagementBreakModel?.data?.totaltime ?? 0}')
+              ],
+            ),
+            const SizedBox(
+                height: TextSize.textFieldGap + TextSize.textFieldGap),
 
-              ///Note
-              TextFormFieldWidget(
-                  controller: note,
-                  labelText: AppString.note,
-                  hintText: AppString.note,
-                  textCapitalization: TextCapitalization.sentences,
-                  minLine: 3,
-                  maxLine: 5),
-            ],
-          ))
+            ///Note
+            TextFormFieldWidget(
+                controller: note,
+                labelText: AppString.note,
+                hintText: AppString.note,
+                textCapitalization: TextCapitalization.sentences,
+                minLine: 3,
+                maxLine: 5),
+          ],
+        ))
       ]);
 }

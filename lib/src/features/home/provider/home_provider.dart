@@ -25,7 +25,7 @@ import '../model/truck_model.dart';
 
 class HomeProvider extends ChangeNotifier {
   static final HomeProvider instance =
-  Provider.of(AppNavigatorKey.key.currentState!.context,listen: false);
+      Provider.of(AppNavigatorKey.key.currentState!.context, listen: false);
 
   bool functionLoading = false;
   bool companyListLoading = false;
@@ -57,11 +57,11 @@ class HomeProvider extends ChangeNotifier {
   LoadWeightModel? loadWeightModel;
 
   Future<void> initialize() async {
-    pendingLoadLoading=true;
+    pendingLoadLoading = true;
     notifyListeners();
     await getLocalData();
     ProfileProvider.instance.getUserInfo();
-    pendingLoadLoading=false;
+    pendingLoadLoading = false;
     notifyListeners();
   }
 
@@ -85,22 +85,24 @@ class HomeProvider extends ChangeNotifier {
   // }
 
   ///Change All Truck
-  Future<void> changeAllTruck({required TruckDataModel value, required String fromPage}) async {
+  Future<void> changeAllTruck(
+      {required TruckDataModel value, required String fromPage}) async {
     selectedAllTruck = value;
     debugPrint('FromPage: $fromPage');
 
     if (fromPage == AppRouter.pendingLoad) {
-       getPendingLoadList();
+      getPendingLoadList();
     } else if (fromPage == AppRouter.upcomingLoad) {
-       getUpcomingLoadList();
+      getUpcomingLoadList();
     } else if (fromPage == AppRouter.completeLoad) {
-       getCompletedLoadList();
+      getCompletedLoadList();
     }
     notifyListeners();
   }
 
   ///Load Filter
-  void dateRangeOnSelectionChanged(DateRangePickerSelectionChangedArgs args) async{
+  void dateRangeOnSelectionChanged(
+      DateRangePickerSelectionChangedArgs args) async {
     if (args.value is PickerDateRange && args.value.startDate != null) {
       filterStartDate = args.value.startDate ?? DateTime.now();
       filterEndDate = args.value.endDate ?? filterStartDate;
@@ -111,13 +113,13 @@ class HomeProvider extends ChangeNotifier {
     functionLoading = true;
     notifyListeners();
 
-    if(loadType == StaticList.loadTypeList.first){
+    if (loadType == StaticList.loadTypeList.first) {
       ///pending load
       await getPendingLoadList();
-    }else if(loadType == StaticList.loadTypeList[1]){
+    } else if (loadType == StaticList.loadTypeList[1]) {
       ///Upcoming load
       await getUpcomingLoadList();
-    }else if(loadType == StaticList.loadTypeList.last){
+    } else if (loadType == StaticList.loadTypeList.last) {
       ///Completed load
       await getCompletedLoadList();
     }
@@ -126,10 +128,11 @@ class HomeProvider extends ChangeNotifier {
     popScreen();
   }
 
-  void pendingLoadStartButtonOnTap({required LoadDataModel model}){
+  void pendingLoadStartButtonOnTap({required LoadDataModel model}) {
     selectedPendingLoadModel = model;
     pushTo(AppRouter.preStartChecklist,
-        arguments: const PreStartChecklistScreen(fromPage: AppRouter.pendingLoad));
+        arguments:
+            const PreStartChecklistScreen(fromPage: AppRouter.pendingLoad));
   }
 
   void clearFilter() {
@@ -144,21 +147,23 @@ class HomeProvider extends ChangeNotifier {
   // 3=Pending load (progress)
   // 4=Completed load
 
-  Future<void> loadSearchOnChange({required String loadType})async{
-    debouncing(waitForMs: 2000,fn: (){
-      notifyListeners();
-      debugPrint('Load Type: $loadType');
-      if (loadType == StaticList.loadTypeList.first) {
-        getPendingLoadList();
-      } else if (loadType == StaticList.loadTypeList[1]) {
-        getUpcomingLoadList();
-      } else if (loadType == StaticList.loadTypeList.last) {
-        getCompletedLoadList();
-      }
-    });
+  Future<void> loadSearchOnChange({required String loadType}) async {
+    debouncing(
+        waitForMs: 2000,
+        fn: () {
+          notifyListeners();
+          debugPrint('Load Type: $loadType');
+          if (loadType == StaticList.loadTypeList.first) {
+            getPendingLoadList();
+          } else if (loadType == StaticList.loadTypeList[1]) {
+            getUpcomingLoadList();
+          } else if (loadType == StaticList.loadTypeList.last) {
+            getCompletedLoadList();
+          }
+        });
   }
 
-  Future<void> clearSearchOnTap({required String loadType})async{
+  Future<void> clearSearchOnTap({required String loadType}) async {
     searchController.clear();
     notifyListeners();
     debugPrint('Load Type: $loadType');
@@ -172,13 +177,15 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getPendingLoadList() async {
-    pendingLoadLoading=true;
+    pendingLoadLoading = true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
-    final companyId = loginModel?.data?.companyId??'';
-    final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
-    final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
+    final companyId = loginModel?.data?.companyId ?? '';
+    final String startDate =
+        DateFormat('yyyy-MM-dd').format(filterStartDate ?? DateTime.now());
+    final String endDate =
+        DateFormat('yyyy-MM-dd').format(filterEndDate ?? DateTime.now());
     final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
@@ -187,25 +194,27 @@ class HomeProvider extends ChangeNotifier {
     }, onSuccess: (response) async {
       pendingLoadList = [];
       LoadModel loadModel = loadModelFromJson(response.body);
-      pendingLoadList = loadModel.data??[];
+      pendingLoadList = loadModel.data ?? [];
       notifyListeners();
       loadModel = LoadModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
-    pendingLoadLoading=false;
+    pendingLoadLoading = false;
     notifyListeners();
   }
 
   Future<void> getUpcomingLoadList() async {
-    upcomingLoadLoading=true;
+    upcomingLoadLoading = true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
-    final companyId = loginModel?.data?.companyId??'';
-    final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
-    final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
+    final companyId = loginModel?.data?.companyId ?? '';
+    final String startDate =
+        DateFormat('yyyy-MM-dd').format(filterStartDate ?? DateTime.now());
+    final String endDate =
+        DateFormat('yyyy-MM-dd').format(filterEndDate ?? DateTime.now());
     final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
@@ -214,7 +223,7 @@ class HomeProvider extends ChangeNotifier {
     }, onSuccess: (response) async {
       upcomingLoadList = [];
       LoadModel loadModel = loadModelFromJson(response.body);
-      upcomingLoadList = loadModel.data??[];
+      upcomingLoadList = loadModel.data ?? [];
       notifyListeners();
       getPendingLoadList();
       loadModel = LoadModel();
@@ -222,18 +231,20 @@ class HomeProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
-    upcomingLoadLoading=false;
+    upcomingLoadLoading = false;
     notifyListeners();
   }
 
   Future<void> getCompletedLoadList() async {
-    completeLoadLoading=true;
+    completeLoadLoading = true;
     notifyListeners();
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
-    final companyId = loginModel?.data?.companyId??'';
-    final String startDate = DateFormat('yyyy-MM-dd').format(filterStartDate??DateTime.now());
-    final String endDate = DateFormat('yyyy-MM-dd').format(filterEndDate??DateTime.now());
+    final companyId = loginModel?.data?.companyId ?? '';
+    final String startDate =
+        DateFormat('yyyy-MM-dd').format(filterStartDate ?? DateTime.now());
+    final String endDate =
+        DateFormat('yyyy-MM-dd').format(filterEndDate ?? DateTime.now());
     final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
@@ -242,7 +253,7 @@ class HomeProvider extends ChangeNotifier {
     }, onSuccess: (response) async {
       completedLoadList = [];
       LoadModel loadModel = loadModelFromJson(response.body);
-      completedLoadList = loadModel.data??[];
+      completedLoadList = loadModel.data ?? [];
       notifyListeners();
       getPendingLoadList();
       loadModel = LoadModel();
@@ -250,29 +261,34 @@ class HomeProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
-    completeLoadLoading=false;
+    completeLoadLoading = false;
     notifyListeners();
   }
 
-  Future<void> loadDecline({required int loadId}) async {
-    pendingLoadLoading=true;
+  Future<void> loadDecline(
+      {required int loadId, required String loadType}) async {
+    pendingLoadLoading = true;
     notifyListeners();
-    final requestBody = {
-      'user_id': loginModel?.data?.id,
-      'load_id': loadId};
+    final requestBody = {'user_id': loginModel?.data?.id, 'load_id': loadId};
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadDecline}',body: requestBody);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadDecline}',
+          body: requestBody);
     }, onSuccess: (response) async {
       var jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
-      getPendingLoadList();
+
+      if (loadType == StaticList.loadTypeList.first) {
+        getPendingLoadList();
+      } else if (loadType == StaticList.loadTypeList[1]) {
+        getUpcomingLoadList();
+      }
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
-    pendingLoadLoading=false;
+    pendingLoadLoading = false;
     notifyListeners();
   }
 
@@ -293,8 +309,9 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveOrCompleteLoadWeight({required Map<String, dynamic> body}) async {
-    if(functionLoading == true){
+  Future<void> saveOrCompleteLoadWeight(
+      {required Map<String, dynamic> body}) async {
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
@@ -305,11 +322,12 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightCreateEdit}',body: body);
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightCreateEdit}',
+          body: body);
     }, onSuccess: (response) async {
       var jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
-      if(body['status']==4){
+      if (body['status'] == 4) {
         await getPendingLoadList();
         popUntilOf(AppRouter.pendingLoad);
       }
@@ -323,27 +341,26 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> saveLoadWeightAttachment(
-      {required String loadWeightType,
-        required List<File> files}) async {
-    if(functionLoading == true){
+      {required String loadWeightType, required List<File> files}) async {
+    if (functionLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
-    if(files.isEmpty){
+    if (files.isEmpty) {
       showToast('Attach $loadWeightType file');
       return;
     }
-    functionLoading=true;
+    functionLoading = true;
     notifyListeners();
     final loadId = selectedPendingLoadModel?.id;
     String fileFieldName = '';
 
-    if(loadWeightType==StaticList.loadWeightType.first){
+    if (loadWeightType == StaticList.loadWeightType.first) {
       fileFieldName = 'pickup_attachments';
-    }else{
+    } else {
       fileFieldName = 'delivery_attachments';
     }
-    await Future.forEach(files, (File element)async{
+    await Future.forEach(files, (File element) async {
       await ApiService.instance.apiCall(execute: () async {
         return await ApiService.instance.multipartRequest(
           url: '${ApiEndpoint.baseUrl}${ApiEndpoint.loadWeightAttachment}',
@@ -362,7 +379,7 @@ class HomeProvider extends ChangeNotifier {
       });
     });
 
-    functionLoading=false;
+    functionLoading = false;
     notifyListeners();
   }
 

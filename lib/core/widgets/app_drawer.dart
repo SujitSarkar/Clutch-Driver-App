@@ -10,8 +10,8 @@ import '../constants/text_size.dart';
 import '../router/app_router.dart';
 import '../router/page_navigator.dart';
 import '../../src/features/drawer/widget/drawer_item_tile.dart';
-import 'loading_widget.dart';
 import 'normal_card.dart';
+import 'text_widget.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -21,16 +21,15 @@ class AppDrawer extends StatelessWidget {
     final HomeProvider homeProvider = Provider.of(context);
 
     return Drawer(
-      width: MediaQuery.of(context).size.width*.9,
+      width: MediaQuery.of(context).size.width * .9,
       child: SafeArea(
         child: NormalCard(
             child: SingleChildScrollView(
           child: Column(children: [
             ///Header
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-              decoration: BoxDecoration(
-                  color: AppColor.drawerHeaderBg),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              decoration: BoxDecoration(color: AppColor.drawerHeaderBg),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,16 +41,22 @@ class AppDrawer extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              '${ProfileProvider.instance.loginModel?.data?.firstName??''} ${HomeProvider.instance.loginModel?.data?.lastName??''}',
+                              '${ProfileProvider.instance.loginModel?.data?.firstName ?? ''} ${HomeProvider.instance.loginModel?.data?.lastName ?? ''}',
                               maxLines: 3,
-                              style: const TextStyle(fontSize: TextSize.bodyText),
+                              style:
+                                  const TextStyle(fontSize: TextSize.bodyText),
                             ),
                             FittedBox(
                               child: Text(
-                                ProfileProvider.instance.loginModel?.data?.email?? ProfileProvider.instance.loginModel?.data?.phone??'N/A',
+                                ProfileProvider
+                                        .instance.loginModel?.data?.email ??
+                                    ProfileProvider
+                                        .instance.loginModel?.data?.phone ??
+                                    'N/A',
                                 maxLines: 1,
                                 style: const TextStyle(
-                                    fontSize: TextSize.bodyText, color: Colors.grey),
+                                    fontSize: TextSize.bodyText,
+                                    color: Colors.grey),
                               ),
                             )
                           ]),
@@ -66,9 +71,10 @@ class AppDrawer extends StatelessWidget {
                 onTap: () async {
                   homeProvider.clearFilter();
                   Scaffold.of(context).closeDrawer();
-                  final String currentRoute = ModalRoute.of(context)!.settings.name ?? '/';
-                  if(!currentRoute.contains(AppRouter.pendingLoad)){
-                     pushTo(AppRouter.pendingLoad);
+                  final String currentRoute =
+                      ModalRoute.of(context)!.settings.name ?? '/';
+                  if (!currentRoute.contains(AppRouter.pendingLoad)) {
+                    pushTo(AppRouter.pendingLoad);
                   }
                 }),
             DrawerItemTile(
@@ -77,7 +83,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () async {
                   homeProvider.clearFilter();
                   Scaffold.of(context).closeDrawer();
-                   pushTo(AppRouter.upcomingLoad);
+                  pushTo(AppRouter.upcomingLoad);
                 }),
             DrawerItemTile(
                 leadingIcon: Icons.check_circle_outline_outlined,
@@ -85,7 +91,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () async {
                   homeProvider.clearFilter();
                   Scaffold.of(context).closeDrawer();
-                   pushTo(AppRouter.completeLoad);
+                  pushTo(AppRouter.completeLoad);
                 }),
             DrawerItemTile(
                 leadingIcon: Icons.check_box_outlined,
@@ -93,7 +99,8 @@ class AppDrawer extends StatelessWidget {
                 onTap: () async {
                   Scaffold.of(context).closeDrawer();
                   pushTo(AppRouter.preStartChecklist,
-                      arguments: const PreStartChecklistScreen(fromPage: 'drawer'));
+                      arguments:
+                          const PreStartChecklistScreen(fromPage: 'drawer'));
                 }),
             DrawerItemTile(
                 leadingIcon: Icons.newspaper,
@@ -109,20 +116,36 @@ class AppDrawer extends StatelessWidget {
                   Scaffold.of(context).closeDrawer();
                   pushTo(AppRouter.changePassword);
                 }),
-            if(homeProvider.loginModel?.data?.linkdCompanyName!=null)
-              ProfileProvider.instance.unlinkLoading
-                  ? const LoadingWidget(color: AppColor.primaryColor)
-                  : DrawerItemTile(
-                leadingIcon: Icons.link_off,
-                title: '${AppString.unlinkFrom} ${homeProvider.loginModel?.data?.linkdCompanyName??'N/A'}',
-                onTap: () async {
-                  ProfileProvider.instance.unlinkDriver();
-                }),
+
             DrawerItemTile(
                 leadingIcon: Icons.logout,
                 title: AppString.logout,
                 onTap: () async {
-                  await AuthenticationProvider.instance.logout();
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title:
+                                const BodyText(text: 'Do you want to logout?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const ButtonText(
+                                    text: 'No',
+                                    textColor: AppColor.enableColor,
+                                  )),
+                              TextButton(
+                                  onPressed: () async {
+                                    await AuthenticationProvider.instance
+                                        .logout();
+                                  },
+                                  child: const ButtonText(
+                                    text: 'Yes',
+                                    textColor: AppColor.errorColor,
+                                  ))
+                            ],
+                          ));
                 }),
           ]),
         )),

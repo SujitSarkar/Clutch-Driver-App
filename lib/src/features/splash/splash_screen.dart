@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:clutch_driver_app/src/features/authentication/provider/authentication_provider.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/text_size.dart';
@@ -24,12 +25,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> onInit() async {
-    await getData(LocalStorageKey.loginResponseKey).then((loginResponseFromLocal)async{
-      if(loginResponseFromLocal!=null){
+    await getData(LocalStorageKey.loginResponseKey)
+        .then((loginResponseFromLocal) async {
+      if (loginResponseFromLocal != null) {
         await HomeProvider.instance.initialize();
         await DrawerMenuProvider.instance.initialize();
+        await AuthenticationProvider.instance.initialize();
         pushAndRemoveUntil(AppRouter.pendingLoad);
-      } else{
+      } else {
         await Future.delayed(const Duration(milliseconds: 1000)).then((value) {
           pushAndRemoveUntil(AppRouter.signIn);
         });
@@ -42,17 +45,19 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         body: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Image.asset('assets/images/logo.png',height: 160,width: 160)),
-                const SizedBox(height: TextSize.pagePadding),
-                const LargeTitleText(text:'Driver App',
-                    textAlign: TextAlign.center,
-                ),
-              ],
-            )));
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            child:
+                Image.asset('assets/images/logo.png', height: 160, width: 160)),
+        const SizedBox(height: TextSize.pagePadding),
+        const LargeTitleText(
+          text: 'Driver App',
+          textAlign: TextAlign.center,
+        ),
+      ],
+    )));
   }
 }

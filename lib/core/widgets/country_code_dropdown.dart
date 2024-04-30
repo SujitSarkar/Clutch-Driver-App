@@ -1,20 +1,21 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import '../../src/features/authentication/model/country_code_model.dart';
 import '../constants/app_color.dart';
 import '../constants/text_size.dart';
 import 'text_widget.dart';
 
 // ignore: must_be_immutable
-class BasicDropdown extends StatelessWidget {
-  final List<String> items;
-  String? selectedValue;
+class CountryCodeDropdown extends StatelessWidget {
+  final List<CountryCode> items;
+  CountryCode? selectedValue;
   final String hintText;
-  final Function(String) onChanged;
+  final Function(CountryCode) onChanged;
   final double? width;
   final double? buttonHeight;
   final double? dropdownWidth;
 
-  BasicDropdown(
+  CountryCodeDropdown(
       {super.key,
       required this.items,
       required this.selectedValue,
@@ -27,7 +28,7 @@ class BasicDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
+      child: DropdownButton2<CountryCode>(
         isExpanded: true,
         hint: Text(hintText,
             style: const TextStyle(color: AppColor.textFieldHintColor),
@@ -35,15 +36,15 @@ class BasicDropdown extends StatelessWidget {
         style:
             TextStyle(color: AppColor.textColor, fontSize: TextSize.bodyText),
         items: items
-            .map((item) => DropdownMenuItem<String>(
+            .map((item) => DropdownMenuItem<CountryCode>(
                   value: item,
                   child: BodyText(
-                    text: item,
+                    text: item.countryCode!,
                   ),
                 ))
             .toList(),
         value: selectedValue,
-        onChanged: (String? value) {
+        onChanged: (CountryCode? value) {
           selectedValue = value;
           onChanged(selectedValue!);
         },

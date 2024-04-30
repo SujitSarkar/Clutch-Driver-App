@@ -53,7 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     emailAddress.text = profileProvider.loginModel!.data!.email ?? '';
     phone.text = profileProvider.loginModel!.data!.phone ?? '';
     license.text = profileProvider.loginModel!.data!.meta!.licenseNumber ?? '';
-    street.text = profileProvider.loginModel!.data!.address!.streetAddress ?? '';
+    street.text =
+        profileProvider.loginModel!.data!.address!.streetAddress ?? '';
     streetNumber.text =
         profileProvider.loginModel!.data!.address!.streetNumber ?? '';
     suburb.text = profileProvider.loginModel!.data!.address!.suburb ?? '';
@@ -309,17 +310,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                 const SizedBox(height: TextSize.textGap),
 
-                if(HomeProvider.instance.loginModel?.data?.linkdCompanyName!=null)
-                TextButton(
-                    onPressed: () {
-                      profileProvider.unlinkDriver();
-                    },
-                    child: profileProvider.unlinkLoading
-                        ? const LoadingWidget(color: AppColor.primaryColor)
-                        : ButtonText(
-                      text: '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.linkdCompanyName ?? 'N/A'}',
-                      textColor: AppColor.primaryColor,
-                    ))
+                if (HomeProvider.instance.loginModel?.data?.linkdCompanyName !=
+                    null)
+                  TextButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: BodyText(
+                                      text:
+                                          '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.linkdCompanyName ?? 'N/A'}?'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const ButtonText(
+                                          text: 'No',
+                                          textColor: AppColor.enableColor,
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          profileProvider.unlinkDriver();
+                                          Navigator.pop(context);
+                                        },
+                                        child: const ButtonText(
+                                          text: 'Yes',
+                                          textColor: AppColor.errorColor,
+                                        ))
+                                  ],
+                                ));
+                      },
+                      child: profileProvider.unlinkLoading
+                          ? const LoadingWidget(color: AppColor.primaryColor)
+                          : ButtonText(
+                              text:
+                                  '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.linkdCompanyName ?? 'N/A'}',
+                              textColor: AppColor.primaryColor,
+                            ))
               ],
             ),
           )

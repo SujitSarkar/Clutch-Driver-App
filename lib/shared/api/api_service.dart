@@ -1,14 +1,14 @@
 import 'dart:io';
-import '../../shared/api/parser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:http_parser/http_parser.dart';
 import 'dart:async';
 import 'dart:convert';
+import '../../shared/api/parser.dart';
 import '../../core/utils/app_navigator_key.dart';
 import '../../src/features/authentication/provider/authentication_provider.dart';
 import 'api_exception.dart';
-import 'package:http_parser/http_parser.dart';
 
 class ApiService {
   ApiService._privateConstructor();
@@ -86,9 +86,9 @@ class ApiService {
   ///Multipart api request
   Future<dynamic> multipartRequest(
       {required String url,
-        required Map<String, dynamic> requestBody,
-        required File file,
-        required String fileFieldName}) async {
+      required Map<String, dynamic> requestBody,
+      required File file,
+      required String fileFieldName}) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     MediaType contentType;
 
@@ -96,11 +96,11 @@ class ApiService {
     requestBody.forEach((key, value) => request.fields[key] = value.toString());
 
     //Get file MediaType
-    try{
+    try {
       contentType = getMediaTypeFromFile(file);
-    }on UnsupportedError{
+    } on UnsupportedError {
       throw ApiException(message: 'Unsupported file');
-    }catch(error){
+    } catch (error) {
       throw ApiException(message: '$error');
     }
 
@@ -134,15 +134,22 @@ class ApiService {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       var jsonData = jsonDecode(response.body);
-      await tokenExpiredAction(jsonData['message'].runtimeType == List? jsonData['message'].first: jsonData['message']);
+      await tokenExpiredAction(jsonData['message'].runtimeType == List
+          ? jsonData['message'].first
+          : jsonData['message']);
       return response;
     } else if (response.statusCode == 500) {
       throw ApiException(message: 'Internal server error');
     } else {
       try {
         var jsonData = jsonDecode(response.body);
-        await tokenExpiredAction(jsonData['message'].runtimeType == List? jsonData['message'].first: jsonData['message']);
-        throw ApiException(message: jsonData['message'].runtimeType == List? jsonData['message'].first: jsonData['message']);
+        await tokenExpiredAction(jsonData['message'].runtimeType == List
+            ? jsonData['message'].first
+            : jsonData['message']);
+        throw ApiException(
+            message: jsonData['message'].runtimeType == List
+                ? jsonData['message'].first
+                : jsonData['message']);
       } catch (e) {
         await tokenExpiredAction(e.toString());
         throw ApiException(message: 'Invalid data format');
