@@ -24,14 +24,12 @@ class AppString {
   static const String phone = 'Phone';
   static const String login = 'Login';
   static const String logout = 'Logout';
-  static const String changePassword = 'Change Password';
+  static const String resetPassword = 'Reset Password';
   static const String unlinkFrom = 'Unlink from';
   static const String signInMessage =
       'Please sign-in to your account and start the\nadventure';
   static const String noInternetConnection = 'No internet connection';
-  static const String resetPassTitle = 'Change your password';
-  static const String resetPassSubTitle =
-      'enter the email or phone number you use to log into clutch and we’ll send you a link to get back into your account';
+  static const String resetPassTitle = 'Reset your password';
 
   ///Drawer
   static const String pendingLoads = 'Pending Loads';
@@ -40,7 +38,8 @@ class AppString {
   static const String dailyLogbook = 'Daily Logbook';
 
   static const String preStartChecklist = 'Pre-Start Checklist';
-  static const String fatigueManagementChecklist = 'Fatigue Management Checklist';
+  static const String fatigueManagementChecklist =
+      'Fatigue Management Checklist';
 
   static const String breakTimes = 'Break Times';
   static const String time = 'Time';
@@ -65,6 +64,7 @@ class AppString {
   static const String load = 'Load';
   static const String pickup = 'Pickup';
   static const String destination = 'Destination';
+  static const String breakDetails = 'Break details';
   static const String commodity = 'Commodity';
   static const String releaseNo = 'Release No';
   static const String deliveryNo = 'Delivery No';
@@ -111,5 +111,4 @@ class AppString {
   static const String state = 'State';
   static const String postCode = 'Post Code';
   static const String country = 'Country';
-
 }

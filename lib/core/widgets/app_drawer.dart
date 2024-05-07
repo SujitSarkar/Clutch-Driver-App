@@ -109,13 +109,6 @@ class AppDrawer extends StatelessWidget {
                   Scaffold.of(context).closeDrawer();
                   pushTo(AppRouter.dailyLogbook);
                 }),
-            DrawerItemTile(
-                leadingIcon: Icons.key,
-                title: AppString.changePassword,
-                onTap: () async {
-                  Scaffold.of(context).closeDrawer();
-                  pushTo(AppRouter.changePassword);
-                }),
 
             DrawerItemTile(
                 leadingIcon: Icons.logout,
@@ -125,7 +118,7 @@ class AppDrawer extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                             title:
-                                const BodyText(text: 'Do you want to logout?'),
+                                const TitleText(text: 'Do you want to logout?'),
                             actions: [
                               TextButton(
                                   onPressed: () {

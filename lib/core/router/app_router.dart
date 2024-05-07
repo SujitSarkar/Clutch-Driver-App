@@ -1,7 +1,8 @@
 class AppRouter {
   static const String initializer = '/';
   static const String signIn = '/signIn';
-  static const String changePassword = '/change-password';
+  static const String resetPassword = '/reset-password';
+  static const String otpScreen = '/otp';
   static const String noInternet = '/no-internet';
 
   ///Home
@@ -16,9 +17,9 @@ class AppRouter {
   ///Drawer
   static const String dailyLogbook = '/daily-logbook';
   static const String preStartChecklist = '/pre-start-checklist';
-  static const String fatigueManagementChecklist = '/fatigue-management-checklist';
+  static const String fatigueManagementChecklist =
+      '/fatigue-management-checklist';
 
   ///Profile
   static const String profile = '/profile';
-
 }

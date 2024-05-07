@@ -322,9 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           '${AppString.unlinkFrom} ${profileProvider.loginModel?.data?.linkdCompanyName ?? 'N/A'}?'),
                                   actions: [
                                     TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
+                                        onPressed: () => Navigator.pop(context),
                                         child: const ButtonText(
                                           text: 'No',
                                           textColor: AppColor.enableColor,

@@ -1,6 +1,8 @@
+import 'package:clutch_driver_app/src/features/authentication/screen/otp_screen.dart';
+import 'package:clutch_driver_app/src/features/authentication/screen/reset_password_screen.dart';
+
 import '../../src/features/home/screen/file_preview_screen.dart';
 import 'package:flutter/material.dart';
-import '../../src/features/authentication/screen/change_password_screen.dart';
 import '../../src/features/drawer/screen/daily_logbook_screen.dart';
 import '../../src/features/drawer/screen/fatigue_management_checklist_screen.dart';
 import '../../src/features/drawer/screen/prestart_checklist_screen.dart';
@@ -32,19 +34,26 @@ class GeneratedRoute {
             pageBuilder: (_, animation, secondaryAnimation) =>
                 const SignInScreen());
 
-      case AppRouter.changePassword:
+      case AppRouter.otpScreen:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-            const ChangePasswordScreen());
+                const OtpScreen());
+
+      case AppRouter.resetPassword:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                const ResetPasswordScreen());
 
       case AppRouter.noInternet:
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: fadeTransition,
             pageBuilder: (_, animation, secondaryAnimation) =>
-            const NoInternetScreen());
+                const NoInternetScreen());
 
       // case AppRouter.companyList:
       //   return PageRouteBuilder(
@@ -105,7 +114,8 @@ class GeneratedRoute {
                 const DailyLogbookScreen());
 
       case AppRouter.preStartChecklist:
-        final PreStartChecklistScreen arguments = settings.arguments as PreStartChecklistScreen;
+        final PreStartChecklistScreen arguments =
+            settings.arguments as PreStartChecklistScreen;
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,

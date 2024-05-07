@@ -1,6 +1,9 @@
+import 'package:flutter/Material.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/text_size.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
@@ -14,14 +17,14 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     final AuthenticationProvider authProvider = Provider.of(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColor.cardColor,
         body: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
             child: Form(
               key: authProvider.signInFormKey,
               child: Column(
@@ -56,7 +59,14 @@ class SignInScreen extends StatelessWidget {
                     hintText: AppString.password.toLowerCase(),
                     required: true,
                   ),
-                  const SizedBox(height: TextSize.textFieldGap),
+
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                          onPressed: () {
+                            pushTo(AppRouter.otpScreen);
+                          },
+                          child: const Text('Forgot password?'))),
 
                   ///Login Button
                   SolidButton(

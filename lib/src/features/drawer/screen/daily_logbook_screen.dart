@@ -35,11 +35,11 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
       await drawerMenuProvider.getPreStartChecks(fromPage: 'drawer');
       await drawerMenuProvider.getDailySummary();
       ///Set data to textField
-      startTime.text = drawerMenuProvider.preStartDataModel!.data!.logStartTime??'';
-      endTime.text = drawerMenuProvider.preStartDataModel!.data!.logEndTime??'';
-      startingOdometerReading.text = drawerMenuProvider.preStartDataModel!.data!.startOdoReading??'';
-      endingOdometerReading.text = drawerMenuProvider.preStartDataModel!.data!.endOdoReading??'';
-      note.text = drawerMenuProvider.preStartDataModel!.data!.logNotes??'';
+      startTime.text = drawerMenuProvider.preStartDataModel?.data?.logStartTime??'';
+      endTime.text = drawerMenuProvider.preStartDataModel?.data?.logEndTime??'';
+      startingOdometerReading.text = drawerMenuProvider.preStartDataModel?.data?.startOdoReading??'';
+      endingOdometerReading.text = drawerMenuProvider.preStartDataModel?.data?.endOdoReading??'';
+      note.text = drawerMenuProvider.preStartDataModel?.data?.logNotes??'';
     });
     super.initState();
   }

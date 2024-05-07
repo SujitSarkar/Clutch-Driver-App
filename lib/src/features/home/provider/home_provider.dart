@@ -268,6 +268,7 @@ class HomeProvider extends ChangeNotifier {
   Future<void> loadDecline(
       {required int loadId, required String loadType}) async {
     pendingLoadLoading = true;
+    upcomingLoadLoading = true;
     notifyListeners();
     final requestBody = {'user_id': loginModel?.data?.id, 'load_id': loadId};
 
@@ -289,6 +290,7 @@ class HomeProvider extends ChangeNotifier {
       showToast('Error: ${error.message}');
     });
     pendingLoadLoading = false;
+    upcomingLoadLoading = false;
     notifyListeners();
   }
 

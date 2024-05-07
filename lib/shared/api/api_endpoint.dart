@@ -4,7 +4,7 @@ class ApiEndpoint {
 
   ///Auth
   static const String login = '/index.php/api/applogin';
-  static const String changePassword = '/index.php/api/app-reset-password';
+  static const String resetPassword = '/index.php/api/app-reset-password';
   static const String countryCodeList = '/index.php/api/country-code-list';
   static const String sendOtp = '/index.php/api/app-send-otp';
 
@@ -42,6 +42,8 @@ class ApiEndpoint {
       '/index.php/api/driver_logbook/fatigue-break-get';
   static const String saveFatigueBreak =
       '/index.php/api/driver_logbook/fatigue-break-save';
+  static const String deleteFatigueBreak =
+      '/index.php/api/driver_logbook/fatigue-break-remove';
   static const String saveFatigueManagement =
       '/index.php/api/driver_logbook/fatigue-management-save';
 }

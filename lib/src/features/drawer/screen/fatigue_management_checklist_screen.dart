@@ -185,9 +185,12 @@ class _FatigueManagementCheckListScreenState
                               Expanded(
                                 flex: 2,
                                 child: SmallText(
-                                    text: AppString.destination,
+                                    text: AppString.breakDetails,
                                     fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(
+                                width: 20,
+                              )
                             ],
                           ),
                           const Divider(thickness: 0.5),

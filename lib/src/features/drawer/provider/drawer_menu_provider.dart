@@ -132,7 +132,9 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final logsDate = DateFormat('yyyy-MM-dd').format(
+        HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
+            DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
@@ -143,7 +145,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       fatigueManagementCheckBoxItem = preStartDataModel!.data!.fatigueChecks!;
       additionalFeeCheckBoxItem = preStartDataModel!.data!.additionalFees!;
 
-      debugPrint(fromPage);
+      debugPrint('From Page: $fromPage');
       if (fromPage == AppRouter.pendingLoad ||
           fromPage == AppRouter.completeLoad) {
         if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck ==
@@ -152,7 +154,7 @@ class DrawerMenuProvider extends ChangeNotifier {
         } else if (HomeProvider
                     .instance.selectedPendingLoadModel?.requiredPrecheck ==
                 true &&
-            response.statusCode == 200) {
+            preStartDataModel?.statusCode == 200) {
           popAndPushTo(AppRouter.loadDetails);
         }
       }
@@ -244,6 +246,9 @@ class DrawerMenuProvider extends ChangeNotifier {
       'start_odo_reading': odoMeterReading,
       'pre_start_notes': notes,
       'pre_start_checks': jsonEncode(preStartChecks),
+      "load_start_date": DateFormat('yyyy-MM-dd').format(
+          HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
+              DateTime.now())
     };
     debugPrint('$requestBody\n');
     await ApiService.instance.apiCall(execute: () async {
@@ -394,6 +399,38 @@ class DrawerMenuProvider extends ChangeNotifier {
       var jsonData = jsonDecode(response.body);
       showToast('${jsonData['message']}');
       getPreStartChecks(fromPage: 'Fatigue Management');
+      jsonData = null;
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+    functionLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> deleteFatigueBreak({required String id}) async {
+    if (functionLoading == true) {
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
+    functionLoading = true;
+    notifyListeners();
+    final driverId = HomeProvider.instance.loginModel?.data?.id;
+
+    final requestBody = {
+      'id': id,
+      'driver_id': driverId,
+    };
+    debugPrint('$requestBody');
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.deleteFatigueBreak}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      var jsonData = jsonDecode(response.body);
+      showToast('${jsonData['message']}');
+      getFatigueBreaks();
+      popScreen();
       jsonData = null;
     }, onError: (error) {
       debugPrint('Error: ${error.message}');

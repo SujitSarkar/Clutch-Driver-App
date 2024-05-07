@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:clutch_driver_app/src/features/authentication/provider/authentication_provider.dart';
+import '../../../src/features/authentication/provider/authentication_provider.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/local_storage_key.dart';
 import '../../../core/constants/text_size.dart';
@@ -25,12 +25,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> onInit() async {
+    await AuthenticationProvider.instance.initialize();
     await getData(LocalStorageKey.loginResponseKey)
         .then((loginResponseFromLocal) async {
       if (loginResponseFromLocal != null) {
         await HomeProvider.instance.initialize();
         await DrawerMenuProvider.instance.initialize();
-        await AuthenticationProvider.instance.initialize();
         pushAndRemoveUntil(AppRouter.pendingLoad);
       } else {
         await Future.delayed(const Duration(milliseconds: 1000)).then((value) {

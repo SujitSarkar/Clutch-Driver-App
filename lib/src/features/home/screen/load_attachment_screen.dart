@@ -37,13 +37,15 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: TitleText(text: 'Upload ${widget.loadWeightType} attachment', textColor: Colors.white),
+          title: TitleText(
+              text: 'Upload ${widget.loadWeightType} attachment',
+              textColor: Colors.white),
           titleSpacing: 0,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: TextSize.pagePadding),
               child: InkWell(
-                onTap: ()=> pushTo(AppRouter.profile),
+                onTap: () => pushTo(AppRouter.profile),
                 child: const CircleAvatar(
                     child: Icon(Icons.person, color: AppColor.primaryColor)),
               ),
@@ -53,8 +55,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
         body: _bodyUI(homeProvider, size));
   }
 
-  Widget _bodyUI(HomeProvider homeProvider, Size size) =>
-      Column(
+  Widget _bodyUI(HomeProvider homeProvider, Size size) => Column(
         children: [
           ///Save & Cancel Button
           Padding(
@@ -69,31 +70,34 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                       textColor: AppColor.disableColor,
                     )),
                 TextButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       await homeProvider.saveLoadWeightAttachment(
-                          loadWeightType: widget.loadWeightType,
-                          files: attachmentFileList,
+                        loadWeightType: widget.loadWeightType,
+                        files: attachmentFileList,
                       );
                     },
                     child: homeProvider.functionLoading
                         ? const LoadingWidget(color: AppColor.primaryColor)
                         : const BodyText(
-                      text: AppString.save,
-                      textColor: AppColor.primaryColor,
-                    )),
+                            text: AppString.save,
+                            textColor: AppColor.primaryColor,
+                          )),
               ],
             ),
           ),
 
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: TextSize.pagePadding),
               children: [
                 ///Image preview
                 InkWell(
                   onTap: () async {
-                    await AppMediaService().getImageFromCamera().then((File? value){
-                      if(value!=null){
+                    await AppMediaService()
+                        .getImageFromCamera()
+                        .then((File? value) {
+                      if (value != null) {
                         selectedAttachmentFile = value;
                         attachmentFileList.add(value);
                         setState(() {});
@@ -113,14 +117,13 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8)),
                             child: isImageFile(selectedAttachmentFile!)
-                                ? Image.file(selectedAttachmentFile!, fit: BoxFit.fitHeight)
+                                ? Image.file(selectedAttachmentFile!,
+                                    fit: BoxFit.fitHeight)
                                 : Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: BodyText(
                                         text: selectedAttachmentFile!
-                                            .uri
-                                            .pathSegments
-                                            .last,
+                                            .uri.pathSegments.last,
                                         textAlign: TextAlign.center,
                                         textColor: Colors.blue),
                                   ))
@@ -142,8 +145,10 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                 ///Attachment Button
                 TextButton(
                     onPressed: () async {
-                      await AppMediaService().getFileFromStorage().then((File? value){
-                        if(value!=null){
+                      await AppMediaService()
+                          .getFileFromStorage()
+                          .then((File? value) {
+                        if (value != null) {
                           selectedAttachmentFile = value;
                           attachmentFileList.add(selectedAttachmentFile!);
                           setState(() {});
@@ -163,7 +168,8 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
 
                 ///Attachment List
                 const BodyText(
-                    text: AppString.linkedDocument, fontWeight: FontWeight.bold),
+                    text: AppString.linkedDocument,
+                    fontWeight: FontWeight.bold),
                 const Divider(height: 8, thickness: 0.8),
                 ListView.separated(
                   shrinkWrap: true,
@@ -179,13 +185,17 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                               color: AppColor.disableColor)),
                       Expanded(
                         child: InkWell(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
-                              selectedAttachmentFile = attachmentFileList[index];
+                              selectedAttachmentFile =
+                                  attachmentFileList[index];
                             });
                           },
                           child: BodyText(
-                              text: attachmentFileList[index].uri.pathSegments.last,
+                              text: attachmentFileList[index]
+                                  .uri
+                                  .pathSegments
+                                  .last,
                               textColor: AppColor.textColor),
                         ),
                       ),
@@ -198,43 +208,53 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
 
                 ///Uploaded List
                 const BodyText(
-                    text: AppString.uploadedDocument, fontWeight: FontWeight.bold),
+                    text: AppString.uploadedDocument,
+                    fontWeight: FontWeight.bold),
                 const Divider(height: 8, thickness: 0.8),
-                if(homeProvider.loadWeightModel!=null)
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.loadWeightType == StaticList.loadWeightType.first
-                      ? homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments!.length
-                      : homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments!.length,
-                  itemBuilder: (context, index) => Row(
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          final url = widget.loadWeightType == StaticList.loadWeightType.first
-                              ? '${homeProvider.loadWeightModel!.data!.pickup!.url}/${homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments![index]}'
-                              : '${homeProvider.loadWeightModel!.data!.deli!.url}/${homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments![index]}';
-                          debugPrint(url);
-                          pushTo(AppRouter.filePreview,arguments: url);
-                        },
-                        child: BodyText(
-                            text: widget.loadWeightType == StaticList.loadWeightType.first
-                                ? homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments![index]
-                                : homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments![index],
-                            textColor: AppColor.primaryColor),
-                      ),
-                    ],
+                if (homeProvider.loadWeightModel != null)
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount:
+                        widget.loadWeightType == StaticList.loadWeightType.first
+                            ? homeProvider.loadWeightModel!.data!.pickup!
+                                .pickupAttachments!.length
+                            : homeProvider.loadWeightModel!.data!.deli!
+                                .deliveryAttachments!.length,
+                    itemBuilder: (context, index) => Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            final url = widget.loadWeightType ==
+                                    StaticList.loadWeightType.first
+                                ? '${homeProvider.loadWeightModel!.data!.pickup!.url}/${homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments![index]}'
+                                : '${homeProvider.loadWeightModel!.data!.deli!.url}/${homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments![index]}';
+                            debugPrint(url);
+                            pushTo(AppRouter.filePreview, arguments: url);
+                          },
+                          child: BodyText(
+                              text: widget.loadWeightType ==
+                                      StaticList.loadWeightType.first
+                                  ? homeProvider.loadWeightModel!.data!.pickup!
+                                      .pickupAttachments![index]
+                                  : homeProvider.loadWeightModel!.data!.deli!
+                                      .deliveryAttachments![index],
+                              textColor: AppColor.primaryColor),
+                        ),
+                      ],
+                    ),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
                   ),
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                ),
               ],
             ),
           )
         ],
       );
 
-  void removeFileFromAttachmentFileList(int index){
-    if(selectedAttachmentFile?.uri.pathSegments.last == attachmentFileList[index].uri.pathSegments.last){
+  void removeFileFromAttachmentFileList(int index) {
+    if (selectedAttachmentFile?.uri.pathSegments.last ==
+        attachmentFileList[index].uri.pathSegments.last) {
       selectedAttachmentFile = null;
     }
     attachmentFileList.removeAt(index);

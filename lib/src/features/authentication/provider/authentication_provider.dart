@@ -11,7 +11,7 @@ import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';
 import '../../drawer/provider/drawer_menu_provider.dart';
 import '../../home/provider/home_provider.dart';
-import '../model/change_password_model.dart';
+import '../model/success_message_model.dart';
 import '../model/country_code_model.dart';
 import '../model/login_model.dart';
 
@@ -21,7 +21,8 @@ class AuthenticationProvider extends ChangeNotifier {
 
   bool loading = false;
   final GlobalKey<FormState> signInFormKey = GlobalKey();
-  final GlobalKey<FormState> changePasswordFormKey = GlobalKey();
+  final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
+  final GlobalKey<FormState> phoneFormKey = GlobalKey();
 
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -130,12 +131,49 @@ class AuthenticationProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> changePasswordButtonOnTap({required int? userId}) async {
+  Future<void> getOtpButtonOnTap() async {
     if (loading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
     }
-    if (!changePasswordFormKey.currentState!.validate()) {
+    if (selectedCountryCode == null) {
+      showToast("Country code required");
+      return;
+    }
+    if (!phoneFormKey.currentState!.validate()) {
+      return;
+    }
+    loading = true;
+    notifyListeners();
+
+    final Map<String, dynamic> requestBody = {
+      "phone": phoneController.text.trim(),
+      "phone_code": selectedCountryCode?.countryCode,
+    };
+    await ApiService.instance.apiCall(execute: () async {
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.sendOtp}',
+          body: requestBody);
+    }, onSuccess: (response) async {
+      SuccessMessageModel successMessageModel =
+          successMessageModelFromJson(response.body);
+      showToast(successMessageModel.message ?? "Something went wrong");
+      successMessageModel = SuccessMessageModel();
+      pushTo(AppRouter.resetPassword);
+    }, onError: (error) {
+      debugPrint('Error: ${error.message}');
+      showToast('Error: ${error.message}');
+    });
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> changePasswordButtonOnTap() async {
+    if (loading == true) {
+      showToast(AppString.anotherProcessRunning);
+      return;
+    }
+    if (!resetPasswordFormKey.currentState!.validate()) {
       return;
     }
     if (passwordController.text != confirmPasswordController.text) {
@@ -146,22 +184,23 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     final Map<String, dynamic> requestBody = {
-      "id": '$userId',
-      "password": passwordController.text,
-      'confirm_password': confirmPasswordController.text
+      "phone": phoneController.text.trim(),
+      "phone_code": selectedCountryCode?.countryCode,
+      'otp_code': otpController.text.trim(),
+      'password': passwordController.text,
+      'password_confirmation': confirmPasswordController.text,
     };
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
-          '${ApiEndpoint.baseUrl}${ApiEndpoint.changePassword}',
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.resetPassword}',
           body: requestBody);
     }, onSuccess: (response) async {
-      ChangePasswordModel changePasswordModel =
-          changePasswordModelFromJson(response.body);
-      showToast('${changePasswordModel.message}');
-      clearAllData();
-      usernameController.text = HomeProvider.instance.loginModel!.data!.email!;
-      await logout();
-      changePasswordModel = ChangePasswordModel();
+      SuccessMessageModel successMessageModel =
+          successMessageModelFromJson(response.body);
+      showToast(successMessageModel.message ?? "Something went wrong");
+      successMessageModel = SuccessMessageModel();
+      clearLocalData();
+      popUntilOf(AppRouter.signIn);
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
