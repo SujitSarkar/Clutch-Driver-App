@@ -185,13 +185,23 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                     ///Open Route in Google Map
                     SolidButton(
                         onTap: () async {
-                          double lat = double.parse(homeProvider
+                          double originLat = double.parse(homeProvider
+                                  .selectedPendingLoadModel?.pickup?.lat ??
+                              "0.0");
+                          double originLong = double.parse(homeProvider
+                                  .selectedPendingLoadModel?.pickup?.lon ??
+                              "0.0");
+                          double destLat = double.parse(homeProvider
                                   .selectedPendingLoadModel?.destination?.lat ??
                               "0.0");
-                          double long = double.parse(homeProvider
+                          double destLong = double.parse(homeProvider
                                   .selectedPendingLoadModel?.destination?.lon ??
                               "0.0");
-                          await openGoogleMapsWithLatLong(lat, long);
+                          await openGoogleMapsWithLatLong(
+                              originLat: originLat,
+                              originLong: originLong,
+                              destLat: destLat,
+                              destLong: destLong);
                         },
                         child:
                             const ButtonText(text: 'Open Route in Google Map')),
@@ -261,7 +271,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                         backgroundColor: AppColor.disableColor,
                         child: ButtonText(
                             text:
-                                '${AppString.upload} (${homeProvider.loadWeightModel!.data!.pickup!.pickupAttachments!.length})')),
+                                '${AppString.upload} (${homeProvider.loadWeightModel?.data?.pickup?.pickupAttachments?.length})')),
                     const SizedBox(height: TextSize.pagePadding),
 
                     ///Delivery Date
@@ -321,7 +331,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                         backgroundColor: AppColor.disableColor,
                         child: ButtonText(
                             text:
-                                '${AppString.upload} (${homeProvider.loadWeightModel!.data!.deli!.deliveryAttachments!.length})')),
+                                '${AppString.upload} (${homeProvider.loadWeightModel?.data?.deli?.deliveryAttachments?.length})')),
                     const SizedBox(height: TextSize.pagePadding),
 
                     ///Calculated Nett

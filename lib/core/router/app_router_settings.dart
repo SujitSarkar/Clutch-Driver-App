@@ -1,5 +1,5 @@
-import 'package:clutch_driver_app/src/features/authentication/screen/otp_screen.dart';
-import 'package:clutch_driver_app/src/features/authentication/screen/reset_password_screen.dart';
+import '../../src/features/authentication/screen/otp_screen.dart';
+import '../../src/features/authentication/screen/reset_password_screen.dart';
 
 import '../../src/features/home/screen/file_preview_screen.dart';
 import 'package:flutter/material.dart';
