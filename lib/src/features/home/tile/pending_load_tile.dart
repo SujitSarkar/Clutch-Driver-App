@@ -47,10 +47,10 @@ class PendingLoadTile extends StatelessWidget {
                       text: '${AppString.load}: ${loadModel.loadRef ?? ''}'),
                   BodyText(
                       text:
-                          '${AppString.pickup}: ${loadModel.pickup?.state ?? ''}'),
+                          '${AppString.pickup}: ${loadModel.pickup?.suburb ?? ''}'),
                   BodyText(
                       text:
-                          '${AppString.destination}: ${loadModel.destination?.state ?? ''}'),
+                          '${AppString.destination}: ${loadModel.destination?.suburb ?? ''}'),
                   BodyText(
                       text:
                           '${AppString.commodity}: ${loadModel.commodity ?? ''}'),

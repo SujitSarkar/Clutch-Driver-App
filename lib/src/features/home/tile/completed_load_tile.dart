@@ -7,7 +7,7 @@ import '../../../../core/widgets/text_widget.dart';
 import '../../../../src/features/home/model/load_model.dart';
 
 class CompletedLoadTile extends StatelessWidget {
-  const CompletedLoadTile({super.key,required this.loadModel});
+  const CompletedLoadTile({super.key, required this.loadModel});
   final LoadDataModel loadModel;
 
   @override
@@ -23,13 +23,25 @@ class CompletedLoadTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BodyText(text: '${AppString.contact}: ${loadModel.contractNo??''}'),
-                BodyText(text: '${AppString.load}: ${loadModel.loadRef??''}'),
-                BodyText(text: '${AppString.pickup}: ${loadModel.pickup?.state??''}'),
-                BodyText(text: '${AppString.destination}: ${loadModel.destination?.state??''}'),
-                BodyText(text: '${AppString.commodity}: ${loadModel.commodity??''}'),
-                BodyText(text: '${AppString.releaseNo}: ${loadModel.releaseNo??''}'),
-                BodyText(text: '${AppString.deliveryNo}: ${loadModel.deliveryNo??''}'),
+                BodyText(
+                    text:
+                        '${AppString.contact}: ${loadModel.contractNo ?? ''}'),
+                BodyText(text: '${AppString.load}: ${loadModel.loadRef ?? ''}'),
+                BodyText(
+                    text:
+                        '${AppString.pickup}: ${loadModel.pickup?.suburb ?? ''}'),
+                BodyText(
+                    text:
+                        '${AppString.destination}: ${loadModel.destination?.suburb ?? ''}'),
+                BodyText(
+                    text:
+                        '${AppString.commodity}: ${loadModel.commodity ?? ''}'),
+                BodyText(
+                    text:
+                        '${AppString.releaseNo}: ${loadModel.releaseNo ?? ''}'),
+                BodyText(
+                    text:
+                        '${AppString.deliveryNo}: ${loadModel.deliveryNo ?? ''}'),
               ],
             ),
           ),
@@ -39,19 +51,21 @@ class CompletedLoadTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                BodyText(text: '${AppString.quantity}: ${loadModel.qty??'0'}'),
+                BodyText(
+                    text: '${AppString.quantity}: ${loadModel.qty ?? '0'}'),
                 const SizedBox(height: 30),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColor.primaryColor,
                         shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5))
-                        ),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
                         minimumSize: const Size(80, 28)),
                     onPressed: () {
-                      HomeProvider.instance.pendingLoadStartButtonOnTap(model: loadModel);
+                      HomeProvider.instance
+                          .pendingLoadStartButtonOnTap(model: loadModel);
                     },
-                    child: const BodyText(text: AppString.edit, textColor: Colors.white))
+                    child: const BodyText(
+                        text: AppString.edit, textColor: Colors.white))
               ],
             ),
           )

@@ -1,4 +1,5 @@
 import 'package:flutter/Material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
@@ -33,10 +34,8 @@ class UpcomingLoadTile extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         bgColor: AppColor.primaryColor.withOpacity(0.1),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -47,10 +46,10 @@ class UpcomingLoadTile extends StatelessWidget {
                       text: '${AppString.load}: ${loadModel.loadRef ?? ''}'),
                   BodyText(
                       text:
-                          '${AppString.pickup}: ${loadModel.pickup?.state ?? ''}'),
+                          '${AppString.pickup}: ${loadModel.pickup?.suburb ?? ''}'),
                   BodyText(
                       text:
-                          '${AppString.destination}: ${loadModel.destination?.state ?? ''}'),
+                          '${AppString.destination}: ${loadModel.destination?.suburb ?? ''}'),
                   BodyText(
                       text:
                           '${AppString.commodity}: ${loadModel.commodity ?? ''}'),
@@ -63,13 +62,11 @@ class UpcomingLoadTile extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Align(
-                  alignment: Alignment.topRight,
-                  child: BodyText(
-                      text: '${AppString.quantity}: ${loadModel.qty ?? '0'}',
-                      textAlign: TextAlign.end)),
+            Align(
+              alignment: Alignment.topRight,
+              child: BodyText(
+                  text: '${AppString.quantity}: ${loadModel.qty ?? '0'}',
+                  textAlign: TextAlign.end),
             )
           ],
         ),

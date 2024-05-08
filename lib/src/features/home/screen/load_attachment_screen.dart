@@ -204,7 +204,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 0),
                 ),
-                const SizedBox(height: TextSize.pagePadding),
+                // const SizedBox(height: TextSize.pagePadding),
 
                 ///Uploaded List
                 const BodyText(
