@@ -122,7 +122,8 @@ class DrawerMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPreStartChecks({required fromPage}) async {
+  Future<void> getPreStartChecks(
+      {required String fromPage, DateTime? dateTime}) async {
     if (initialLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
@@ -132,9 +133,9 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final logsDate = DateFormat('yyyy-MM-dd').format(
+    final logsDate = DateFormat('yyyy-MM-dd').format(dateTime ??
         HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
-            DateTime.now());
+        DateTime.now());
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
