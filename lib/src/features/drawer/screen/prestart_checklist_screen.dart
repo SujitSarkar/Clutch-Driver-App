@@ -31,28 +31,29 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
   final TextEditingController note = TextEditingController();
   final TextEditingController dateController = TextEditingController();
 
-  ///You have to fillup this form first
+  late DrawerMenuProvider drawerMenuProvider;
 
   @override
   void initState() {
-    final DrawerMenuProvider drawerMenuProvider =
-        Provider.of(context, listen: false);
+    drawerMenuProvider = Provider.of(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await drawerMenuProvider.getPreStartChecks(fromPage: widget.fromPage);
-
-      ///Set data to textField
-      startingOdometerReading.text =
-          drawerMenuProvider.preStartDataModel?.data?.startOdoReading ?? '';
-      startTime.text =
-          drawerMenuProvider.preStartDataModel?.data?.logStartTime ?? '';
-      note.text =
-          drawerMenuProvider.preStartDataModel?.data?.preStartNotes ?? '';
       dateController.text = DateFormat('yyyy-MM-dd').format(
           HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
               DateTime.now());
+      initializeData();
     });
     super.initState();
+  }
+
+  void initializeData() {
+    ///Set data to textField
+    startingOdometerReading.text =
+        drawerMenuProvider.preStartDataModel?.data?.startOdoReading ?? '';
+    startTime.text =
+        drawerMenuProvider.preStartDataModel?.data?.logStartTime ?? '';
+    note.text = drawerMenuProvider.preStartDataModel?.data?.preStartNotes ?? '';
   }
 
   @override
@@ -116,7 +117,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
             child: ListView(
           padding: const EdgeInsets.all(TextSize.pagePadding),
           children: [
-            ///Dropdown & Date
+            ///Truck Dropdown & Date
             Row(
               children: [
                 Expanded(
@@ -144,8 +145,9 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                     if (date != null) {
                       dateController.text =
                           DateFormat('yyyy-MM-dd').format(date);
-                      drawerMenuProvider.getPreStartChecks(
+                      await drawerMenuProvider.getPreStartChecks(
                           fromPage: widget.fromPage, dateTime: date);
+                      initializeData();
                     }
                   },
                 ))

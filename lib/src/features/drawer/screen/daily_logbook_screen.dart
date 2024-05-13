@@ -29,29 +29,30 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
   final TextEditingController endingOdometerReading = TextEditingController();
   final TextEditingController note = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  late DrawerMenuProvider drawerMenuProvider;
 
   @override
   void initState() {
-    final DrawerMenuProvider drawerMenuProvider =
-        Provider.of(context, listen: false);
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      drawerMenuProvider = Provider.of(context, listen: false);
       await drawerMenuProvider.getPreStartChecks(fromPage: 'drawer');
       await drawerMenuProvider.getDailySummary();
-
-      ///Set data to textField
-      startTime.text =
-          drawerMenuProvider.preStartDataModel?.data?.logStartTime ?? '';
-      endTime.text =
-          drawerMenuProvider.preStartDataModel?.data?.logEndTime ?? '';
-      startingOdometerReading.text =
-          drawerMenuProvider.preStartDataModel?.data?.startOdoReading ?? '';
-      endingOdometerReading.text =
-          drawerMenuProvider.preStartDataModel?.data?.endOdoReading ?? '';
-      note.text = drawerMenuProvider.preStartDataModel?.data?.logNotes ?? '';
       dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      initializeData();
     });
     super.initState();
+  }
+
+  void initializeData() async {
+    ///Set data to textField
+    startTime.text =
+        drawerMenuProvider.preStartDataModel?.data?.logStartTime ?? '';
+    endTime.text = drawerMenuProvider.preStartDataModel?.data?.logEndTime ?? '';
+    startingOdometerReading.text =
+        drawerMenuProvider.preStartDataModel?.data?.startOdoReading ?? '';
+    endingOdometerReading.text =
+        drawerMenuProvider.preStartDataModel?.data?.endOdoReading ?? '';
+    note.text = drawerMenuProvider.preStartDataModel?.data?.logNotes ?? '';
   }
 
   @override
@@ -144,8 +145,10 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
                       if (date != null) {
                         dateController.text =
                             DateFormat('yyyy-MM-dd').format(date);
-                        drawerMenuProvider.getPreStartChecks(
+                        await drawerMenuProvider.getPreStartChecks(
                             fromPage: 'drawer', dateTime: date);
+                        await drawerMenuProvider.getDailySummary();
+                        initializeData();
                       }
                     },
                   ))
