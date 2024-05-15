@@ -6,6 +6,7 @@ import '../../../../core/constants/static_list.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/normal_card.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
@@ -14,6 +15,8 @@ import '../../../../core/constants/text_size.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../../shared/date_time_picker.dart';
+import '../../drawer/widget/address_details_widget.dart';
+import '../../drawer/widget/load_details_widget.dart';
 import '../provider/home_provider.dart';
 
 class LoadDetailsScreen extends StatefulWidget {
@@ -46,6 +49,15 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
       onInit();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    pickupTareWeight.removeListener(calculateNett);
+    pickupGrossWeight.removeListener(calculateNett);
+    deliveryTareWeight.removeListener(calculateNett);
+    deliveryGrossWeight.removeListener(calculateNett);
+    super.dispose();
   }
 
   Future<void> onInit() async {
@@ -153,33 +165,51 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ///Details
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BodyText(
-                            text:
-                                '${AppString.contact}: ${homeProvider.selectedPendingLoadModel?.contractNo ?? ''}'),
-                        BodyText(
-                            text:
-                                '${AppString.quantity}: ${homeProvider.selectedPendingLoadModel?.qty ?? '0'}'),
-                      ],
-                    ),
-                    BodyText(
-                        text:
-                            '${AppString.load}: ${homeProvider.selectedPendingLoadModel?.loadRef ?? ''}'),
-                    BodyText(
-                        text:
-                            '${AppString.pickup}: ${homeProvider.selectedPendingLoadModel?.pickup?.suburb ?? ''}'),
-                    BodyText(
-                        text:
-                            '${AppString.destination}: ${homeProvider.selectedPendingLoadModel?.destination?.suburb ?? ''}'),
-                    BodyText(
-                        text:
-                            '${AppString.commodity}: ${homeProvider.selectedPendingLoadModel?.commodity ?? ''}'),
-                    BodyText(
-                        text:
-                            '${AppString.noteForDriver}: ${homeProvider.selectedPendingLoadModel?.noteForDriver ?? ''}'),
+                    if (homeProvider.selectedPendingLoadModel != null)
+                      NormalCard(
+                        padding: const EdgeInsets.all(12),
+                        bgColor: AppColor.primaryColor.withOpacity(0.1),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ///Load info
+                            LoadDetailsWidget(
+                                model: homeProvider.selectedPendingLoadModel!),
+                            const SizedBox(height: TextSize.textGap),
+
+                            ///Pickup Details
+                            const BodyText(
+                              text: AppString.pickup,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            AddressDetailsWidget(
+                              model: homeProvider.selectedPendingLoadModel!,
+                              destinationType: DestinationType.pickup,
+                            ),
+                            const SizedBox(height: TextSize.textGap),
+
+                            ///Destination Details
+                            const BodyText(
+                              text: AppString.destination,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            AddressDetailsWidget(
+                              model: homeProvider.selectedPendingLoadModel!,
+                              destinationType: DestinationType.destibation,
+                            ),
+
+                            ///Driver Note
+                            if (homeProvider
+                                    .selectedPendingLoadModel?.noteForDriver !=
+                                null)
+                              BodyText(
+                                  text:
+                                      '${AppString.noteForDriver}: ${homeProvider.selectedPendingLoadModel?.noteForDriver ?? ''}'),
+                            const SizedBox(height: TextSize.textGap),
+                          ],
+                        ),
+                      ),
                     const SizedBox(height: TextSize.textGap),
 
                     ///Open Route in Google Map

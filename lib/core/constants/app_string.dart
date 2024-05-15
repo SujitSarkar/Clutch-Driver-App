@@ -73,6 +73,16 @@ class AppString {
   static const String loadDetails = 'Load Details';
   static const String search = 'Search';
 
+  //Load Details
+  static const String state = 'State';
+  static const String suburb = 'Suburb';
+  static const String postCode = 'Post Code';
+  static const String street = 'Street';
+  static const String address = 'Address';
+  static const String streetNumber = 'Street Number';
+  static const String unitType = 'Unit Type';
+  static const String country = 'Country';
+
   static const String note = 'Note';
   static const String pickupDate = 'Pickup Date';
   static const String pickupTime = 'Pickup Time';
@@ -104,11 +114,4 @@ class AppString {
   static const String organization = 'Organization';
   static const String uploadPhoto = 'Upload Photo';
   static const String license = 'License';
-  static const String street = 'Street';
-  static const String address = 'Address';
-  static const String streetNumber = 'Street Number';
-  static const String suburb = 'Suburb';
-  static const String state = 'State';
-  static const String postCode = 'Post Code';
-  static const String country = 'Country';
 }

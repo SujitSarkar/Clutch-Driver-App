@@ -20,6 +20,7 @@ class NormalCard extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 8)),
       elevation: 0.0,
       child: Container(
+        width: double.infinity,
         padding: padding ?? const EdgeInsets.all(0.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 8)),
