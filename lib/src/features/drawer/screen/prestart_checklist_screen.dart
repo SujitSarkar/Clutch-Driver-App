@@ -132,6 +132,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                             value: value, fromPage: AppRouter.dailyLogbook);
                       }),
                 ),
+                //Decimal keyboard added, New field added to Prending, upcoming, completed, load details screen
                 const SizedBox(width: 12),
                 Expanded(
                     child: TextFormFieldWidget(
