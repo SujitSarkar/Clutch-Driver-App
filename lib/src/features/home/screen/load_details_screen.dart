@@ -265,6 +265,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       },
                     ),
                     const SizedBox(height: TextSize.textGap),
+
+                    ///Pickup time
                     TextFormFieldWidget(
                       controller: pickupTime,
                       labelText: AppString.pickupTime,
@@ -279,18 +281,24 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       },
                     ),
                     const SizedBox(height: TextSize.textGap),
+
+                    ///Pickup Tare weight
                     TextFormFieldWidget(
                       controller: pickupTareWeight,
                       labelText: AppString.pickupTareWeight,
                       hintText: AppString.pickupTareWeight,
-                      textInputType: TextInputType.number,
+                      textInputType:
+                          const TextInputType.numberWithOptions(decimal: true),
                     ),
                     const SizedBox(height: TextSize.textGap),
+
+                    ///Pickup Gross weight
                     TextFormFieldWidget(
                       controller: pickupGrossWeight,
                       labelText: AppString.pickupGrossWeight,
                       hintText: AppString.pickupGrossWeight,
-                      textInputType: TextInputType.number,
+                      textInputType:
+                          const TextInputType.numberWithOptions(decimal: true),
                     ),
                     const SizedBox(height: TextSize.textGap),
                     SolidButton(
@@ -320,6 +328,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                       },
                     ),
                     const SizedBox(height: TextSize.textGap),
+                    //Delivery Time
                     TextFormFieldWidget(
                       controller: deliveryTime,
                       labelText: AppString.deliveryTime,
@@ -335,20 +344,24 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                     ),
                     const SizedBox(height: TextSize.textGap),
 
-                    ///Delivery Weight
+                    ///Delivery Gross Weight
                     TextFormFieldWidget(
                       controller: deliveryGrossWeight,
                       labelText: AppString.deliveryGrossWeight,
                       hintText: AppString.deliveryGrossWeight,
-                      textInputType: TextInputType.number,
+                      textInputType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       required: true,
                     ),
                     const SizedBox(height: TextSize.textGap),
+
+                    ///Delivery Tare Weight
                     TextFormFieldWidget(
                       controller: deliveryTareWeight,
                       labelText: AppString.deliveryTareWeight,
                       hintText: AppString.deliveryTareWeight,
-                      textInputType: TextInputType.number,
+                      textInputType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       required: true,
                     ),
                     const SizedBox(height: TextSize.textGap),

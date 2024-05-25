@@ -60,6 +60,10 @@ class PendingLoadTile extends StatelessWidget {
                   BodyText(
                       text:
                           '${AppString.deliveryNo}: ${loadModel.deliveryNo ?? ''}'),
+                  if (loadModel.showRate != null)
+                    BodyText(
+                        text:
+                            '${AppString.loadRate}: ${loadModel.showRate ?? ''}'),
                 ],
               ),
             ),
@@ -71,7 +75,7 @@ class PendingLoadTile extends StatelessWidget {
                 children: [
                   BodyText(
                       text: '${AppString.quantity}: ${loadModel.qty ?? '0'}'),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 80),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.primaryColor,

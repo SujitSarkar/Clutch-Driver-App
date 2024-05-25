@@ -59,6 +59,10 @@ class UpcomingLoadTile extends StatelessWidget {
                   BodyText(
                       text:
                           '${AppString.deliveryNo}: ${loadModel.deliveryNo ?? ''}'),
+                  if (loadModel.showRate != null)
+                    BodyText(
+                        text:
+                            '${AppString.loadRate}: ${loadModel.showRate ?? ''}'),
                 ],
               ),
             ),

@@ -23,6 +23,10 @@ class LoadDetailsWidget extends StatelessWidget {
         ),
         BodyText(text: '${AppString.load}: ${model.loadRef ?? ''}'),
         BodyText(text: '${AppString.commodity}: ${model.commodity ?? ''}'),
+        BodyText(text: '${AppString.releaseNo}: ${model.releaseNo ?? ''}'),
+        BodyText(text: '${AppString.deliveryNo}: ${model.deliveryNo ?? ''}'),
+        if (model.showRate != null)
+          BodyText(text: '${AppString.loadRate}: ${model.showRate ?? ''}'),
       ],
     );
   }

@@ -160,7 +160,8 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
               controller: startingOdometerReading,
               labelText: AppString.startingOdometerReading,
               hintText: AppString.startingOdometerReading,
-              textInputType: TextInputType.number,
+              textInputType:
+                  const TextInputType.numberWithOptions(decimal: true),
             ),
             const SizedBox(height: TextSize.textFieldGap),
 

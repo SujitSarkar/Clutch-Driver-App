@@ -68,6 +68,7 @@ class AppString {
   static const String commodity = 'Commodity';
   static const String releaseNo = 'Release No';
   static const String deliveryNo = 'Delivery No';
+  static const String loadRate = 'Load Rate';
   static const String noteForDriver = 'Note for driver';
   static const String quantity = 'QTY';
   static const String loadDetails = 'Load Details';

@@ -66,7 +66,6 @@ class ProfileProvider extends ChangeNotifier {
     }, onSuccess: (response) async {
       StateModel stateModel = stateModelFromJson(response.body);
       stateList = stateModel.data ?? [];
-      selectedState = stateList.isNotEmpty ? stateList.first : null;
       stateModel = StateModel();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
@@ -96,6 +95,7 @@ class ProfileProvider extends ChangeNotifier {
           .get('${ApiEndpoint.baseUrl}${ApiEndpoint.getUserInfo}?id=$userId');
     }, onSuccess: (response) async {
       loginModel = loginModelFromJson(response.body);
+      selectedState = loginModel?.data?.address?.state;
       notifyListeners();
     }, onError: (error) {
       debugPrint('Error: ${error.message}');
@@ -104,25 +104,28 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> unlinkDriver() async {
-    unlinkLoading=true;
+    unlinkLoading = true;
     notifyListeners();
     HomeProvider.instance.notifyListeners();
     final requestBody = {
       'id': HomeProvider.instance.loginModel?.data?.id,
-      'company_id': HomeProvider.instance.loginModel?.data?.companyId??''};
+      'company_id': HomeProvider.instance.loginModel?.data?.companyId ?? ''
+    };
 
     await ApiService.instance.apiCall(execute: () async {
-      return await ApiService.instance
-          .post('${ApiEndpoint.baseUrl}${ApiEndpoint.unlinkDriver}',body: requestBody);
+      return await ApiService.instance.post(
+          '${ApiEndpoint.baseUrl}${ApiEndpoint.unlinkDriver}',
+          body: requestBody);
     }, onSuccess: (response) async {
-      HomeProvider.instance.loginModel?.data?.linkdCompanyName=null;
-      HomeProvider.instance.loginModel?.data?.companyId=null;
-      await setData(LocalStorageKey.loginResponseKey, loginModelToJson(HomeProvider.instance.loginModel!))
+      HomeProvider.instance.loginModel?.data?.linkdCompanyName = null;
+      HomeProvider.instance.loginModel?.data?.companyId = null;
+      await setData(LocalStorageKey.loginResponseKey,
+              loginModelToJson(HomeProvider.instance.loginModel!))
           .then((value) async {
-            await HomeProvider.instance.getLocalData();
-            ApiService.instance.addAccessTokenAndCookie(
-                token: loginModel?.data?.authToken,
-                cookie: loginModel?.data?.authToken);
+        await HomeProvider.instance.getLocalData();
+        ApiService.instance.addAccessTokenAndCookie(
+            token: loginModel?.data?.authToken,
+            cookie: loginModel?.data?.authToken);
       });
       var jsonData = jsonDecode(response.body);
       showToast(jsonData['message']);
@@ -130,7 +133,7 @@ class ProfileProvider extends ChangeNotifier {
       debugPrint('Error: ${error.message}');
       showToast('Error: ${error.message}');
     });
-    unlinkLoading=false;
+    unlinkLoading = false;
     notifyListeners();
     HomeProvider.instance.notifyListeners();
   }

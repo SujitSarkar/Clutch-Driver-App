@@ -194,7 +194,8 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
                 controller: endingOdometerReading,
                 labelText: AppString.endingOdometerReading,
                 hintText: AppString.endingOdometerReading,
-                textInputType: TextInputType.number,
+                textInputType:
+                    const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: TextSize.textFieldGap),
 
