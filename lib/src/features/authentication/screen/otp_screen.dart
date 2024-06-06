@@ -2,7 +2,7 @@ import '../../../../core/widgets/country_code_dropdown.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_field_widget.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_color.dart';

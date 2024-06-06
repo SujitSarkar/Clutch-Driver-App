@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -151,13 +151,15 @@ class DrawerMenuProvider extends ChangeNotifier {
           fromPage == AppRouter.completeLoad) {
         if (HomeProvider.instance.selectedPendingLoadModel?.requiredPrecheck ==
             false) {
-          popAndPushTo(AppRouter.loadDetails);
+          popAndPushTo(AppRouter.loadDetails, arguments: fromPage);
         } else if (HomeProvider
                     .instance.selectedPendingLoadModel?.requiredPrecheck ==
                 true &&
             preStartDataModel?.statusCode == 200) {
-          popAndPushTo(AppRouter.loadDetails);
+          popAndPushTo(AppRouter.loadDetails, arguments: fromPage);
         }
+      } else if (fromPage == AppRouter.upcomingLoad) {
+        popAndPushTo(AppRouter.loadDetails, arguments: fromPage);
       }
     }, onError: (error) {
       debugPrint('Error: ${error.message}');

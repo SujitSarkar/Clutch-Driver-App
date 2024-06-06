@@ -15,7 +15,7 @@ class OutlineButton extends StatelessWidget {
   final double? width;
   final Color? backgroundColor;
   final BorderRadiusGeometry? borderRadius;
-  final MaterialStateProperty<Color?>? splashColor;
+  final WidgetStateProperty<Color?>? splashColor;
   final Color? borderColor;
 
   @override
@@ -31,7 +31,7 @@ class OutlineButton extends StatelessWidget {
                         const BorderRadius.all(Radius.circular(5))))
             .copyWith(
                 overlayColor: splashColor ??
-                    MaterialStateProperty.all(Colors.white.withOpacity(0.5))),
+                    WidgetStateProperty.all(Colors.white.withOpacity(0.5))),
         onPressed: onTap,
         child: child);
   }

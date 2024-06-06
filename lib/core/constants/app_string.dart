@@ -10,6 +10,7 @@ class AppString {
   static const String save = 'Save';
   static const String start = 'Start';
   static const String edit = 'Edit';
+  static const String preview = 'Preview';
   static const String complete = 'Complete';
   static const String completeDelivery = 'Complete Delivery';
   static const String upload = 'Upload';
@@ -91,6 +92,7 @@ class AppString {
   static const String pickupGrossWeight = 'Pickup Gross Weight';
   static const String deliveryDate = 'Delivery Date';
   static const String deliveryTime = 'Delivery Time';
+  static const String declineLoad = 'Decline load';
   static const String deliveryGrossWeight = 'Delivery Gross Weight';
   static const String deliveryTareWeight = 'Delivery Tare Weight';
   static const String calculatedNett = 'Calculated Nett';

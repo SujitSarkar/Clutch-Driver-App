@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import '../../../../core/constants/text_size.dart';
 
 class DrawerItemTile extends StatelessWidget {

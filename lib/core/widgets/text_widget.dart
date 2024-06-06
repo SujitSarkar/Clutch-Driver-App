@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import '../constants/app_color.dart';
 import '../constants/text_size.dart';
 
@@ -18,7 +18,7 @@ class BodyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        textAlign: textAlign?? TextAlign.start,
+        textAlign: textAlign ?? TextAlign.start,
         style: TextStyle(
             color: textColor ?? AppColor.textColor,
             fontSize: TextSize.bodyText,
@@ -29,10 +29,10 @@ class BodyText extends StatelessWidget {
 class SmallText extends StatelessWidget {
   const SmallText(
       {super.key,
-        required this.text,
-        this.textColor,
-        this.fontWeight,
-        this.textAlign});
+      required this.text,
+      this.textColor,
+      this.fontWeight,
+      this.textAlign});
 
   final String text;
   final Color? textColor;
@@ -42,7 +42,7 @@ class SmallText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        textAlign: textAlign?? TextAlign.start,
+        textAlign: textAlign ?? TextAlign.start,
         style: TextStyle(
             color: textColor ?? AppColor.textColor,
             fontSize: TextSize.smallText,
@@ -53,10 +53,10 @@ class SmallText extends StatelessWidget {
 class TitleText extends StatelessWidget {
   const TitleText(
       {super.key,
-        required this.text,
-        this.textColor,
-        this.fontWeight,
-        this.textAlign});
+      required this.text,
+      this.textColor,
+      this.fontWeight,
+      this.textAlign});
 
   final String text;
   final Color? textColor;
@@ -66,7 +66,7 @@ class TitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        textAlign: textAlign?? TextAlign.start,
+        textAlign: textAlign ?? TextAlign.start,
         style: TextStyle(
             color: textColor ?? AppColor.textColor,
             fontSize: TextSize.titleText,
@@ -77,10 +77,10 @@ class TitleText extends StatelessWidget {
 class LargeTitleText extends StatelessWidget {
   const LargeTitleText(
       {super.key,
-        required this.text,
-        this.textColor,
-        this.fontWeight,
-        this.textAlign});
+      required this.text,
+      this.textColor,
+      this.fontWeight,
+      this.textAlign});
 
   final String text;
   final Color? textColor;
@@ -90,7 +90,7 @@ class LargeTitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        textAlign: textAlign?? TextAlign.start,
+        textAlign: textAlign ?? TextAlign.start,
         style: TextStyle(
             color: textColor ?? AppColor.textColor,
             fontSize: TextSize.largeTitleText,
@@ -101,10 +101,10 @@ class LargeTitleText extends StatelessWidget {
 class ButtonText extends StatelessWidget {
   const ButtonText(
       {super.key,
-        required this.text,
-        this.textColor,
-        this.fontWeight,
-        this.textAlign});
+      required this.text,
+      this.textColor,
+      this.fontWeight,
+      this.textAlign});
 
   final String text;
   final Color? textColor;
@@ -114,7 +114,7 @@ class ButtonText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        textAlign: textAlign?? TextAlign.start,
+        textAlign: textAlign ?? TextAlign.start,
         style: TextStyle(
             color: textColor ?? Colors.white,
             fontSize: TextSize.buttonText,

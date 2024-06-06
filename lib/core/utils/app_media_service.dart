@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'permission_handler.dart';
 
@@ -12,8 +12,8 @@ class AppMediaService {
       return null;
     }
     try {
-      final XFile? image = await ImagePicker().pickImage(
-          source: ImageSource.camera, imageQuality: 70);
+      final XFile? image = await ImagePicker()
+          .pickImage(source: ImageSource.camera, imageQuality: 70);
       if (image != null) {
         file = File(image.path);
       } else {

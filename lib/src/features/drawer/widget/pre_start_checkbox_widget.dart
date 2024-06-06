@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/drawer_menu_provider.dart';
@@ -20,8 +20,7 @@ class PreStartCheckboxWidget extends StatelessWidget {
           dense: true,
           title: BodyText(
               text: drawerMenuProvider.preStartCheckBoxItem[index].name!),
-          value: drawerMenuProvider.preStartCheckBoxItem[index].value ??
-              false,
+          value: drawerMenuProvider.preStartCheckBoxItem[index].value ?? false,
           onChanged: (bool? value) {
             drawerMenuProvider.changePreStartItemCheckboxValue(
               index,

@@ -1,4 +1,5 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/utils/app_toast.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/app_string.dart';
@@ -60,13 +61,20 @@ class CompletedLoadTile extends StatelessWidget {
                 const SizedBox(height: 80),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColor.primaryColor,
+                        backgroundColor: loadModel.editable != null &&
+                                loadModel.editable == true
+                            ? AppColor.primaryColor
+                            : AppColor.disableColor,
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         minimumSize: const Size(80, 28)),
                     onPressed: () {
-                      HomeProvider.instance
-                          .pendingLoadStartButtonOnTap(model: loadModel);
+                      if (loadModel.editable != null &&
+                          loadModel.editable == true) {
+                        HomeProvider.instance.editButtonOnTap(model: loadModel);
+                      } else {
+                        showToast('Not eligible to edit!');
+                      }
                     },
                     child: const BodyText(
                         text: AppString.edit, textColor: Colors.white))

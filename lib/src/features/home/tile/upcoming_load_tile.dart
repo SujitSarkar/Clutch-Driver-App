@@ -1,5 +1,4 @@
-import 'package:flutter/Material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
@@ -27,7 +26,7 @@ class UpcomingLoadTile extends StatelessWidget {
           foregroundColor: Colors.white,
           icon: Icons.delete,
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          label: 'Decline load',
+          label: AppString.declineLoad,
         ),
       ]),
       child: NormalCard(
@@ -66,11 +65,28 @@ class UpcomingLoadTile extends StatelessWidget {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: BodyText(
-                  text: '${AppString.quantity}: ${loadModel.qty ?? '0'}',
-                  textAlign: TextAlign.end),
+            Column(
+              children: [
+                BodyText(
+                    text: '${AppString.quantity}: ${loadModel.qty ?? '0'}',
+                    textAlign: TextAlign.end),
+                const SizedBox(height: 80),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: loadModel.editable != null &&
+                                loadModel.editable == true
+                            ? AppColor.primaryColor
+                            : AppColor.disableColor,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        minimumSize: const Size(80, 28)),
+                    onPressed: () {
+                      HomeProvider.instance
+                          .previewButtonOnTap(model: loadModel);
+                    },
+                    child: const BodyText(
+                        text: AppString.preview, textColor: Colors.white))
+              ],
             )
           ],
         ),

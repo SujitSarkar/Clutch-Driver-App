@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/static_list.dart';
@@ -46,7 +46,8 @@ class LoadDateRangePickerWidget extends StatelessWidget {
                   minDate: loadType == StaticList.loadTypeList[1]
                       ? DateTime.now()
                       : null,
-                  maxDate: loadType == StaticList.loadTypeList.first ||loadType == StaticList.loadTypeList.last
+                  maxDate: loadType == StaticList.loadTypeList.first ||
+                          loadType == StaticList.loadTypeList.last
                       ? DateTime.now()
                       : null,
                   onSelectionChanged: homeProvider.dateRangeOnSelectionChanged,

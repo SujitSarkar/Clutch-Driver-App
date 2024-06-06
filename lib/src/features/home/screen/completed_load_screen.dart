@@ -1,5 +1,5 @@
 import '../../../../core/widgets/refresh_indicator.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/static_list.dart';
@@ -27,8 +27,8 @@ class CompleteLoadScreen extends StatefulWidget {
 class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) =>
-        HomeProvider.instance.getCompletedLoadList());
+    WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) => HomeProvider.instance.getCompletedLoadList());
     super.initState();
   }
 
@@ -105,7 +105,8 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
                           buttonHeight: 35,
                           dropdownWidth: 150,
                           onChanged: (value) {
-                            homeProvider.changeAllTruck(value:value,fromPage: AppRouter.completeLoad);
+                            homeProvider.changeAllTruck(
+                                value: value, fromPage: AppRouter.completeLoad);
                           })
                     ],
                   ),
@@ -116,10 +117,12 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
                     child: SearchField(
                       controller: homeProvider.searchController,
                       hintText: AppString.search,
-                      onChanged: (value){
-                        homeProvider.loadSearchOnChange(loadType: StaticList.loadTypeList.last);
+                      onChanged: (value) {
+                        homeProvider.loadSearchOnChange(
+                            loadType: StaticList.loadTypeList.last);
                       },
-                      suffixOnTap: ()=>homeProvider.clearSearchOnTap(loadType: StaticList.loadTypeList.last),
+                      suffixOnTap: () => homeProvider.clearSearchOnTap(
+                          loadType: StaticList.loadTypeList.last),
                     ),
                   )
                 ],
@@ -133,19 +136,22 @@ class _CompleteLoadScreenState extends State<CompleteLoadScreen> {
   }
 
   Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
-      homeProvider.completedLoadList.isNotEmpty? RefreshIndicatorWidget(
-        onRefresh: () async => await homeProvider.getCompletedLoadList(),
-        child: ListView.separated(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(
-              horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
-          itemCount: homeProvider.completedLoadList.length,
-          itemBuilder: (context, index) => CompletedLoadTile(
-            loadModel: homeProvider.completedLoadList[index],
-          ),
-          separatorBuilder: (context, index) =>
-              const SizedBox(height: TextSize.pagePadding),
-        ),
-      ):NoLoadFoundWidget(
+      homeProvider.completedLoadList.isNotEmpty
+          ? RefreshIndicatorWidget(
+              onRefresh: () async => await homeProvider.getCompletedLoadList(),
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: TextSize.pagePadding,
+                    vertical: TextSize.textGap),
+                itemCount: homeProvider.completedLoadList.length,
+                itemBuilder: (context, index) => CompletedLoadTile(
+                  loadModel: homeProvider.completedLoadList[index],
+                ),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: TextSize.pagePadding),
+              ),
+            )
+          : NoLoadFoundWidget(
               onRefresh: () async => homeProvider.getCompletedLoadList());
 }

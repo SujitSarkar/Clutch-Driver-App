@@ -1,6 +1,6 @@
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import '../../../../core/constants/static_list.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_color.dart';
@@ -85,7 +85,7 @@ class PendingLoadTile extends StatelessWidget {
                           minimumSize: const Size(80, 28)),
                       onPressed: () {
                         HomeProvider.instance
-                            .pendingLoadStartButtonOnTap(model: loadModel);
+                            .startButtonOnTap(model: loadModel);
                       },
                       child: const BodyText(
                           text: AppString.start, textColor: Colors.white))

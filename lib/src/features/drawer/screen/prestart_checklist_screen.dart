@@ -1,6 +1,7 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/utils/app_toast.dart';
 import '../../../../core/utils/date_picker.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/constants/app_color.dart';
@@ -97,6 +98,14 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                   )),
               TextButton(
                   onPressed: () async {
+                    if (startingOdometerReading.text.isEmpty) {
+                      showToast('Starting odometer reading is required');
+                      return;
+                    }
+                    if (startTime.text.isEmpty) {
+                      showToast('Start time is required');
+                      return;
+                    }
                     await drawerMenuProvider.savePreStartCheckList(
                         startTime: startTime.text.trim(),
                         odoMeterReading: startingOdometerReading.text.trim(),
@@ -162,10 +171,11 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
               hintText: AppString.startingOdometerReading,
               textInputType:
                   const TextInputType.numberWithOptions(decimal: true),
+              required: true,
             ),
             const SizedBox(height: TextSize.textFieldGap),
 
-            ///End time
+            ///Start time
             TextFormFieldWidget(
               controller: startTime,
               labelText: AppString.startTime,

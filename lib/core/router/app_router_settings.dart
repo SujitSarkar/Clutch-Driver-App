@@ -1,6 +1,5 @@
 import '../../src/features/authentication/screen/otp_screen.dart';
 import '../../src/features/authentication/screen/reset_password_screen.dart';
-
 import '../../src/features/home/screen/file_preview_screen.dart';
 import 'package:flutter/material.dart';
 import '../../src/features/drawer/screen/daily_logbook_screen.dart';
@@ -87,8 +86,10 @@ class GeneratedRoute {
         return PageRouteBuilder(
             settings: settings,
             transitionsBuilder: slideTransition,
-            pageBuilder: (_, animation, secondaryAnimation) =>
-                const LoadDetailsScreen());
+            pageBuilder: (_, animation, secondaryAnimation) {
+              final args = settings.arguments as String;
+              return LoadDetailsScreen(fromPage: args);
+            });
 
       case AppRouter.loadAttachment:
         final String arguments = settings.arguments as String;

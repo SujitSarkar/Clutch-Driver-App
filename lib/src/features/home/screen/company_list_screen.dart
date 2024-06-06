@@ -7,7 +7,7 @@
 // import 'package:clutch_driver_app/core/widgets/solid_button.dart';
 // import 'package:clutch_driver_app/core/widgets/text_widget.dart';
 // import 'package:clutch_driver_app/src/features/home/tile/company_tile.dart';
-// import 'package:flutter/Material.dart';
+// import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:provider/provider.dart';
 // import '../provider/home_provider.dart';

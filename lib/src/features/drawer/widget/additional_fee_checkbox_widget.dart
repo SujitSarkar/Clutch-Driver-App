@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/drawer_menu_provider.dart';
@@ -18,7 +18,8 @@ class AdditionalFeeCheckboxWidget extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           visualDensity: VisualDensity.compact,
           dense: true,
-          title: BodyText(text: drawerMenuProvider.additionalFeeCheckBoxItem[index].name!),
+          title: BodyText(
+              text: drawerMenuProvider.additionalFeeCheckBoxItem[index].name!),
           value: drawerMenuProvider.additionalFeeCheckBoxItem[index].value ??
               false,
           onChanged: (bool? value) {

@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import '../constants/app_color.dart';
 
 class NormalCard extends StatelessWidget {

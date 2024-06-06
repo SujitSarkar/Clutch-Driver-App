@@ -39,8 +39,8 @@ class TruckDropdown extends StatelessWidget {
             .map((item) => DropdownMenuItem<TruckDataModel>(
                   value: item,
                   child: FittedBox(
-                    child: BodyText(text:
-                      'Truck: ${item.registrationNo}',
+                    child: BodyText(
+                      text: 'Truck: ${item.registrationNo}',
                     ),
                   ),
                 ))
@@ -58,7 +58,7 @@ class TruckDropdown extends StatelessWidget {
         ),
         buttonStyleData: ButtonStyleData(
           height: buttonHeight,
-          width: width?? double.infinity,
+          width: width ?? double.infinity,
           padding: const EdgeInsets.only(left: 14, right: 14),
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -79,8 +79,8 @@ class TruckDropdown extends StatelessWidget {
           elevation: 8,
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(10),
-            thickness: MaterialStateProperty.all(6),
-            thumbVisibility: MaterialStateProperty.all(true),
+            thickness: WidgetStateProperty.all(6),
+            thumbVisibility: WidgetStateProperty.all(true),
           ),
           // offset: const Offset(-10, 0),
         ),

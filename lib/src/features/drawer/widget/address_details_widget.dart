@@ -21,11 +21,12 @@ class AddressDetailsWidget extends StatelessWidget {
               //Address:115-117 William Angliss Drive,
               BodyText(
                   text:
-                      '${AppString.address}: ${model.pickup?.streetNumber}, ${model.pickup?.streetAddress}'),
-              BodyText(text: '${AppString.suburb}: ${model.pickup?.suburb}'),
+                      '${AppString.address}: ${model.pickup?.streetNumber ?? ''}, ${model.pickup?.streetAddress ?? ''}'),
+              BodyText(
+                  text: '${AppString.suburb}: ${model.pickup?.suburb ?? ''}'),
               BodyText(
                   text:
-                      '${AppString.state}: ${model.pickup?.state} / ${AppString.postCode}: ${model.pickup?.postcode}'),
+                      '${AppString.state}: ${model.pickup?.state ?? ''} / ${AppString.postCode}: ${model.pickup?.postcode ?? ''}'),
             ],
           )
         : Column(
@@ -34,12 +35,13 @@ class AddressDetailsWidget extends StatelessWidget {
             children: [
               BodyText(
                   text:
-                      '${AppString.address}: ${model.destination?.streetNumber}, ${model.destination?.streetAddress}'),
-              BodyText(
-                  text: '${AppString.suburb}: ${model.destination?.suburb}'),
+                      '${AppString.address}: ${model.destination?.streetNumber ?? ''}, ${model.destination?.streetAddress ?? ''}'),
               BodyText(
                   text:
-                      '${AppString.state}: ${model.destination?.state} / ${AppString.postCode}: ${model.destination?.postcode}'),
+                      '${AppString.suburb}: ${model.destination?.suburb ?? ''}'),
+              BodyText(
+                  text:
+                      '${AppString.state}: ${model.destination?.state ?? ''} / ${AppString.postCode}: ${model.destination?.postcode ?? ''}'),
             ],
           );
   }

@@ -5,7 +5,7 @@ import '../../../../core/router/page_navigator.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../../../../src/features/drawer/provider/drawer_menu_provider.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_string.dart';
 import '../../../../core/constants/text_size.dart';
@@ -73,20 +73,22 @@ class AddBreakDialogWidget extends StatelessWidget {
             children: [
               Expanded(
                   child: SolidButton(
-                    backgroundColor: Colors.grey,
+                      backgroundColor: Colors.grey,
                       onTap: () => popScreen(),
                       child: const ButtonText(text: AppString.cancel))),
               const SizedBox(width: 12),
               Expanded(
                   child: SolidButton(
-                      onTap: () async{
-                        if(startTime.text.isNotEmpty && endTime.text.isNotEmpty){
+                      onTap: () async {
+                        if (startTime.text.isNotEmpty &&
+                            endTime.text.isNotEmpty) {
                           await drawerMenuProvider.saveFatigueBreak(
                               startTime: startTime.text.trim(),
                               endTime: endTime.text.trim(),
                               breakDetails: breakDetails.text.trim());
-                        }else{
-                          showToast('Select break start and end time',position: ToastGravity.TOP);
+                        } else {
+                          showToast('Select break start and end time',
+                              position: ToastGravity.TOP);
                         }
                       },
                       child: drawerMenuProvider.functionLoading

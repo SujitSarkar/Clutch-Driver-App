@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -128,11 +128,25 @@ class HomeProvider extends ChangeNotifier {
     popScreen();
   }
 
-  void pendingLoadStartButtonOnTap({required LoadDataModel model}) {
+  void startButtonOnTap({required LoadDataModel model}) {
     selectedPendingLoadModel = model;
     pushTo(AppRouter.preStartChecklist,
         arguments:
             const PreStartChecklistScreen(fromPage: AppRouter.pendingLoad));
+  }
+
+  void editButtonOnTap({required LoadDataModel model}) {
+    selectedPendingLoadModel = model;
+    pushTo(AppRouter.preStartChecklist,
+        arguments:
+            const PreStartChecklistScreen(fromPage: AppRouter.completeLoad));
+  }
+
+  void previewButtonOnTap({required LoadDataModel model}) {
+    selectedPendingLoadModel = model;
+    pushTo(AppRouter.preStartChecklist,
+        arguments:
+            const PreStartChecklistScreen(fromPage: AppRouter.upcomingLoad));
   }
 
   void clearFilter() {

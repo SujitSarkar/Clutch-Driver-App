@@ -9,7 +9,6 @@ import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/solid_button.dart';
 import '../../../../core/widgets/text_field_widget.dart';
 import '../../../../core/widgets/text_widget.dart';
-import '../../home/provider/home_provider.dart';
 import '../provider/authentication_provider.dart';
 
 class ResetPasswordScreen extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -87,8 +87,8 @@ class PendingLoadListScreen extends StatelessWidget {
                             showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                builder: (context) =>
-                                    LoadDateRangePickerWidget(loadType: StaticList.loadTypeList.first));
+                                builder: (context) => LoadDateRangePickerWidget(
+                                    loadType: StaticList.loadTypeList.first));
                           },
                         ),
 
@@ -100,17 +100,19 @@ class PendingLoadListScreen extends StatelessWidget {
                                   context: context,
                                   isScrollControlled: true,
                                   builder: (context) =>
-                                      LoadDateRangePickerWidget(loadType: StaticList.loadTypeList.first));
+                                      LoadDateRangePickerWidget(
+                                          loadType:
+                                              StaticList.loadTypeList.first));
                             },
                             child: BodyText(
                                 text: homeProvider.filterStartDate!
                                             .millisecondsSinceEpoch ==
-                                        homeProvider
-                                            .filterEndDate!.millisecondsSinceEpoch
+                                        homeProvider.filterEndDate!
+                                            .millisecondsSinceEpoch
                                     ? DateFormat("MMM dd")
                                         .format(homeProvider.filterStartDate!)
                                     : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} '
-                                    '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                                        '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
                           ),
                         ),
 
@@ -123,7 +125,9 @@ class PendingLoadListScreen extends StatelessWidget {
                             buttonHeight: 35,
                             dropdownWidth: 150,
                             onChanged: (value) {
-                              homeProvider.changeAllTruck(value:value,fromPage: AppRouter.pendingLoad);
+                              homeProvider.changeAllTruck(
+                                  value: value,
+                                  fromPage: AppRouter.pendingLoad);
                             })
                       ],
                     ),
@@ -132,12 +136,14 @@ class PendingLoadListScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 16),
                       child: SearchField(
-                          controller: homeProvider.searchController,
-                          hintText: AppString.search,
-                        onChanged: (value){
-                            homeProvider.loadSearchOnChange(loadType: StaticList.loadTypeList.first);
+                        controller: homeProvider.searchController,
+                        hintText: AppString.search,
+                        onChanged: (value) {
+                          homeProvider.loadSearchOnChange(
+                              loadType: StaticList.loadTypeList.first);
                         },
-                        suffixOnTap: ()=>homeProvider.clearSearchOnTap(loadType: StaticList.loadTypeList.first),
+                        suffixOnTap: () => homeProvider.clearSearchOnTap(
+                            loadType: StaticList.loadTypeList.first),
                       ),
                     )
                   ],

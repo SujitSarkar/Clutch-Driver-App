@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/widgets/text_widget.dart';
 import '../provider/drawer_menu_provider.dart';
@@ -19,8 +19,8 @@ class FatigueManagementCheckboxWidget extends StatelessWidget {
           visualDensity: VisualDensity.compact,
           dense: true,
           title: BodyText(
-              text:
-                  drawerMenuProvider.fatigueManagementCheckBoxItem[index].name!),
+              text: drawerMenuProvider
+                  .fatigueManagementCheckBoxItem[index].name!),
           value: drawerMenuProvider.fatigueManagementCheckBoxItem[index].value,
           onChanged: (value) {
             drawerMenuProvider.changeFatigueManagementCheckboxItemValue(

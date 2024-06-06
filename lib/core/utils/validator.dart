@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 
 bool validateEmail(String emailAddress) => RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -20,7 +20,7 @@ double parseTextFieldDataToDouble(TextEditingController textEditingController) {
       textEditingController.text.isNotEmpty ? textEditingController.text : '0');
 }
 
-double roundDouble(double value, [int places=2]) {
+double roundDouble(double value, [int places = 2]) {
   final factor = pow(10, places);
   return (value * factor).round() / factor;
 }

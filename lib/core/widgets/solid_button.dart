@@ -10,14 +10,14 @@ class SolidButton extends StatelessWidget {
       this.height,
       this.backgroundColor,
       this.borderRadius,
-        this.splashColor});
+      this.splashColor});
   final Function() onTap;
   final Widget child;
   final double? width;
   final double? height;
   final Color? backgroundColor;
   final BorderRadiusGeometry? borderRadius;
-  final MaterialStateProperty<Color?>? splashColor;
+  final WidgetStateProperty<Color?>? splashColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,14 @@ class SolidButton extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 backgroundColor: backgroundColor ?? AppColor.primaryColor,
                 elevation: 0.0,
-                fixedSize: Size(width ?? MediaQuery.of(context).size.width, height??40),
+                fixedSize: Size(
+                    width ?? MediaQuery.of(context).size.width, height ?? 40),
                 shape: RoundedRectangleBorder(
                     borderRadius: borderRadius ??
                         const BorderRadius.all(Radius.circular(5))))
             .copyWith(
-                overlayColor: splashColor??
-                    MaterialStateProperty.all(Colors.white.withOpacity(0.5))),
+                overlayColor: splashColor ??
+                    WidgetStateProperty.all(Colors.white.withOpacity(0.5))),
         onPressed: onTap,
         child: child);
   }

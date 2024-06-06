@@ -1,4 +1,4 @@
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/widgets/refresh_indicator.dart';
@@ -27,8 +27,8 @@ class UpcomingLoadScreen extends StatefulWidget {
 class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) =>
-        HomeProvider.instance.getUpcomingLoadList());
+    WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) => HomeProvider.instance.getUpcomingLoadList());
     super.initState();
   }
 
@@ -38,7 +38,8 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: const TitleText(text: AppString.upcomingLoads,textColor: Colors.white),
+          title: const TitleText(
+              text: AppString.upcomingLoads, textColor: Colors.white),
           titleSpacing: 0,
           actions: [
             Padding(
@@ -55,7 +56,7 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
             child: Container(
               color: AppColor.appBodyBg,
               padding:
-              const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
+                  const EdgeInsets.only(left: 4, right: TextSize.pagePadding),
               child: Column(
                 children: [
                   Row(
@@ -85,13 +86,13 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
                           },
                           child: BodyText(
                               text: homeProvider.filterStartDate!
-                                  .millisecondsSinceEpoch ==
-                                  homeProvider
-                                      .filterEndDate!.millisecondsSinceEpoch
+                                          .millisecondsSinceEpoch ==
+                                      homeProvider
+                                          .filterEndDate!.millisecondsSinceEpoch
                                   ? DateFormat("MMM dd")
-                                  .format(homeProvider.filterStartDate!)
+                                      .format(homeProvider.filterStartDate!)
                                   : '${DateFormat("MMM dd").format(homeProvider.filterStartDate!)} '
-                                  '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
+                                      '- ${DateFormat("MMM dd").format(homeProvider.filterEndDate!)}'),
                         ),
                       ),
 
@@ -104,7 +105,8 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
                           buttonHeight: 35,
                           dropdownWidth: 150,
                           onChanged: (value) {
-                            homeProvider.changeAllTruck(value:value,fromPage: AppRouter.upcomingLoad);
+                            homeProvider.changeAllTruck(
+                                value: value, fromPage: AppRouter.upcomingLoad);
                           })
                     ],
                   ),
@@ -115,10 +117,12 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
                     child: SearchField(
                       controller: homeProvider.searchController,
                       hintText: AppString.search,
-                      onChanged: (value){
-                        homeProvider.loadSearchOnChange(loadType: StaticList.loadTypeList[1]);
+                      onChanged: (value) {
+                        homeProvider.loadSearchOnChange(
+                            loadType: StaticList.loadTypeList[1]);
                       },
-                      suffixOnTap: ()=>homeProvider.clearSearchOnTap(loadType: StaticList.loadTypeList[1]),
+                      suffixOnTap: () => homeProvider.clearSearchOnTap(
+                          loadType: StaticList.loadTypeList[1]),
                     ),
                   )
                 ],
@@ -131,19 +135,23 @@ class _UpcomingLoadScreenState extends State<UpcomingLoadScreen> {
             : _bodyUI(homeProvider, size, context));
   }
 
-  Widget _bodyUI(HomeProvider homeProvider,Size size, BuildContext context) =>
-      homeProvider.upcomingLoadList.isNotEmpty? RefreshIndicatorWidget(
-        onRefresh: () async => await homeProvider.getUpcomingLoadList(),
-        child: ListView.separated(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding:const EdgeInsets.symmetric(
-              horizontal: TextSize.pagePadding, vertical: TextSize.textGap),
-          itemCount: homeProvider.upcomingLoadList.length,
-          itemBuilder: (context, index) =>
-              UpcomingLoadTile(loadModel: homeProvider.upcomingLoadList[index],),
-          separatorBuilder: (context, index) =>
-          const SizedBox(height: TextSize.pagePadding),
-        ),
-      ): NoLoadFoundWidget(
-          onRefresh: () async => homeProvider.getUpcomingLoadList());
+  Widget _bodyUI(HomeProvider homeProvider, Size size, BuildContext context) =>
+      homeProvider.upcomingLoadList.isNotEmpty
+          ? RefreshIndicatorWidget(
+              onRefresh: () async => await homeProvider.getUpcomingLoadList(),
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: TextSize.pagePadding,
+                    vertical: TextSize.textGap),
+                itemCount: homeProvider.upcomingLoadList.length,
+                itemBuilder: (context, index) => UpcomingLoadTile(
+                  loadModel: homeProvider.upcomingLoadList[index],
+                ),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: TextSize.pagePadding),
+              ),
+            )
+          : NoLoadFoundWidget(
+              onRefresh: () async => homeProvider.getUpcomingLoadList());
 }

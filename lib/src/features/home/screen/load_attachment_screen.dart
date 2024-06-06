@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/static_list.dart';
 import '../../../../core/widgets/loading_widget.dart';
@@ -75,6 +75,7 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
                         loadWeightType: widget.loadWeightType,
                         files: attachmentFileList,
                       );
+                      popScreen();
                     },
                     child: homeProvider.functionLoading
                         ? const LoadingWidget(color: AppColor.primaryColor)

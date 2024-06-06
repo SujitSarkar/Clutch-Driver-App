@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import '../../../../src/features/drawer/provider/drawer_menu_provider.dart';
-import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../src/features/drawer/model/fatigue_management_break_model.dart';

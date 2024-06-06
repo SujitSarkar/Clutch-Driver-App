@@ -76,8 +76,8 @@ class BasicDropdown extends StatelessWidget {
           elevation: 8,
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(10),
-            thickness: MaterialStateProperty.all(6),
-            thumbVisibility: MaterialStateProperty.all(true),
+            thickness: WidgetStateProperty.all(6),
+            thumbVisibility: WidgetStateProperty.all(true),
           ),
           // offset: const Offset(-10, 0),
         ),
