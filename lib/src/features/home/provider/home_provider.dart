@@ -196,10 +196,10 @@ class HomeProvider extends ChangeNotifier {
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companyId ?? '';
-    final String startDate =
-        DateFormat('yyyy-MM-dd').format(filterStartDate ?? DateTime.now());
-    final String endDate =
-        DateFormat('yyyy-MM-dd').format(filterEndDate ?? DateTime.now());
+    final String startDate = DateFormat(AppString.dateFormatString)
+        .format(filterStartDate ?? DateTime.now());
+    final String endDate = DateFormat(AppString.dateFormatString)
+        .format(filterEndDate ?? DateTime.now());
     final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
@@ -225,10 +225,10 @@ class HomeProvider extends ChangeNotifier {
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companyId ?? '';
-    final String startDate =
-        DateFormat('yyyy-MM-dd').format(filterStartDate ?? DateTime.now());
-    final String endDate =
-        DateFormat('yyyy-MM-dd').format(filterEndDate ?? DateTime.now());
+    final String startDate = DateFormat(AppString.dateFormatString)
+        .format(filterStartDate ?? DateTime.now());
+    final String endDate = DateFormat(AppString.dateFormatString)
+        .format(filterEndDate ?? DateTime.now());
     final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {
@@ -255,10 +255,10 @@ class HomeProvider extends ChangeNotifier {
     final driverId = loginModel?.data?.id;
     final assetId = selectedAllTruck?.id;
     final companyId = loginModel?.data?.companyId ?? '';
-    final String startDate =
-        DateFormat('yyyy-MM-dd').format(filterStartDate ?? DateTime.now());
-    final String endDate =
-        DateFormat('yyyy-MM-dd').format(filterEndDate ?? DateTime.now());
+    final String startDate = DateFormat(AppString.dateFormatString)
+        .format(filterStartDate ?? DateTime.now());
+    final String endDate = DateFormat(AppString.dateFormatString)
+        .format(filterEndDate ?? DateTime.now());
     final String loadRef = searchController.text.trim();
 
     await ApiService.instance.apiCall(execute: () async {

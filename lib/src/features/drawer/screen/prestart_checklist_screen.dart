@@ -40,7 +40,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await drawerMenuProvider.getPreStartChecks(fromPage: widget.fromPage);
-      dateController.text = DateFormat('yyyy-MM-dd').format(
+      dateController.text = DateFormat(AppString.dateFormatString).format(
           HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
               DateTime.now());
       initializeData();
@@ -153,7 +153,7 @@ class _PreStartChecklistScreenState extends State<PreStartChecklistScreen> {
                     final DateTime? date = await getDateFromPicker();
                     if (date != null) {
                       dateController.text =
-                          DateFormat('yyyy-MM-dd').format(date);
+                          DateFormat(AppString.dateFormatString).format(date);
                       await drawerMenuProvider.getPreStartChecks(
                           fromPage: widget.fromPage, dateTime: date);
                       initializeData();

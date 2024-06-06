@@ -133,7 +133,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final logsDate = DateFormat('yyyy-MM-dd').format(dateTime ??
+    final logsDate = DateFormat(AppString.dateFormatString).format(dateTime ??
         HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
         DateTime.now());
 
@@ -170,7 +170,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     HomeProvider.instance.notifyListeners();
   }
 
-  Future<void> getDailySummary() async {
+  Future<void> getDailySummary({required DateTime date}) async {
     if (initialLoading == true) {
       showToast(AppString.anotherProcessRunning);
       return;
@@ -181,7 +181,7 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final assetId = selectedOwnTruck?.id;
     final driverId = HomeProvider.instance.loginModel?.data?.id;
-    final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final logsDate = DateFormat(AppString.dateFormatString).format(date);
 
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.get(
@@ -249,7 +249,7 @@ class DrawerMenuProvider extends ChangeNotifier {
       'start_odo_reading': odoMeterReading,
       'pre_start_notes': notes,
       'pre_start_checks': jsonEncode(preStartChecks),
-      "load_start_date": DateFormat('yyyy-MM-dd').format(
+      "load_start_date": DateFormat(AppString.dateFormatString).format(
           HomeProvider.instance.selectedPendingLoadModel?.loadStartDate ??
               DateTime.now())
     };
@@ -307,7 +307,8 @@ class DrawerMenuProvider extends ChangeNotifier {
       'driver_id': driverId,
       'asset_id': assetId,
       'company_id': companyId,
-      'load_start_date': DateFormat('yyyy-MM-dd').format(DateTime.now())
+      'load_start_date':
+          DateFormat(AppString.dateFormatString).format(DateTime.now())
     };
     await ApiService.instance.apiCall(execute: () async {
       return await ApiService.instance.post(
@@ -380,7 +381,8 @@ class DrawerMenuProvider extends ChangeNotifier {
     final companyId = HomeProvider.instance.loginModel?.data?.companyId ?? '';
     final driverId = HomeProvider.instance.loginModel?.data?.id;
     final assetId = selectedOwnTruck?.id;
-    final logsDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final logsDate =
+        DateFormat(AppString.dateFormatString).format(DateTime.now());
     List<Map<String, dynamic>> fatigueChecks = [];
 
     for (CheckBoxDataModel model in fatigueManagementCheckBoxItem) {

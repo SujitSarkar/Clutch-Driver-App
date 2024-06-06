@@ -66,7 +66,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
     await homeProvider.getLoadWeight();
 
     if (homeProvider.loadWeightModel!.data!.pickup!.pickupDate != null) {
-      pickupDate.text = DateFormat('yyyy-MM-dd')
+      pickupDate.text = DateFormat(AppString.dateFormatString)
           .format(homeProvider.loadWeightModel!.data!.pickup!.pickupDate!);
     }
     pickupTime.text =
@@ -77,7 +77,7 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
         homeProvider.loadWeightModel!.data!.pickup!.pickupGrossWeight ?? '';
 
     if (homeProvider.loadWeightModel!.data!.deli!.deliveryDate != null) {
-      deliveryDate.text = DateFormat('yyyy-MM-dd')
+      deliveryDate.text = DateFormat(AppString.dateFormatString)
           .format(homeProvider.loadWeightModel!.data!.deli!.deliveryDate!);
     }
     deliveryTime.text =
@@ -270,7 +270,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                               DateTime? dateTime = await pickDate(context);
                               if (dateTime != null) {
                                 pickupDate.text =
-                                    DateFormat('yyyy-MM-dd').format(dateTime);
+                                    DateFormat(AppString.dateFormatString)
+                                        .format(dateTime);
                               }
                             },
                           ),
@@ -335,7 +336,8 @@ class _LoadDetailsScreenState extends State<LoadDetailsScreen> {
                               DateTime? dateTime = await pickDate(context);
                               if (dateTime != null) {
                                 deliveryDate.text =
-                                    DateFormat('yyyy-MM-dd').format(dateTime);
+                                    DateFormat(AppString.dateFormatString)
+                                        .format(dateTime);
                               }
                             },
                           ),

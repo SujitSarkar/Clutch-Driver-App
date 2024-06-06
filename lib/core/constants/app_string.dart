@@ -1,6 +1,7 @@
 class AppString {
   static const String appName = 'Driver App';
   static const String fontName = 'inter';
+  static const String dateFormatString = 'yyyy-MM-dd';
 
   ///Button String
   static const String appExitMessage = 'Do you want to exit?';

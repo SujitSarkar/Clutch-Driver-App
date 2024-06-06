@@ -36,8 +36,9 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       drawerMenuProvider = Provider.of(context, listen: false);
       await drawerMenuProvider.getPreStartChecks(fromPage: 'drawer');
-      await drawerMenuProvider.getDailySummary();
-      dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      await drawerMenuProvider.getDailySummary(date: DateTime.now());
+      dateController.text =
+          DateFormat(AppString.dateFormatString).format(DateTime.now());
       initializeData();
     });
     super.initState();
@@ -144,10 +145,10 @@ class _DailyLogbookScreenState extends State<DailyLogbookScreen> {
                       final DateTime? date = await getDateFromPicker();
                       if (date != null) {
                         dateController.text =
-                            DateFormat('yyyy-MM-dd').format(date);
+                            DateFormat(AppString.dateFormatString).format(date);
                         await drawerMenuProvider.getPreStartChecks(
                             fromPage: 'drawer', dateTime: date);
-                        await drawerMenuProvider.getDailySummary();
+                        await drawerMenuProvider.getDailySummary(date: date);
                         initializeData();
                       }
                     },
