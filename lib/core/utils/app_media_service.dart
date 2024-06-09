@@ -26,7 +26,8 @@ class AppMediaService {
     return file;
   }
 
-  Future<File?> getImageFromGallery() async {
+  Future<File?> getImageFromGallery(
+      {int? imageQuality, double? maxHeight}) async {
     File? file;
     final bool permission = await AppPermissionHandler().galleryPermission();
     if (!permission) {
@@ -34,7 +35,10 @@ class AppMediaService {
     }
     try {
       final XFile? image = await ImagePicker().pickImage(
-          source: ImageSource.gallery, imageQuality: 70, maxHeight: 500);
+        source: ImageSource.gallery,
+        imageQuality: imageQuality ?? 70,
+        maxHeight: maxHeight ?? 500.0,
+      );
       if (image != null) {
         file = File(image.path);
       } else {

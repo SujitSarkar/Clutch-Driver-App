@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/app_navigator_key.dart';
+import 'app_navigator_key.dart';
 
 void pushTo(String targetRoute, {dynamic arguments}) =>
     Navigator.pushNamed(AppNavigatorKey.key.currentState!.context, targetRoute,

@@ -8,7 +8,7 @@ import '../../../../src/features/drawer/model/fatigue_management_break_model.dar
 import '../../../../src/features/drawer/model/daily_summery_model.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../core/router/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
 import '../../../../shared/api/api_endpoint.dart';
 import '../../../../shared/api/api_service.dart';

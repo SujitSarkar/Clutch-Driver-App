@@ -6,7 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:async';
 import 'dart:convert';
 import '../../shared/api/parser.dart';
-import '../../core/utils/app_navigator_key.dart';
+import '../../core/router/app_navigator_key.dart';
 import '../../src/features/authentication/provider/authentication_provider.dart';
 import 'api_exception.dart';
 

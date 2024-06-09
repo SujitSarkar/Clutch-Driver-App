@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:clutch_driver_app/core/utils/app_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/static_list.dart';
@@ -145,16 +146,8 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
 
                 ///Attachment Button
                 TextButton(
-                    onPressed: () async {
-                      await AppMediaService()
-                          .getFileFromStorage()
-                          .then((File? value) {
-                        if (value != null) {
-                          selectedAttachmentFile = value;
-                          attachmentFileList.add(selectedAttachmentFile!);
-                          setState(() {});
-                        }
-                      });
+                    onPressed: () {
+                      uploadAttachmentOnTap();
                     },
                     child: const Row(
                       children: [
@@ -252,6 +245,80 @@ class _LoadAttachmentScreenState extends State<LoadAttachmentScreen> {
           )
         ],
       );
+
+  Future<void> uploadAttachmentOnTap() async {
+    modalBottomSheet(
+        context: context,
+        height: MediaQuery.of(context).size.height * .3,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              TextButton(
+                  onPressed: () async {
+                    popScreen();
+                    await AppMediaService()
+                        .getImageFromCamera()
+                        .then((File? value) {
+                      if (value != null) {
+                        selectedAttachmentFile = value;
+                        attachmentFileList.add(value);
+                        setState(() {});
+                      }
+                    });
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.camera, color: AppColor.primaryColor),
+                      SizedBox(width: 8),
+                      BodyText(text: AppString.camera)
+                    ],
+                  )),
+              TextButton(
+                  onPressed: () async {
+                    popScreen();
+                    await AppMediaService()
+                        .getImageFromGallery(imageQuality: 100)
+                        .then((File? value) {
+                      if (value != null) {
+                        selectedAttachmentFile = value;
+                        attachmentFileList.add(selectedAttachmentFile!);
+                        setState(() {});
+                      }
+                    });
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.image_outlined, color: AppColor.primaryColor),
+                      SizedBox(width: 8),
+                      BodyText(text: AppString.gallery)
+                    ],
+                  )),
+              TextButton(
+                  onPressed: () async {
+                    popScreen();
+                    await AppMediaService()
+                        .getFileFromStorage()
+                        .then((File? value) {
+                      if (value != null) {
+                        selectedAttachmentFile = value;
+                        attachmentFileList.add(selectedAttachmentFile!);
+                        setState(() {});
+                      }
+                    });
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.file_copy_outlined,
+                          color: AppColor.primaryColor),
+                      SizedBox(width: 8),
+                      BodyText(text: AppString.file)
+                    ],
+                  )),
+            ],
+          ),
+        ));
+  }
 
   void removeFileFromAttachmentFileList(int index) {
     if (selectedAttachmentFile?.uri.pathSegments.last ==

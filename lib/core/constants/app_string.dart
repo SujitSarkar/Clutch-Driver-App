@@ -99,6 +99,9 @@ class AppString {
   static const String calculatedNett = 'Calculated Nett';
 
   static const String uploadAttachment = 'Upload Attachment';
+  static const String file = 'File';
+  static const String camera = 'Camera';
+  static const String gallery = 'Gallery';
   static const String openCamera = 'Open Camera';
   static const String linkedDocument = 'Linked Document';
   static const String uploadedDocument = 'Uploaded Document';

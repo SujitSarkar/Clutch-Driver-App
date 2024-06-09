@@ -5,7 +5,7 @@ import 'core/constants/app_string.dart';
 import 'core/constants/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/router/app_router_settings.dart';
-import 'core/utils/app_navigator_key.dart';
+import 'core/router/app_navigator_key.dart';
 import 'src/features/authentication/provider/authentication_provider.dart';
 import 'src/features/drawer/provider/drawer_menu_provider.dart';
 import 'src/features/home/provider/home_provider.dart';
@@ -28,8 +28,10 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<AuthenticationProvider>(
               create: (_) => AuthenticationProvider()),
           ChangeNotifierProvider<HomeProvider>(create: (_) => HomeProvider()),
-          ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
-          ChangeNotifierProvider<DrawerMenuProvider>(create: (_) => DrawerMenuProvider()),
+          ChangeNotifierProvider<ProfileProvider>(
+              create: (_) => ProfileProvider()),
+          ChangeNotifierProvider<DrawerMenuProvider>(
+              create: (_) => DrawerMenuProvider()),
         ],
         child: MaterialApp(
           navigatorKey: AppNavigatorKey.key,

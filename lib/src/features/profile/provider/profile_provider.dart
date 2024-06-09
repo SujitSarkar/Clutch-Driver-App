@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/local_storage_key.dart';
-import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../core/router/app_navigator_key.dart';
 import '../../../../core/utils/local_storage.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/constants/app_string.dart';

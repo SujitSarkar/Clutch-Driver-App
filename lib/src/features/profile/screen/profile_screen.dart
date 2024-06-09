@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../core/utils/app_bottom_sheet.dart';
 import '../../../../src/features/home/provider/home_provider.dart';
 import '../../../../core/widgets/basic_dropdown.dart';
 import '../../../../core/widgets/loading_widget.dart';
@@ -150,14 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       TextButton(
                           onPressed: () async {
-                            await AppMediaService()
-                                .getImageFromGallery()
-                                .then((File? value) {
-                              if (value != null) {
-                                selectedAttachmentFile = value;
-                                setState(() {});
-                              }
-                            });
+                            uploadPhotoOnTap();
                           },
                           child: const ButtonText(
                               text: AppString.uploadPhoto,
@@ -351,6 +345,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       );
+
+  Future<void> uploadPhotoOnTap() async {
+    modalBottomSheet(
+        context: context,
+        height: MediaQuery.of(context).size.height * .22,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              TextButton(
+                  onPressed: () async {
+                    popScreen();
+                    await AppMediaService()
+                        .getImageFromCamera()
+                        .then((File? value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedAttachmentFile = value;
+                        });
+                      }
+                    });
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.camera, color: AppColor.primaryColor),
+                      SizedBox(width: 8),
+                      BodyText(text: AppString.camera)
+                    ],
+                  )),
+              TextButton(
+                  onPressed: () async {
+                    popScreen();
+                    await AppMediaService()
+                        .getImageFromGallery(imageQuality: 100)
+                        .then((File? value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedAttachmentFile = value;
+                        });
+                      }
+                    });
+                  },
+                  child: const Row(
+                    children: [
+                      Icon(Icons.image_outlined, color: AppColor.primaryColor),
+                      SizedBox(width: 8),
+                      BodyText(text: AppString.gallery)
+                    ],
+                  )),
+            ],
+          ),
+        ));
+  }
 
   Future<void> saveButtonOnTap(ProfileProvider profileProvider) async {
     final address = {

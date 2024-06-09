@@ -4,7 +4,7 @@ import '../../../../core/constants/app_string.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/router/page_navigator.dart';
 import '../../../../core/constants/local_storage_key.dart';
-import '../../../../core/utils/app_navigator_key.dart';
+import '../../../../core/router/app_navigator_key.dart';
 import '../../../../core/utils/app_toast.dart';
 import '../../../../core/utils/local_storage.dart';
 import '../../../../shared/api/api_endpoint.dart';
